@@ -1,0 +1,1033 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap');
+:root{--g:#4caf50;--gdim:rgba(76,175,80,0.12);--y:#ffd600;--r:#e53935;--bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--bd:rgba(76,175,80,0.25);--tx:#e8e8e8;--mu:#777;--fd:'Bebas Neue',sans-serif;--fb:'IBM Plex Sans',sans-serif;--fm:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;}
+.hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.hdr-logo{font-family:var(--fd);font-size:28px;color:var(--g);letter-spacing:2px;line-height:1;}
+.hdr-logo span{color:var(--y);}
+.hdr-meta{margin-left:auto;font-family:var(--fm);font-size:12px;color:var(--mu);text-align:right;line-height:1.6;}
+.hdr-meta .handle{color:var(--g);font-size:14px;}
+.drop-zone{margin:28px 20px;border:1.5px dashed var(--bd);border-radius:8px;padding:44px 20px;text-align:center;cursor:pointer;background:var(--s1);transition:border-color .2s,background .2s;}
+.drop-zone:hover,.drag-over{border-color:var(--g)!important;background:var(--gdim)!important;}
+.drop-zone i{font-size:36px;color:var(--g);margin-bottom:10px;display:block;}
+.dz-title{font-family:var(--fd);font-size:22px;color:var(--g);letter-spacing:1px;margin-bottom:4px;}
+.dz-sub{color:var(--mu);font-size:13px;}
+.editor{display:none;}
+.editor.active{display:block;}
+.psbar{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;padding:14px 20px;background:var(--s1);border-bottom:1px solid var(--bd);}
+.psc{background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:9px 11px;}
+.psc-l{font-size:11px;color:var(--mu);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.psc-v{font-family:var(--fd);font-size:22px;color:var(--g);}
+.tabs{display:flex;border-bottom:1px solid var(--bd);padding:0 20px;background:var(--s1);gap:2px;}
+.tab{font-family:var(--fd);font-size:16px;letter-spacing:1px;padding:12px 20px;cursor:pointer;color:var(--mu);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:color .15s,border-color .15s;}
+.tab:hover{color:var(--tx);}
+.tab.active{color:var(--g);border-bottom-color:var(--g);}
+.tc{display:none;padding:20px;}
+.tc.active{display:block;}
+.sec-title{font-family:var(--fd);font-size:19px;letter-spacing:1px;color:var(--g);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.btn-icon {width: 16px;height: 16px;pointer-events: none;}
+
+/* ARTIFACTS */
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:11px;}
+.art-card{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:16px 18px;display:flex;align-items:center;gap:14px;}
+.art-card.owned{border-color:rgba(76,175,80,.4);}
+.art-card.missing{border-color:rgba(255,214,0,.15);opacity:.75;}
+.art-icon{width:46px;height:46px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--s2);}
+.art-info{flex:1;min-width:0;}
+.art-name{font-weight:500;font-size:15px;line-height:1.3;}
+.art-desc{font-size:12px;color:var(--mu);margin-top:3px;line-height:1.4;}
+.art-id{font-family:var(--fm);font-size:10px;color:#555;margin-top:3px;}
+.art-ctrl{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.lv-disp{font-family:var(--fm);font-size:13px;color:var(--g);min-width:38px;text-align:center;background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:4px 5px;}
+.lv-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);width:30px;height:30px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .1s;padding:0;}
+.lv-btn:hover{background:var(--gdim);border-color:var(--g);}
+.add-btn{background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.3);color:var(--y);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:13px;font-family:var(--fm);transition:background .15s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.add-btn:hover{background:rgba(255,214,0,.18);}
+
+/* COINS */
+.coin-summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+.coin-card{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:18px;}
+.coin-title{font-family:var(--fd);font-size:18px;letter-spacing:1px;margin-bottom:14px;}
+.coin-title.dreamer{color:#a78bfa;}
+.coin-title.dragon{color:#fb923c;}
+.coin-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-family:var(--fm);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.coin-row:last-child{border-bottom:none;}
+.coin-row .lbl{color:var(--mu);}
+.coin-row .val{color:var(--tx);}
+.coin-available{margin-top:14px;display:flex;align-items:center;gap:10px;}
+.coin-avail-label{font-family:var(--fm);font-size:12px;color:var(--mu);}
+.coin-avail-input{font-family:var(--fd);font-size:26px;width:150px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:4px 10px;color:#a78bfa;}
+.coin-avail-input.dragon{color:#fb923c;}
+.coin-avail-input:focus{outline:none;border-color:var(--g);}
+
+/* CHAR CARDS */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:10px;}
+.char-card{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:14px;}
+.char-name{font-family:var(--fd);font-size:16px;letter-spacing:1px;margin-bottom:10px;}
+.char-stat{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.char-stat:last-child{border-bottom:none;}
+.ck{color:var(--mu);}
+.cvc{display:flex;align-items:center;gap:5px;}
+.c-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);width:26px;height:26px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;transition:background .1s;font-size:16px;line-height:1;}
+.c-btn:hover{background:var(--gdim);border-color:var(--g);}
+.cv{font-family:var(--fm);font-size:13px;min-width:34px;text-align:center;}
+
+/* COLLAPSIBLE SECTIONS */
+.coll-section{margin-bottom:6px;border:1px solid var(--bd);border-radius:6px;overflow:hidden;}
+.coll-header{font-family:var(--fd);font-size:16px;letter-spacing:1px;padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--s2);user-select:none;}
+.coll-header:hover{background:rgba(76,175,80,.08);}
+.coll-arrow{font-size:12px;color:var(--mu);transition:transform .2s;}
+.coll-header.open .coll-arrow{transform:rotate(180deg);}
+.coll-body{display:none;padding:14px;}
+.coll-body.open{display:block;}
+
+/* BOSS UI */
+.boss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;}
+.boss-card{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:12px 14px;}
+.boss-card-title{font-family:var(--fd);font-size:14px;letter-spacing:.5px;color:var(--mu);margin-bottom:10px;text-transform:uppercase;}
+.boss-stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
+.boss-stat-row:last-child{border-bottom:none;}
+.bs-label{color:var(--mu);}
+.bs-label.editable{color:var(--tx);}
+.bs-val-wrap{display:flex;align-items:center;gap:5px;}
+.bs-val{font-family:var(--fm);font-size:13px;min-width:34px;text-align:center;color:var(--g);}
+.bs-val.computed{color:var(--mu);font-size:12px;}
+.bs-btn{background:var(--s1);border:1px solid var(--bd);color:var(--tx);width:24px;height:24px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:background .1s;font-size:15px;line-height:1;}
+.bs-btn:hover{background:var(--gdim);border-color:var(--g);}
+
+/* STATS */
+.stat-search{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:5px;color:var(--tx);padding:9px 14px;font-family:var(--fm);font-size:14px;margin-bottom:14px;}
+.stat-search:focus{outline:none;border-color:var(--g);}
+.stat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:8px;}
+.stat-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:11px 14px;display:flex;align-items:center;gap:10px;}
+.stat-key{font-family:var(--fm);font-size:12px;color:var(--mu);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.stat-label{color:var(--tx);font-size:14px;display:block;margin-bottom:2px;}
+.stat-val{font-family:var(--fm);font-size:14px;color:var(--g);width:90px;text-align:right;background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:5px 9px;}
+.adv-toggle{font-family:var(--fm);font-size:12px;color:var(--mu);cursor:pointer;border:1px solid var(--bd);background:var(--s2);padding:5px 12px;border-radius:4px;margin-bottom:14px;}
+.adv-toggle:hover{color:var(--tx);}
+.adv-section{display:none;}
+.adv-section.show{display:block;}
+
+.save-bar{position:sticky;bottom:0;background:var(--s1);border-top:1px solid var(--bd);padding:13px 20px;display:flex;align-items:center;gap:12px;}
+.save-btn{background:var(--g);border:none;color:#000;padding:11px 24px;border-radius:5px;cursor:pointer;font-family:var(--fd);font-size:19px;letter-spacing:1px;transition:background .15s,transform .1s;}
+.save-btn:hover{background:#66bb6a;}
+.save-btn:active{transform:scale(.97);}
+.save-btn:disabled{background:#2a2a2a;color:#555;cursor:not-allowed;}
+.status{font-family:var(--fm);font-size:13px;color:var(--mu);}
+.status.ok{color:var(--g);}
+.status.err{color:var(--r);}
+</style>
+
+<div class="root" id="root">
+<div class="hdr">
+  <div class="hdr-logo">TMNT <span>SF</span> SAVE EDITOR</div>
+  <div class="hdr-meta" id="hdr-meta">drop a save file to begin</div>
+</div>
+<div class="drop-zone" id="dz">
+  <label for="fi" style="cursor:pointer;display:block;">
+    <i class="ti ti-file-upload" aria-hidden="true"></i>
+    <div class="dz-title">DROP SAVE FILE</div>
+    <div class="dz-sub">saveSlot_GameState*_cloud.json -- drag and drop or click to browse</div>
+    <input type="file" id="fi" accept=".json" style="display:none">
+  </label>
+</div>
+<div class="editor" id="editor">
+  <div class="psbar" id="psbar"></div>
+  <div class="tabs">
+    <button class="tab active" data-tab="artifacts">Artifacts</button>
+    <button class="tab" data-tab="stats">Stats</button>
+  </div>
+  <div class="tc active" id="tab-artifacts">
+    <div class="sec-title"><i class="ti ti-shield" aria-hidden="true"></i>Artifact inventory</div>
+    <div class="art-grid" id="art-grid"></div>
+  </div>
+  <div class="tc" id="tab-stats">
+    <div class="sec-title"><i class="ti ti-coin" aria-hidden="true"></i>Currency</div>
+    <div class="coin-summary" id="coin-summary"></div>
+    <div class="sec-title"><i class="ti ti-users" aria-hidden="true"></i>Per character</div>
+    <div class="char-grid" id="char-grid"></div>
+    <div class="sec-title" style="margin-top:8px;"><i class="ti ti-chart-bar" aria-hidden="true"></i>Global stats</div>
+    <input class="stat-search" id="ss" type="text" placeholder="search stats...">
+    <div id="stat-sections"></div>
+    <div style="margin-top:18px;">
+      <button class="adv-toggle" id="adv-toggle">show advanced / hidden stats</button>
+      <div class="adv-section" id="adv-section">
+        <div class="stat-list" id="adv-list"></div>
+      </div>
+    </div>
+  </div>
+  <div class="save-bar">
+    <button class="save-btn" id="save-btn" disabled>EXPORT SAVE</button>
+    <span class="status" id="status">load a file to begin</span>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script>
+(function(){
+
+// Artifact data: { id: [name, maxLevel, descByLevel[]] }
+// descByLevel: index 0=Lv1. Single entry = same text at all levels.
+const _M = ['10%','12.5%','15%','17%','20%','22.5%'];
+const _md = (el) => _M.map(p=>`Guarantees next power is ${el}. +${p} double select on ${el}.`);
+
+const ARTIFACTS = {
+  // -- CONFIRMED (pak canonical name + user verified) --
+  '-1890023709':['Manhole Cover',        6, _md('Water')],
+  '620203132':  ['Foot Clan Medallion',  6, _md('Flame')],
+  '118435057':  ['Broken Ooze Canister', 6, _md('Ooze')],
+  '154543150':  ['Sword of Tengu',       6, _md('Utrom')],
+  '-1705361390':['Tessen',               6, _md('Ninja')],
+  '-1254274800':['Mystical Seal of Protection', 6, _md('Astral')],
+  '1716809447': ['Stockgen ID',          6, _M.map(p=>`+${p} chance of gaining Bonus Scrap when defeating MOUSERs or Super Foot Soldiers.`)],
+  '-1492998623':['Turnstone',            6, _M.map(p=>`+${p} chance to gain bonus Dragon or Dreamer Coins upon defeating a veteran or champion enemy.`)],
+  '62957209':   ['Fuzzy Dice',           6, _M.map(p=>`+${p} double select chance on any power selection.`)],
+  '-1309509024':['Insulated Pizza Box',  6, ['Boosts last for an additional 2 rooms. Given by Nobody (Docks).','Boosts last for an additional 3 rooms. Given by Nobody (Docks).','Boosts last for an additional 4 rooms. Given by Nobody (Docks).','Boosts last for an additional 5 rooms. Given by Nobody (Docks).','Boosts last for an additional 6 rooms. Given by Nobody (Docks).','Boosts last for an additional 7 rooms. Given by Nobody (Docks).']],
+  '-1216430156':['Vintage Blowtorch',       3, ['Every 7s, your next Final Strike Stuns non-boss enemies.','Every 6s, your next Final Strike Stuns non-boss enemies.','Every 5s, your next Final Strike Stuns non-boss enemies.']],
+  '1639908458': ['Astral Charm',         6, ['+3s invulnerability after consuming a Splinter\'s Revive.','+3.5s invulnerability after consuming a Splinter\'s Revive.','+4s invulnerability after consuming a Splinter\'s Revive.','+4.5s invulnerability after consuming a Splinter\'s Revive.','+5s invulnerability after consuming a Splinter\'s Revive.','+5.5s invulnerability after consuming a Splinter\'s Revive.']],
+  '-2131893020':['Mysterious Gofu',      3, ['Gain a random level 1 Tool at the start of each Chapter.','Gain a random level 2 Tool at the start of each Chapter.','Gain a random level 3 Tool at the start of each Chapter.']],
+  // -- UNCONFIRMED — canonical internal name in parentheses --
+  '152828709':  ['Busted Snare',            3, ['When you finish a room, all players heal 2 Health. This effect does not stack.','When you finish a room, all players heal 3 Health. This effect does not stack.','When you finish a room, all players heal 4 Health. This effect does not stack.']],
+  '1801399113': ["Casey's Portrait",        3, ['When you finish a room, all players gain +10 Max Health. This effect does not stack.','When you finish a room, all players gain +15 Max Health. This effect does not stack.','When you finish a room, all players gain +20 Max Health. This effect does not stack.']],
+  '-1582634853':['Positronic Motherboard',  6, ['+10% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+12.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+15% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+17.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+20% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+22.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.']],
+  '-1560928193':['Channel Six Mini Camera', 3, ['Your Special has increased cooldown but deals 40% extra damage.','Your Special has increased cooldown but deals 55% extra damage.','Your Special has increased cooldown but deals 70% extra damage.']],
+  '-8075567':   ['Heart of Tengu',         6, ['+5% dodge chance. Increased invulnerability duration on dash.','+7.5% dodge chance. Increased invulnerability duration on dash.','+10% dodge chance. Increased invulnerability duration on dash.','+12.5% dodge chance. Increased invulnerability duration on dash.','+15% dodge chance. Increased invulnerability duration on dash.','+17.5% dodge chance. Increased invulnerability duration on dash.']],
+  '1130332645': ['Untuned Guitar',          3, ['When you finish a room, all players permanently gain +2% elemental damage. This effect does not stack.','When you finish a room, all players permanently gain +3% elemental damage. This effect does not stack.','When you finish a room, all players permanently gain +4% elemental damage. This effect does not stack.']],
+  '-15526325':  ['War Staff',               3, ['+100% damage taken from all sources. +60% currencies granted by Bosses.','+100% damage taken from all sources. +80% currencies granted by Bosses.','+100% damage taken from all sources. +100% currencies granted by Bosses.']],
+  '538990255':  ['Splintered Drumsticks',   3, ['When you finish a room, all players gain +10 Scrap. This effect does not stack.','When you finish a room, all players gain +15 Scrap. This effect does not stack.','When you finish a room, all players gain +20 Scrap. This effect does not stack.']],
+  '368133059':  ['Clan Hamato Seal',         3, ['When you finish a room, all players gain +10 Max Health. This effect does not stack.','When you finish a room, all players gain +15 Max Health. This effect does not stack.','When you finish a room, all players gain +20 Max Health. This effect does not stack.']],
+  '-596661861': ['Cracked Stasis Beacon',   3, ['You\'re much slower. Beat a Boss while carrying this to gain +500 Scrap.','You\'re much slower. Beat a Boss while carrying this to gain +650 Scrap.','You\'re much slower. Beat a Boss while carrying this to gain +800 Scrap.']],
+  '-1495665439':[`Kitsune's Cup`,           3, ["You can't heal. Gain +50% Dreamer Coins.","You can't heal. Gain +65% Dreamer Coins.","You can't heal. Gain +80% Dreamer Coins."]],
+  '-1134319911':['Giant Tusk Fragment',     3, ["You can't heal. Gain +50% Dragon Coins.","You can't heal. Gain +65% Dragon Coins.","You can't heal. Gain +80% Dragon Coins."]],
+  '521134896':  ['Buddy the Wraith',        3, ['Summon a tier 1 allied Utrom Astral Wraith. On room completion it levels up; on death it levels down. Tier increases on chapter completion.','Summon a tier 2 allied Utrom Astral Wraith. On room completion it levels up; on death it levels down. Tier increases on chapter completion.','Summon a tier 3 allied Utrom Astral Wraith. On room completion it levels up; on death it levels down. Tier increases on chapter completion.']],
+  '1671700685': ['The Maltese Hamster',     3, ['Your Tool has increased cooldown but deals 40% extra damage.','Your Tool has increased cooldown but deals 55% extra damage.','Your Tool has increased cooldown but deals 70% extra damage.']],
+  '1186664881': ['Hot Cocoa (with Marshmallows)', 3, ['-1 dash charge. Dashing grants a burst of movement speed. (Lv1)','-1 dash charge. Dashing grants a burst of movement speed. (Lv2)','-1 dash charge. Dashing grants a burst of movement speed. (Lv3)']],
+  '804661233':  ['Polar Bear Netsuke',      3, ['Every 16s, your next Final Strike sends out a line of Flames. Cooldown is halved under half HP.','Every 14s, your next Final Strike sends out a line of Flames. Cooldown is halved under half HP.','Every 12s, your next Final Strike sends out a line of Flames. Cooldown is halved under half HP.']],
+}
+
+function artMaxLevel(sym){ return (ARTIFACTS[sym]||[null,6])[1]; }
+function artDesc(sym, lv){
+  const a=ARTIFACTS[sym]; if(!a) return '';
+  const descs=a[2]; if(!descs||!descs.length) return '';
+  return descs[Math.min(lv-1, descs.length-1)];
+}
+
+// Sync artifact changes to all coop slots that have inventory data
+function coopInvs(){
+  return (save.state.coop||[])
+    .map(c=>c&&c.lifetime&&c.lifetime.artifact_inventory)
+    .filter(inv=>inv&&inv.artifact_symbols&&inv.artifact_symbols.length>0);
+}
+function coopAddArtifact(symInt, lv){
+  coopInvs().forEach(inv=>{
+    if(!inv.artifact_symbols.includes(symInt)){
+      inv.artifact_symbols.push(symInt);
+      inv.artifact_levels.push(lv);
+    }
+  });
+}
+function coopRemoveArtifact(symInt){
+  coopInvs().forEach(inv=>{
+    const idx=inv.artifact_symbols.indexOf(symInt);
+    if(idx!==-1){inv.artifact_symbols.splice(idx,1);inv.artifact_levels.splice(idx,1);}
+  });
+}
+function coopSetLevel(symInt, lv){
+  coopInvs().forEach(inv=>{
+    const idx=inv.artifact_symbols.indexOf(symInt);
+    if(idx!==-1) inv.artifact_levels[idx]=lv;
+  });
+}
+
+const CHARS = [
+  {name:'Michelangelo',color:'#f97316',id:195141004,tal:'michelangelo_talismans',wrap:'michelangelo_wraps',win:'stat_shredder_victory_michelangelo'},
+  {name:'Leonardo',color:'#3b82f6',id:190203475,tal:'leonardo_talismans',wrap:'leonardo_wraps',win:'stat_shredder_victory_leonardo'},
+  {name:'Raphael',color:'#ef4444',id:343331501,tal:'raphael_talismans',wrap:'raphael_wraps',win:'stat_shredder_victory_raphael'},
+  {name:'Donatello',color:'#a855f7',id:313913754,tal:'donatello_talismans',wrap:'donatello_wraps',win:'stat_shredder_victory_donatello'},
+  {name:'Casey Jones',color:'#6b7280',id:1252917672,tal:'caseyjones_talismans',wrap:'caseyjones_wraps',win:'stat_shredder_victory_caseyjones'},
+  {name:'Metalhead',color:'#f5bb0b',id:1751315127,tal:'metalhead_talismans',wrap:'metalhead_wraps',win:'stat_shredder_victory_metalhead'},
+  {name:'Alopex',color:'#14b8a6',id:1773431475,tal:'alopex_talismans',wrap:'alopex_wraps',win:'stat_shredder_victory_alopex'},
+];
+
+const ADV_KEYS = new Set([
+  'spent_coins','spent_dark_coins','spent_light_coins','coins','dark_coins','light_coins',
+  'coins_earned_enemy','coins_earned_destructible','coins_earned_reward','coins_earned_boss',
+  'coins_earned_reward_bonus','coins_earned_running_start',
+  'dark_coins_earned_reward','dark_coins_earned_reward_bonus','dark_coins_earned_veteran',
+  'dark_coins_earned_boss','dark_coins_earned_champion',
+  'light_coins_earned_reward','light_coins_earned_reward_bonus','light_coins_earned_veteran',
+  'light_coins_earned_boss','light_coins_earned_champion',
+  'version','one_time_reset_best_time','stat_homelair_cinematic_scene',
+  'stat_finished_artifact_Tutorial','stat_artifact_seen','stat_currency_seen',
+  'stat_spoken_to_alopex_intro','equipped','collected','has_seen_enrage',
+  'boss_deaths','boss_kills','hard_boss_kills','multiplayer_boss_kills',
+  'visits','stat_arena_catchup_applied','stat_arena_has_unlocked_mode',
+  'stat_arena_celebrate_city','stat_arena_celebrate_docks','stat_arena_celebrate_sewers',
+  'STAT_WARSTAFF_BOSSBEATEN','time_in_game',
+  'stat_shredder_victory','stat_shredder_victory_any','stat_shredder_narrative_victory',
+  'stat_karai_victory_any','stat_leatherhead_victory','stat_leatherhead_victory_any',
+  'stat_beboprocksteady_victory','stat_beboprocksteady_victory_any',
+]);
+
+const BOSS_SECTIONS_KEYS = new Set([
+  'stat_leatherhead_reached','stat_leatherhead_victory','stat_leatherhead_victory_any',
+  'stat_leatherhead_victory_hard','stat_leatherhead_reached_storm','stat_leatherhead_victory_storm',
+  'stat_leatherhead_reached_waves','stat_leatherhead_victory_waves','stat_leatherhead_reached_punkfrogs',
+  'stat_leatherhead_victory_punkfrogs','stat_leatherhead_rats_any_defeated','stat_leatherhead_rats_small_defeated',
+  'stat_leatherhead_rats_large_defeated','stat_leatherhead_rats_massive_defeated',
+  'stat_leatherhead_rats_multi_kills_penta','stat_leatherhead_rats_multi_kills_deca','stat_leatherhead_rats_multi_kills_highest',
+  'stat_karai_reached','stat_karai_victory_any','stat_karai_reached_flame','stat_karai_victory_flame',
+  'stat_karai_victory_kunai','stat_karai_victory_shadow_hard','stat_karai_victory_gauntlet_hard',
+  'stat_beboprocksteady_reached','stat_beboprocksteady_victory','stat_beboprocksteady_victory_any','stat_beboprocksteady_victory_hard',
+  'stat_shredder_victory','stat_shredder_victory_any','stat_shredder_narrative_victory','stat_shredder_victory_hard',
+  'stat_shredder_victory_flame','stat_shredder_victory_ninja','stat_shredder_victory_ooze',
+  'stat_shredder_victory_water','stat_shredder_victory_astral','stat_shredder_victory_utrom',
+  'stat_shredder_victory_michelangelo','stat_shredder_victory_leonardo','stat_shredder_victory_raphael',
+  'stat_shredder_victory_donatello','stat_shredder_victory_caseyjones','stat_shredder_victory_alopex','stat_shredder_victory_metalhead',
+  'stat_punkfrogmech_victory','stat_punkfrogmech_victory_hard',
+  'stat_punkfrogMech_reached_variantA','stat_punkfrogmech_victory_variantA',
+  'stat_punkfrogMech_reached_variantB','stat_punkfrogmech_victory_variantB',
+  'stat_punkfrogMech_reached_variantC','stat_punkfrogmech_victory_variantC',
+]);
+
+const CHAR_STAT_KEYS = new Set(CHARS.flatMap(c=>[c.tal,c.wrap,c.win]));
+CHAR_STAT_KEYS.add('deaths');CHAR_STAT_KEYS.add('victories');
+
+const STAT_SECTIONS = [
+  {title:'General', keys:[
+    ['runs_started','Runs started'],['best_time','Best run time (s)'],['best_streak','Best win streak'],
+    ['stat_rooms_cleared','Rooms cleared'],['stat_shimmering_entered','Shimmering portals entered'],
+    ['stat_hard_portal_entered','Hard (red) portals entered'],['stat_done_perfect_run','Perfect runs completed'],
+    ['clears','Chapter clears'],['lucky_dice','Lucky dice collected'],['spent_lucky_dice','Lucky dice spent'],
+    ['shadow_tokens','Shadow tokens earned'],['shimmering_blades','Shimmering blades earned'],
+    ['gauntlet_medallion','Gauntlet medallions earned'],['astral_hearts','Astral hearts earned'],
+    ['stat_rooms_with_rain','Rooms with rain'],['stat_rooms_with_lightning','Rooms with lightning'],
+  ]},
+  {title:'Enemies', keys:[
+    ['stat_defeat_any','All enemies'],['stat_defeat_common','Common enemies'],['stat_defeat_veterans','Veterans'],
+    ['stat_defeat_champions','Champions'],['stat_defeat_boss_any','Bosses'],['stat_defeat_miniboss_any','Minibosses'],
+    ['stat_defeat_footclan','Foot Clan (total)'],['stat_defeat_swords','Swords'],['stat_defeat_swordbreakers','Swordbreakers'],
+    ['stat_defeat_flame_foot','Flame Foot'],['stat_defeat_shadow_foot','Shadow Foot'],
+    ['stat_defeat_supersoldiers','Super Soldiers'],['stat_defeat_supersoldiers_punk','Punk Super Soldiers'],
+    ['stat_defeat_enforcer','Enforcers'],['stat_defeat_vanguard','Vanguard'],['stat_defeat_shurikens','Shurikens'],
+    ['stat_defeat_assassins','Assassins'],['stat_defeat_assassins_any','Assassins (all types)'],
+    ['stat_defeat_assassins_flame','Flame assassins'],['stat_defeat_assassins_shadow','Shadow assassins'],
+    ['stat_defeat_ninja_elite','Ninja elite'],['stat_defeat_elite_any','Elite (all)'],
+    ['stat_defeat_elite_shadow','Elite shadow'],['stat_defeat_elite_mystic','Elite mystic'],
+    ['stat_defeat_firedancer','Fire Dancers'],['stat_defeat_marktwo','Mark Two'],
+    ['stat_defeat_stockgen','Stockgen'],['stat_defeat_mutants','Mutants (total)'],
+    ['stat_defeat_mousers','Mousers (total)'],['stat_defeat_mousers_small','Mousers small'],
+    ['stat_defeat_mousers_large','Mousers large'],['stat_defeat_mousers_scouts','Mouser scouts'],
+    ['stat_defeat_mousers_arcs','Mouser arcs'],['stat_defeat_mousers_pulsers_small','Mouser pulsers small'],
+    ['stat_defeat_mousers_pulsers_large','Mouser pulsers large'],
+    ['stat_defeat_mousers_artillery_small','Mouser artillery small'],['stat_defeat_mousers_artillery_large','Mouser artillery large'],
+    ['stat_defeat_mousers_mines_small','Mouser mines small'],['stat_defeat_mousers_mines_large','Mouser mines large'],
+    ['stat_defeat_mousers_suppressors','Mouser suppressors'],['stat_defeat_mousers_riotguard','Mouser riot guard'],
+    ['stat_defeat_mousers_slicers','Mouser slicers'],['stat_defeat_mousers_punk','Punk mousers'],
+    ['stat_defeat_rats','Rats (total)'],['stat_defeat_rats_small','Rats small'],['stat_defeat_rats_large','Rats large'],['stat_defeat_rats_massive','Rats massive'],
+    ['stat_defeat_punkfrogs','Punk Frogs (total)'],['stat_defeat_punkfrogs_mace','PF mace'],['stat_defeat_punkfrogs_polearm','PF polearm'],
+    ['stat_defeat_punkfrogs_crossbow','PF crossbow'],['stat_defeat_punkfrogs_axe','PF axe'],
+    ['stat_destroyed_crates_any','Crates (total)'],['stat_destroyed_crates_small','Crates small'],['stat_destroyed_crates_large','Crates large'],
+    ['stat_receivedallies_any','Allies received'],['stat_receivedallies_smallmousers','Allies: small mousers'],
+    ['stat_receivedallies_largemousers','Allies: large mousers'],['stat_receivedallies_supersoldier','Allies: super soldiers'],
+    ['stat_allies_killedby_mousers','Allies killed by mousers'],
+  ]},
+  {title:"Metalhead's Lab", keys:[
+    ['stat_arena_victories','Total victories'],
+    ['stat_arena_victories_sewers','Sewers total'],['stat_arena_victories_sewers_challenge_one','Sewers challenge 1'],
+    ['stat_arena_victories_sewers_challenge_two','Sewers challenge 2'],['stat_arena_victories_sewers_challenge_three','Sewers challenge 3'],
+    ['stat_arena_victories_docks','Docks total'],['stat_arena_victories_docks_challenge_one','Docks challenge 1'],
+    ['stat_arena_victories_docks_challenge_two','Docks challenge 2'],['stat_arena_victories_docks_challenge_three','Docks challenge 3'],
+    ['stat_arena_victories_city','City total'],['stat_arena_victories_city_challenge_one','City challenge 1'],
+    ['stat_arena_victories_city_challenge_two','City challenge 2'],['stat_arena_victories_city_challenge_three','City challenge 3'],
+    ['stat_prestige_celebration','Prestige celebrations'],
+  ]},
+  {title:'Minibosses - Sewers', keys:[
+    ['stat_miniboss_rabidrats_reached','Rabid Rats - reached'],['stat_miniboss_rabidrats_victory','Rabid Rats - victories'],['stat_miniboss_rabidrats_victory_hard','Rabid Rats - hard victories'],
+    ['stat_miniboss_lurkingmenace_reached','Lurking Menace - reached'],['stat_miniboss_lurkingmenace_victory','Lurking Menace - victories'],['stat_miniboss_lurkingmenace_victory_hard','Lurking Menace - hard victories'],
+    ['stat_miniboss_mousermayhem_reached','Mouser Mayhem - reached'],['stat_miniboss_mousermayhem_victory','Mouser Mayhem - victories'],['stat_miniboss_mousermayhem_victory_hard','Mouser Mayhem - hard victories'],
+    ['stat_miniboss_punksinthesewers_reached','Punks in the Sewers - reached'],['stat_miniboss_punksinthesewers_victory','Punks in the Sewers - victories'],['stat_miniboss_punksinthesewers_victory_hard','Punks in the Sewers - hard victories'],
+  ]},
+  {title:'Minibosses - Docks', keys:[
+    ['stat_miniboss_nightwatch_reached','Nightwatch - reached'],['stat_miniboss_nightwatch_victory','Nightwatch - victories'],['stat_miniboss_nightwatch_victory_hard','Nightwatch - hard victories'],
+    ['stat_miniboss_baybombardiers_reached','Bay Bombardiers - reached'],['stat_miniboss_baybombardiers_victory','Bay Bombardiers - victories'],['stat_miniboss_baybombardiers_victory_hard','Bay Bombardiers - hard victories'],
+    ['stat_miniboss_pierpressure_reached','Pier Pressure - reached'],['stat_miniboss_pierpressure_victory','Pier Pressure - victories'],['stat_miniboss_pierpressure_victory_hard','Pier Pressure - hard victories'],
+    ['stat_miniboss_docksidediplomacy_reached','Dockside Diplomacy - reached'],['stat_miniboss_docksidediplomacy_victory','Dockside Diplomacy - victories'],['stat_miniboss_docksidediplomacy_victory_hard','Dockside Diplomacy - hard victories'],
+  ]},
+  {title:'Minibosses - Streets', keys:[
+    ['stat_miniboss_mutantshowdown_reached','Mutant Showdown - reached'],['stat_miniboss_mutantshowdown_victory','Mutant Showdown - victories'],['stat_miniboss_mutantshowdown_victory_hard','Mutant Showdown - hard victories'],
+    ['stat_miniboss_fencinglessons_reached','Fencing Lessons - reached'],['stat_miniboss_fencinglessons_victory','Fencing Lessons - victories'],['stat_miniboss_fencinglessons_victory_hard','Fencing Lessons - hard victories'],
+    ['stat_miniboss_footclanfaceoff_reached','Foot Clan Face-Off - reached'],['stat_miniboss_footclanfaceoff_victory','Foot Clan Face-Off - victories'],['stat_miniboss_footclanfaceoff_victory_hard','Foot Clan Face-Off - hard victories'],
+    ['stat_miniboss_twinassassins_reached','Twin Assassins - reached'],['stat_miniboss_twinassassins_victory','Twin Assassins - victories'],['stat_miniboss_twinassassins_victory_hard','Twin Assassins - hard victories'],
+    ['stat_miniboss_powerplay_reached','Power Play - reached'],['stat_miniboss_powerplay_victory','Power Play - victories'],['stat_miniboss_powerplay_victory_hard','Power Play - hard victories'],
+    ['stat_miniboss_alleywaypunks_reached','Alleyway Punks - reached'],['stat_miniboss_alleywaypunks_victory','Alleyway Punks - victories'],['stat_miniboss_alleywaypunks_victory_hard','Alleyway Punks - hard victories'],
+    ['stat_miniboss_ninjaelite_reached','Ninja Elite - reached'],['stat_miniboss_ninjaelite_victory','Ninja Elite - victories'],['stat_miniboss_ninjaelite_victory_hard','Ninja Elite - hard victories'],
+    ['stat_miniboss_gigi_victory','Gigi - victories'],['stat_miniboss_gigi_victory_hard','Gigi - hard victories'],
+    ['stat_miniboss_gigi_reached_variantA','Gigi - reached (A)'],['stat_miniboss_gigi_victory_variantA','Gigi - victories (A)'],
+  ]},
+  {title:'Minibosses - Rooftops', keys:[
+    ['stat_miniboss_handofshadow_reached','Hand of Shadow - reached'],['stat_miniboss_handofshadow_victory','Hand of Shadow - victories'],
+    ['stat_miniboss_astralwraith_reached','Astral Wraith - reached'],['stat_miniboss_astralwraith_victory','Astral Wraith - victories'],['stat_miniboss_astralwraith_victory_hard','Astral Wraith - hard victories'],
+    ['stat_miniboss_mysticcouncil_reached','Mystic Council - reached'],['stat_miniboss_mysticcouncil_victory','Mystic Council - victories'],['stat_miniboss_mysticcouncil_victory_hard','Mystic Council - hard victories'],
+    ['stat_miniboss_illumination_reached','Illumination - reached'],['stat_miniboss_illumination_victory','Illumination - victories'],['stat_miniboss_illumination_victory_hard','Illumination - hard victories'],
+    ['stat_miniboss_firewatch_reached','Firewatch - reached'],['stat_miniboss_firewatch_victory','Firewatch - victories'],['stat_miniboss_firewatch_victory_hard','Firewatch - hard victories'],
+    ['stat_miniboss_mysticstrike_reached','Mystic Strike - reached'],['stat_miniboss_mysticstrike_victory','Mystic Strike - victories'],['stat_miniboss_mysticstrike_victory_hard','Mystic Strike - hard victories'],
+    ['stat_miniboss_assassinpluswraith_reached','Assassin + Wraith - reached'],['stat_miniboss_assassinpluswraith_victory','Assassin + Wraith - victories'],['stat_miniboss_assassinpluswraith_victory_hard','Assassin + Wraith - hard victories'],
+  ]},
+  {title:'Shimmering portals', keys:[
+    ['stat_shimmering_power','Power'],['stat_shimmering_power_greater','Greater power'],['stat_shimmering_power_immense','Immense power'],['stat_shimmering_power_ultimate','Ultimate power'],
+    ['stat_shimmering_foot','Foot'],['stat_shimmering_pacing','Pacing'],['stat_shimmering_protection','Protection'],['stat_shimmering_storms','Storms'],
+    ['stat_shimmering_mice','Mice'],['stat_shimmering_paupers','Paupers'],['stat_shimmering_pockets','Pockets'],['stat_shimmering_plunderedpizza','Plundered pizza'],
+    ['stat_shimmering_coffers','Coffers'],['stat_shimmering_scarcity','Scarcity'],['stat_shimmering_dashes','Dashes'],['stat_shimmering_projection','Projection'],
+    ['stat_shimmering_specials','Specials'],['stat_shimmering_stolen','Stolen'],['stat_shimmering_utility','Utility'],
+  ]},
+];
+
+let save=null,rawBuf=null,zlibOff=0,origName='save.json',dirty=false,origFloatPaths=null;
+
+function findZlib(b){for(let i=0;i<b.length-1;i++)if(b[i]===0x78&&(b[i+1]===0x9c||b[i+1]===0xda||b[i+1]===0x01))return i;return -1;}
+
+function md5(str){
+  function sa(x,y){const l=(x&0xFFFF)+(y&0xFFFF);return(((x>>16)+(y>>16)+(l>>16))<<16)|(l&0xFFFF);}
+  function brl(n,c){return(n<<c)|(n>>>(32-c));}
+  function cmn(q,a,b,x,s,t){return sa(brl(sa(sa(a,q),sa(x,t)),s),b);}
+  function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t);}
+  function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t);}
+  function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t);}
+  function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t);}
+  const utf8=unescape(encodeURIComponent(str));
+  const by=new Uint8Array(utf8.length);for(let i=0;i<utf8.length;i++)by[i]=utf8.charCodeAt(i);
+  const L=by.length,ex=((L+8)>>>6<<4)+14-L/4|0;const M=new Int32Array(L/4+ex+2);
+  for(let i=0;i<L;i++)M[i>>2]|=by[i]<<((i%4)*8);M[L>>2]|=0x80<<((L%4)*8);M[M.length-2]=L*8;
+  let a=1732584193,b=-271733879,c=-1732584194,d=271733878;
+  for(let i=0;i<M.length;i+=16){
+    const A=a,B=b,C=c,D=d;
+    a=ff(a,b,c,d,M[i],7,-680876936);d=ff(d,a,b,c,M[i+1],12,-389564586);c=ff(c,d,a,b,M[i+2],17,606105819);b=ff(b,c,d,a,M[i+3],22,-1044525330);
+    a=ff(a,b,c,d,M[i+4],7,-176418897);d=ff(d,a,b,c,M[i+5],12,1200080426);c=ff(c,d,a,b,M[i+6],17,-1473231341);b=ff(b,c,d,a,M[i+7],22,-45705983);
+    a=ff(a,b,c,d,M[i+8],7,1770035416);d=ff(d,a,b,c,M[i+9],12,-1958414417);c=ff(c,d,a,b,M[i+10],17,-42063);b=ff(b,c,d,a,M[i+11],22,-1990404162);
+    a=ff(a,b,c,d,M[i+12],7,1804603682);d=ff(d,a,b,c,M[i+13],12,-40341101);c=ff(c,d,a,b,M[i+14],17,-1502002290);b=ff(b,c,d,a,M[i+15],22,1236535329);
+    a=gg(a,b,c,d,M[i+1],5,-165796510);d=gg(d,a,b,c,M[i+6],9,-1069501632);c=gg(c,d,a,b,M[i+11],14,643717713);b=gg(b,c,d,a,M[i],20,-373897302);
+    a=gg(a,b,c,d,M[i+5],5,-701558691);d=gg(d,a,b,c,M[i+10],9,38016083);c=gg(c,d,a,b,M[i+15],14,-660478335);b=gg(b,c,d,a,M[i+4],20,-405537848);
+    a=gg(a,b,c,d,M[i+9],5,568446438);d=gg(d,a,b,c,M[i+14],9,-1019803690);c=gg(c,d,a,b,M[i+3],14,-187363961);b=gg(b,c,d,a,M[i+8],20,1163531501);
+    a=gg(a,b,c,d,M[i+13],5,-1444681467);d=gg(d,a,b,c,M[i+2],9,-51403784);c=gg(c,d,a,b,M[i+7],14,1735328473);b=gg(b,c,d,a,M[i+12],20,-1926607734);
+    a=hh(a,b,c,d,M[i+5],4,-378558);d=hh(d,a,b,c,M[i+8],11,-2022574463);c=hh(c,d,a,b,M[i+11],16,1839030562);b=hh(b,c,d,a,M[i+14],23,-35309556);
+    a=hh(a,b,c,d,M[i+1],4,-1530992060);d=hh(d,a,b,c,M[i+4],11,1272893353);c=hh(c,d,a,b,M[i+7],16,-155497632);b=hh(b,c,d,a,M[i+10],23,-1094730640);
+    a=hh(a,b,c,d,M[i+13],4,681279174);d=hh(d,a,b,c,M[i],11,-358537222);c=hh(c,d,a,b,M[i+3],16,-722521979);b=hh(b,c,d,a,M[i+6],23,76029189);
+    a=hh(a,b,c,d,M[i+9],4,-640364487);d=hh(d,a,b,c,M[i+12],11,-421815835);c=hh(c,d,a,b,M[i+15],16,530742520);b=hh(b,c,d,a,M[i+2],23,-995338651);
+    a=ii(a,b,c,d,M[i],6,-198630844);d=ii(d,a,b,c,M[i+7],10,1126891415);c=ii(c,d,a,b,M[i+14],15,-1416354905);b=ii(b,c,d,a,M[i+5],21,-57434055);
+    a=ii(a,b,c,d,M[i+12],6,1700485571);d=ii(d,a,b,c,M[i+3],10,-1894986606);c=ii(c,d,a,b,M[i+10],15,-1051523);b=ii(b,c,d,a,M[i+1],21,-2054922799);
+    a=ii(a,b,c,d,M[i+8],6,1873313359);d=ii(d,a,b,c,M[i+15],10,-30611744);c=ii(c,d,a,b,M[i+6],15,-1560198380);b=ii(b,c,d,a,M[i+13],21,1309151649);
+    a=ii(a,b,c,d,M[i+4],6,-145523070);d=ii(d,a,b,c,M[i+11],10,-1120210379);c=ii(c,d,a,b,M[i+2],15,718787259);b=ii(b,c,d,a,M[i+9],21,-343485551);
+    a=sa(a,A);b=sa(b,B);c=sa(c,C);d=sa(d,D);
+  }
+  function h(n){let s='',v;for(let i=0;i<4;i++){v=(n>>>(i*8))&0xFF;s+=('0'+v.toString(16)).slice(-2);}return s;}
+  return(h(a)+h(b)+h(c)+h(d)).toUpperCase();
+}
+
+// MD5 over a Uint8Array directly — avoids string encoding issues
+function md5bytes(by){
+  function sa(x,y){const l=(x&0xFFFF)+(y&0xFFFF);return(((x>>16)+(y>>16)+(l>>16))<<16)|(l&0xFFFF);}
+  function brl(n,c){return(n<<c)|(n>>>(32-c));}
+  function cmn(q,a,b,x,s,t){return sa(brl(sa(sa(a,q),sa(x,t)),s),b);}
+  function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t);}
+  function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t);}
+  function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t);}
+  function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t);}
+  const L=by.length;
+  // Pad to 512-bit blocks: message + 0x80 + zeros + 64-bit length
+  const blocks=Math.ceil((L+9)/64)*16;
+  const M=new Int32Array(blocks);
+  for(let i=0;i<L;i++)M[i>>2]|=by[i]<<((i%4)*8);
+  M[L>>2]|=0x80<<((L%4)*8);
+  // Length in bits as 64-bit LE (only low 32 bits needed for sane file sizes)
+  M[blocks-2]=L*8;
+  let a=1732584193,b=-271733879,c=-1732584194,d=271733878;
+  for(let i=0;i<M.length;i+=16){
+    const A=a,B=b,C=c,D=d;
+    a=ff(a,b,c,d,M[i],7,-680876936);d=ff(d,a,b,c,M[i+1],12,-389564586);c=ff(c,d,a,b,M[i+2],17,606105819);b=ff(b,c,d,a,M[i+3],22,-1044525330);
+    a=ff(a,b,c,d,M[i+4],7,-176418897);d=ff(d,a,b,c,M[i+5],12,1200080426);c=ff(c,d,a,b,M[i+6],17,-1473231341);b=ff(b,c,d,a,M[i+7],22,-45705983);
+    a=ff(a,b,c,d,M[i+8],7,1770035416);d=ff(d,a,b,c,M[i+9],12,-1958414417);c=ff(c,d,a,b,M[i+10],17,-42063);b=ff(b,c,d,a,M[i+11],22,-1990404162);
+    a=ff(a,b,c,d,M[i+12],7,1804603682);d=ff(d,a,b,c,M[i+13],12,-40341101);c=ff(c,d,a,b,M[i+14],17,-1502002290);b=ff(b,c,d,a,M[i+15],22,1236535329);
+    a=gg(a,b,c,d,M[i+1],5,-165796510);d=gg(d,a,b,c,M[i+6],9,-1069501632);c=gg(c,d,a,b,M[i+11],14,643717713);b=gg(b,c,d,a,M[i],20,-373897302);
+    a=gg(a,b,c,d,M[i+5],5,-701558691);d=gg(d,a,b,c,M[i+10],9,38016083);c=gg(c,d,a,b,M[i+15],14,-660478335);b=gg(b,c,d,a,M[i+4],20,-405537848);
+    a=gg(a,b,c,d,M[i+9],5,568446438);d=gg(d,a,b,c,M[i+14],9,-1019803690);c=gg(c,d,a,b,M[i+3],14,-187363961);b=gg(b,c,d,a,M[i+8],20,1163531501);
+    a=gg(a,b,c,d,M[i+13],5,-1444681467);d=gg(d,a,b,c,M[i+2],9,-51403784);c=gg(c,d,a,b,M[i+7],14,1735328473);b=gg(b,c,d,a,M[i+12],20,-1926607734);
+    a=hh(a,b,c,d,M[i+5],4,-378558);d=hh(d,a,b,c,M[i+8],11,-2022574463);c=hh(c,d,a,b,M[i+11],16,1839030562);b=hh(b,c,d,a,M[i+14],23,-35309556);
+    a=hh(a,b,c,d,M[i+1],4,-1530992060);d=hh(d,a,b,c,M[i+4],11,1272893353);c=hh(c,d,a,b,M[i+7],16,-155497632);b=hh(b,c,d,a,M[i+10],23,-1094730640);
+    a=hh(a,b,c,d,M[i+13],4,681279174);d=hh(d,a,b,c,M[i],11,-358537222);c=hh(c,d,a,b,M[i+3],16,-722521979);b=hh(b,c,d,a,M[i+6],23,76029189);
+    a=hh(a,b,c,d,M[i+9],4,-640364487);d=hh(d,a,b,c,M[i+12],11,-421815835);c=hh(c,d,a,b,M[i+15],16,530742520);b=hh(b,c,d,a,M[i+2],23,-995338651);
+    a=ii(a,b,c,d,M[i],6,-198630844);d=ii(d,a,b,c,M[i+7],10,1126891415);c=ii(c,d,a,b,M[i+14],15,-1416354905);b=ii(b,c,d,a,M[i+5],21,-57434055);
+    a=ii(a,b,c,d,M[i+12],6,1700485571);d=ii(d,a,b,c,M[i+3],10,-1894986606);c=ii(c,d,a,b,M[i+10],15,-1051523);b=ii(b,c,d,a,M[i+1],21,-2054922799);
+    a=ii(a,b,c,d,M[i+8],6,1873313359);d=ii(d,a,b,c,M[i+15],10,-30611744);c=ii(c,d,a,b,M[i+6],15,-1560198380);b=ii(b,c,d,a,M[i+13],21,1309151649);
+    a=ii(a,b,c,d,M[i+4],6,-145523070);d=ii(d,a,b,c,M[i+11],10,-1120210379);c=ii(c,d,a,b,M[i+2],15,718787259);b=ii(b,c,d,a,M[i+9],21,-343485551);
+    a=sa(a,A);b=sa(b,B);c=sa(c,C);d=sa(d,D);
+  }
+  function h(n){let s='',v;for(let i=0;i<4;i++){v=(n>>>(i*8))&0xFF;s+=('0'+v.toString(16)).slice(-2);}return s;}
+  return(h(a)+h(b)+h(c)+h(d)).toUpperCase();
+}
+function wLE(v){return new Uint8Array([v&0xff,(v>>8)&0xff,(v>>16)&0xff,(v>>24)&0xff]);}
+function sv(k){const st=save.state.lifetime.stats;return st[k]?Math.round(st[k].value):0;}
+function setStat(k,v){
+  const st=save.state.lifetime.stats;
+  if(!st[k])st[k]={version:1,value:v,values:[{key:0,value:v}]};
+  else{st[k].value=v;if(st[k].values&&st[k].values.length>0)st[k].values[0].value=v;}
+}
+
+function loadFile(file){
+  origName=file.name;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const buf=new Uint8Array(e.target.result);
+      const zOff=findZlib(buf);if(zOff===-1)throw new Error('No zlib stream found');
+      const dec=pako.inflate(buf.slice(zOff));
+      const js=new TextDecoder().decode(dec).replace(/\0+$/,'');
+      save=JSON.parse(js);rawBuf=buf;zlibOff=zOff;dirty=false;
+      // Build set of JSON paths whose values were floats (X.0) in the original
+      origFloatPaths=new Set();
+      buildFloatPaths(JSON.parse(js),'',origFloatPaths,js);
+      render();setStatus('loaded: '+file.name,'ok');
+    }catch(err){setStatus('error: '+err.message,'err');}
+  };
+  r.readAsArrayBuffer(file);
+}
+
+// Build a parallel structure from raw JSON that marks which numbers were floats.
+// We walk the raw JSON string character by character alongside JSON.parse output.
+function buildFloatPaths(obj,path,floatSet,rawJson){
+  let pos=0;
+  function skipWs(){while(pos<rawJson.length&&' \t\n\r'.includes(rawJson[pos]))pos++;}
+  function parseValue(o,p){
+    skipWs();
+    const c=rawJson[pos];
+    if(c==='"'){parseString();return;}
+    if(c==='{'){parseObject(o,p);return;}
+    if(c==='['){parseArray(o,p);return;}
+    if(c==='t'){pos+=4;return;} // true
+    if(c==='f'){pos+=5;return;} // false
+    if(c==='n'){pos+=4;return;} // null
+    // number
+    const start=pos;
+    if(rawJson[pos]==='-')pos++;
+    while(pos<rawJson.length&&'0123456789'.includes(rawJson[pos]))pos++;
+    let isFloat=false;
+    if(pos<rawJson.length&&rawJson[pos]==='.'){isFloat=true;pos++;while(pos<rawJson.length&&'0123456789'.includes(rawJson[pos]))pos++;}
+    if(pos<rawJson.length&&'eE'.includes(rawJson[pos])){isFloat=true;pos++;if('+-'.includes(rawJson[pos]))pos++;while(pos<rawJson.length&&'0123456789'.includes(rawJson[pos]))pos++;}
+    if(isFloat&&p!=='')floatSet.add(p);
+  }
+  function parseString(){
+    pos++; // opening "
+    while(pos<rawJson.length){if(rawJson[pos]==='\\'){pos+=2;}else if(rawJson[pos]==='"'){pos++;return;}else pos++;}
+  }
+  function parseObject(o,p){
+    pos++; // {
+    skipWs();
+    if(rawJson[pos]==='}'){pos++;return;}
+    while(pos<rawJson.length){
+      skipWs();
+      const kstart=pos;
+      parseString();
+      const key=rawJson.slice(kstart+1,pos-1).replace(/\\(.)/g,'$1');
+      skipWs();pos++; // :
+      const cp=p?p+'.'+key:key;
+      parseValue(o&&typeof o==='object'?o[key]:undefined,cp);
+      skipWs();
+      if(rawJson[pos]==='}'){pos++;return;}
+      pos++; // ,
+    }
+  }
+  function parseArray(o,p){
+    pos++; // [
+    skipWs();
+    if(rawJson[pos]===']'){pos++;return;}
+    let i=0;
+    while(pos<rawJson.length){
+      parseValue(Array.isArray(o)?o[i]:undefined,p+'['+i+']');
+      i++;skipWs();
+      if(rawJson[pos]===']'){pos++;return;}
+      pos++; // ,
+    }
+  }
+  parseValue(obj,'');
+}
+
+// Custom stringify that restores .0 on whole-number floats that were originally floats
+function floatSafeStringify(obj,path){
+  if(obj===null)return'null';
+  if(typeof obj==='boolean')return obj?'true':'false';
+  if(typeof obj==='string')return JSON.stringify(obj);
+  if(typeof obj==='number'){
+    if(Number.isInteger(obj)&&origFloatPaths&&origFloatPaths.has(path))return obj+'.0';
+    return String(obj);
+  }
+  if(Array.isArray(obj)){
+    return'['+obj.map((v,i)=>floatSafeStringify(v,path+'['+i+']')).join(',')+']';
+  }
+  if(typeof obj==='object'){
+    const parts=[];
+    for(const k of Object.keys(obj)){
+      const p=path?path+'.'+k:k;
+      parts.push(JSON.stringify(k)+':'+floatSafeStringify(obj[k],p));
+    }
+    return'{'+parts.join(',')+'}';
+  }
+  return String(obj);
+}
+
+function repack(){
+  const js=floatSafeStringify(save,'')+'\0';
+  const jb=new TextEncoder().encode(js);
+  const comp=pako.deflate(jb,{level:6});
+  const hdr=rawBuf.slice(0,zlibOff);
+  // Compute MD5 over the actual bytes that get compressed (same as what game will decompress)
+  const m=new TextEncoder().encode(md5bytes(jb));
+  for(let i=0;i<32;i++)hdr[8+i]=m[i];
+  const us=wLE(jb.length),cs=wLE(comp.length);
+  for(let i=0;i<4;i++){hdr[41+i]=us[i];hdr[45+i]=cs[i];}
+  const out=new Uint8Array(hdr.length+comp.length);
+  out.set(hdr);out.set(comp,hdr.length);return out;
+}
+
+function exportSave(){
+  try{
+    const out=repack();
+    const blob=new Blob([out],{type:'application/octet-stream'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=origName;a.click();
+    dirty=false;setStatus('exported -- drop into your TMNTSF folder','ok');
+  }catch(err){setStatus('export error: '+err.message,'err');}
+}
+
+function setStatus(msg,cls){const el=document.getElementById('status');el.textContent=msg;el.className='status'+(cls?' '+cls:'');}
+function markDirty(){dirty=true;document.getElementById('save-btn').disabled=false;setStatus('unsaved changes','');}
+
+function collapsible(title, colorHex, buildFn){
+  const id='coll-'+Math.random().toString(36).slice(2);
+  const wrap=document.createElement('div');wrap.className='coll-section';
+  const hdr=document.createElement('div');hdr.className='coll-header';
+  hdr.innerHTML=`<span style="color:${colorHex||'var(--mu)'}">${title}</span><span class="coll-arrow">&#9660;</span>`;
+  const body=document.createElement('div');body.className='coll-body';
+  hdr.addEventListener('click',()=>{hdr.classList.toggle('open');body.classList.toggle('open');});
+  wrap.appendChild(hdr);wrap.appendChild(body);
+  buildFn(body);
+  return wrap;
+}
+
+function pmBtn(action,key,extra){
+  return `<button class="bs-btn" data-action="${action}" data-key="${key}" ${extra||''}>${action==='inc'?'<img src="media/images/plus.png" alt="increase" class="btn-icon">':'<img src="media/images/minus.png" alt="decrease" class="btn-icon">'}</button>`;
+}
+
+function bossRow(label, key, editable, extraClass){
+  const val=sv(key);
+  const cls=editable?'editable':'';
+  return `<div class="boss-stat-row">
+    <span class="bs-label ${cls}">${label}</span>
+    <div class="bs-val-wrap">
+      ${editable?pmBtn('dec',key):''}
+      <span class="bs-val ${editable?'':'computed'}" id="bsv-${key}">${val}</span>
+      ${editable?pmBtn('inc',key):''}
+    </div>
+  </div>`;
+}
+
+function render(){
+  document.getElementById('dz').style.display='none';
+  document.getElementById('editor').classList.add('active');
+  document.getElementById('save-btn').disabled=false;
+  const lt=save.state.lifetime,st=lt.stats;
+  document.getElementById('hdr-meta').innerHTML=`<div class="handle">${save.handle}</div><div>${save.player_id}</div>`;
+  const hrs=st.time_in_game?Math.round(st.time_in_game.value/3600):0;
+  document.getElementById('psbar').innerHTML=[
+    ['runs',sv('runs_started')],['victories',sv('stat_shredder_victory')],
+    ['kills',sv('kills').toLocaleString()],['deaths',sv('deaths')?Math.round(save.state.lifetime.stats.deaths.values.find(x=>x.key===0)?.value||0):0],
+    ['hours',hrs],['artifacts',lt.artifact_inventory.artifact_symbols.length],
+    ['dreamer coins',(sv('light_coins')-sv('spent_light_coins')).toLocaleString()],
+    ['dragon coins',(sv('dark_coins')-sv('spent_dark_coins')).toLocaleString()],
+  ].map(([l,v])=>`<div class="psc"><div class="psc-l">${l}</div><div class="psc-v">${v}</div></div>`).join('');
+  renderArtifacts();renderCoins();renderCharStats();renderGlobalStats();renderBossStats();
+}
+
+function renderArtifacts(){
+  const inv=save.state.lifetime.artifact_inventory;
+  const owned=inv.artifact_symbols.map(String);
+  const ownedLvl={};owned.forEach((s,i)=>ownedLvl[s]=inv.artifact_levels[i]);
+  const missing=Object.keys(ARTIFACTS).filter(s=>!owned.includes(s));
+  const grid=document.getElementById('art-grid');grid.innerHTML='';
+
+  const mk=(sym,isOwned)=>{
+    const a=ARTIFACTS[sym]||['Unknown ('+sym+')',6,['']];
+    const name=a[0],maxLv=a[1];
+    const lv=isOwned?(ownedLvl[sym]||1):1;
+    const desc=artDesc(sym,isOwned?lv:1);
+    const imgSrc=`media/images/${Math.abs(parseInt(sym))}.png`;
+    const d=document.createElement('div');d.className='art-card '+(isOwned?'owned':'missing');
+    d.innerHTML=`
+      <div class="art-icon"><img src="${imgSrc}" alt="" style="width:40px;height:40px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-${isOwned?'shield':'lock'}" aria-hidden="true" style="font-size:22px;color:${isOwned?'var(--g)':'var(--y)'};display:none;width:100%;height:100%;align-items:center;justify-content:center;"></i></div>
+      <div class="art-info">
+        <div class="art-name">${name}</div>
+        <div class="art-desc" id="desc${sym}">${desc}</div>
+        <div class="art-id">${sym} &middot; max Lv ${maxLv}</div>
+      </div>
+      <div class="art-ctrl">
+        ${isOwned?`
+          <button class="lv-btn" data-s="${sym}" data-d="-1" title="decrease level"><img src="media/images/minus.png" alt="decrease" class="btn-icon"></button>
+          <span class="lv-disp" id="lv${sym}">Lv ${lv}</span>
+          <button class="lv-btn" data-s="${sym}" data-d="1" title="increase level"><img src="media/images/plus.png" alt="increase" class="btn-icon"></button>
+        `:`<button class="add-btn" data-s="${sym}" data-action="add">+ add</button>`}
+      </div>`;
+    grid.appendChild(d);
+  };
+
+  owned.forEach(s=>mk(s,true));missing.forEach(s=>mk(s,false));
+}
+
+function renderCoins(){
+  const lE=sv('light_coins'),lS=sv('spent_light_coins');
+  const dE=sv('dark_coins'),dS=sv('spent_dark_coins');
+  document.getElementById('coin-summary').innerHTML=`
+    <div class="coin-card">
+      <div class="coin-title dreamer">Dreamer Coins (light)</div>
+      ${[['From bosses','light_coins_earned_boss'],['From rewards','light_coins_earned_reward'],
+        ['From veterans','light_coins_earned_veteran'],['From champions','light_coins_earned_champion'],
+        ['Reward bonuses','light_coins_earned_reward_bonus'],
+      ].map(([l,k])=>`<div class="coin-row"><span class="lbl">${l}</span><span class="val">${sv(k).toLocaleString()}</span></div>`).join('')}
+      <div class="coin-row"><span class="lbl">Total spent</span><span class="val">${lS.toLocaleString()}</span></div>
+      <div class="coin-available">
+        <span class="coin-avail-label">Available now:</span>
+        <input class="coin-avail-input" id="dreamer-avail" type="number" value="${lE-lS}" min="0">
+      </div>
+    </div>
+    <div class="coin-card">
+      <div class="coin-title dragon">Dragon Coins (dark)</div>
+      ${[['From bosses','dark_coins_earned_boss'],['From rewards','dark_coins_earned_reward'],
+        ['From veterans','dark_coins_earned_veteran'],['From champions','dark_coins_earned_champion'],
+        ['Reward bonuses','dark_coins_earned_reward_bonus'],
+      ].map(([l,k])=>`<div class="coin-row"><span class="lbl">${l}</span><span class="val">${sv(k).toLocaleString()}</span></div>`).join('')}
+      <div class="coin-row"><span class="lbl">Total spent</span><span class="val">${dS.toLocaleString()}</span></div>
+      <div class="coin-available">
+        <span class="coin-avail-label">Available now:</span>
+        <input class="coin-avail-input dragon" id="dragon-avail" type="number" value="${dE-dS}" min="0">
+      </div>
+    </div>`;
+
+  document.getElementById('dreamer-avail').addEventListener('change',e=>{
+    const want=Math.max(0,parseInt(e.target.value)||0);
+    setStat('light_coins',want+sv('spent_light_coins'));
+    markDirty();
+  });
+  document.getElementById('dragon-avail').addEventListener('change',e=>{
+    const want=Math.max(0,parseInt(e.target.value)||0);
+    setStat('dark_coins',want+sv('spent_dark_coins'));
+    markDirty();
+  });
+}
+
+function renderCharStats(){
+  const st=save.state.lifetime.stats;
+  const deathsArr=st.deaths?st.deaths.values||[]:[]; 
+  const vicArr=st.victories?st.victories.values||[]:[]; 
+
+  const grid=document.getElementById('char-grid');
+  grid.innerHTML=CHARS.map(c=>{
+    const dv=(deathsArr.find(x=>x.key===c.id)||{value:0}).value;
+    const vv=(vicArr.find(x=>x.key===c.id)||{value:0}).value;
+    const mkR=(lbl,val,uid)=>`
+      <div class="char-stat">
+        <span class="ck">${lbl}</span>
+        <div class="cvc">
+          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="dec"><img src="media/images/minus.png" alt="decrease" class="btn-icon"></button>
+          <span class="cv" id="cv-${c.name}-${uid}">${Math.round(val)}</span>
+          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="inc"><img src="media/images/plus.png" alt="increase" class="btn-icon"></button>
+        </div>
+      </div>`;
+    return `<div class="char-card">
+      <div class="char-name" style="color:${c.color}">${c.name}</div>
+      ${mkR('Shredder wins',sv(c.win),c.win)}
+      ${mkR('Deaths',dv,'__deaths__')}
+      ${mkR('Victories',vv,'__victories__')}
+      ${mkR('Talismans',sv(c.tal),c.tal)}
+      ${mkR('Wraps',sv(c.wrap),c.wrap)}
+    </div>`;
+  }).join('');
+}
+
+function recomputeShredder(){
+  const byChar=CHARS.reduce((s,c)=>s+sv(c.win),0);
+  setStat('stat_shredder_victory',byChar);
+  setStat('stat_shredder_victory_any',byChar);
+  setStat('stat_shredder_narrative_victory',byChar);
+  ['bsv-stat_shredder_victory','bsv-stat_shredder_victory_any','bsv-stat_shredder_narrative_victory'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent=byChar;
+  });
+}
+
+function recomputeKarai(){
+  const total=sv('stat_karai_victory_kunai')+sv('stat_karai_victory_flame')+sv('stat_karai_victory_shadow_hard')+sv('stat_karai_victory_gauntlet_hard');
+  setStat('stat_karai_victory_any',total);
+  const el=document.getElementById('bsv-stat_karai_victory_any');if(el)el.textContent=total;
+}
+
+function recomputeLeatherhead(){
+  const total=sv('stat_leatherhead_victory_storm')+sv('stat_leatherhead_victory_waves')+sv('stat_leatherhead_victory_punkfrogs');
+  const base=Math.max(sv('stat_leatherhead_victory'),total);
+  setStat('stat_leatherhead_victory',base);setStat('stat_leatherhead_victory_any',base);
+  ['bsv-stat_leatherhead_victory','bsv-stat_leatherhead_victory_any'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=base;});
+}
+
+function recomputeBebop(){
+  const base=sv('stat_beboprocksteady_victory');
+  setStat('stat_beboprocksteady_victory_any',base);
+  const el=document.getElementById('bsv-stat_beboprocksteady_victory_any');if(el)el.textContent=base;
+}
+
+function renderBossStats(){
+  const container=document.getElementById('stat-sections');
+  if(!container)return;
+
+  const bossWrap=document.createElement('div');bossWrap.id='boss-sections';
+
+  const charColors={'Michelangelo':'#f97316','Leonardo':'#3b82f6','Raphael':'#ef4444','Donatello':'#a855f7','Casey Jones':'#6b7280','Metalhead':'#f5bb0b','Alopex':'#14b8a6'};
+
+  const addBossSection=(title,color,buildFn)=>{
+    const sec=collapsible(title,color,body=>{
+      const grid=document.createElement('div');grid.className='boss-grid';body.appendChild(grid);
+      buildFn(grid);
+    });
+    bossWrap.appendChild(sec);
+  };
+
+  addBossSection('Boss - Leatherhead','#22c55e',grid=>{
+    const c1=document.createElement('div');c1.className='boss-card';
+    c1.innerHTML=`<div class="boss-card-title">Results</div>
+      ${bossRow('Reached','stat_leatherhead_reached',true)}
+      ${bossRow('Victories (total)','stat_leatherhead_victory',false)}
+      ${bossRow('Victories (any)','stat_leatherhead_victory_any',false)}
+      ${bossRow('Hard victories','stat_leatherhead_victory_hard',true)}`;
+    const c2=document.createElement('div');c2.className='boss-card';
+    c2.innerHTML=`<div class="boss-card-title">Variants</div>
+      ${bossRow('Reached (storm)','stat_leatherhead_reached_storm',true)}
+      ${bossRow('Victories (storm)','stat_leatherhead_victory_storm',true)}
+      ${bossRow('Reached (waves)','stat_leatherhead_reached_waves',true)}
+      ${bossRow('Victories (waves)','stat_leatherhead_victory_waves',true)}
+      ${bossRow('Reached (punk frogs)','stat_leatherhead_reached_punkfrogs',true)}
+      ${bossRow('Victories (punk frogs)','stat_leatherhead_victory_punkfrogs',true)}`;
+    const c3=document.createElement('div');c3.className='boss-card';
+    c3.innerHTML=`<div class="boss-card-title">Rat kills during fight</div>
+      ${bossRow('Rats (total)','stat_leatherhead_rats_any_defeated',true)}
+      ${bossRow('Small rats','stat_leatherhead_rats_small_defeated',true)}
+      ${bossRow('Large rats','stat_leatherhead_rats_large_defeated',true)}
+      ${bossRow('Massive rats','stat_leatherhead_rats_massive_defeated',true)}
+      ${bossRow('Penta kills','stat_leatherhead_rats_multi_kills_penta',true)}
+      ${bossRow('Deca kills','stat_leatherhead_rats_multi_kills_deca',true)}
+      ${bossRow('Highest multi-kill','stat_leatherhead_rats_multi_kills_highest',true)}`;
+    grid.appendChild(c1);grid.appendChild(c2);grid.appendChild(c3);
+  });
+
+  addBossSection('Boss - Karai','#ec4899',grid=>{
+    const c1=document.createElement('div');c1.className='boss-card';
+    c1.innerHTML=`<div class="boss-card-title">Results</div>
+      ${bossRow('Reached','stat_karai_reached',true)}
+      ${bossRow('Victories (any - computed)','stat_karai_victory_any',false)}`;
+    const c2=document.createElement('div');c2.className='boss-card';
+    c2.innerHTML=`<div class="boss-card-title">Variants (edit these)</div>
+      ${bossRow('Victories (kunai)','stat_karai_victory_kunai',true)}
+      ${bossRow('Reached (flame)','stat_karai_reached_flame',true)}
+      ${bossRow('Victories (flame)','stat_karai_victory_flame',true)}
+      ${bossRow('Victories (shadow hard)','stat_karai_victory_shadow_hard',true)}
+      ${bossRow('Victories (gauntlet hard)','stat_karai_victory_gauntlet_hard',true)}`;
+    grid.appendChild(c1);grid.appendChild(c2);
+  });
+
+  addBossSection('Boss - Bebop & Rocksteady','#f97316',grid=>{
+    const c1=document.createElement('div');c1.className='boss-card';
+    c1.innerHTML=`<div class="boss-card-title">Results</div>
+      ${bossRow('Reached','stat_beboprocksteady_reached',true)}
+      ${bossRow('Victories','stat_beboprocksteady_victory',true)}
+      ${bossRow('Victories (any - computed)','stat_beboprocksteady_victory_any',false)}
+      ${bossRow('Hard victories','stat_beboprocksteady_victory_hard',true)}`;
+    grid.appendChild(c1);
+  });
+
+  addBossSection('Boss - Shredder','#ef4444',grid=>{
+    const c1=document.createElement('div');c1.className='boss-card';
+    c1.innerHTML=`<div class="boss-card-title">Results</div>
+      ${bossRow('Victories (total - computed)','stat_shredder_victory',false)}
+      ${bossRow('Victories (any - computed)','stat_shredder_victory_any',false)}
+      ${bossRow('Narrative victories (computed)','stat_shredder_narrative_victory',false)}
+      ${bossRow('Hard victories','stat_shredder_victory_hard',true)}`;
+    const c2=document.createElement('div');c2.className='boss-card';
+    c2.innerHTML=`<div class="boss-card-title">By character (edit these)</div>
+      ${CHARS.map(c=>`${bossRow(c.name,c.win,true)}`).join('')}`;
+    const c3=document.createElement('div');c3.className='boss-card';
+    c3.innerHTML=`<div class="boss-card-title">By build (edit these)</div>
+      ${bossRow('Flame build','stat_shredder_victory_flame',true)}
+      ${bossRow('Ninja build','stat_shredder_victory_ninja',true)}
+      ${bossRow('Ooze build','stat_shredder_victory_ooze',true)}
+      ${bossRow('Water build','stat_shredder_victory_water',true)}
+      ${bossRow('Astral build','stat_shredder_victory_astral',true)}
+      ${bossRow('Utrom build','stat_shredder_victory_utrom',true)}`;
+    grid.appendChild(c1);grid.appendChild(c2);grid.appendChild(c3);
+  });
+
+  addBossSection('Boss - Punk Frog Mech','#84cc16',grid=>{
+    const c1=document.createElement('div');c1.className='boss-card';
+    c1.innerHTML=`<div class="boss-card-title">Results</div>
+      ${bossRow('Victories','stat_punkfrogmech_victory',true)}
+      ${bossRow('Hard victories','stat_punkfrogmech_victory_hard',true)}`;
+    const c2=document.createElement('div');c2.className='boss-card';
+    c2.innerHTML=`<div class="boss-card-title">Variants</div>
+      ${bossRow('Reached (A)','stat_punkfrogMech_reached_variantA',true)}
+      ${bossRow('Victories (A)','stat_punkfrogmech_victory_variantA',true)}
+      ${bossRow('Reached (B)','stat_punkfrogMech_reached_variantB',true)}
+      ${bossRow('Victories (B)','stat_punkfrogmech_victory_variantB',true)}
+      ${bossRow('Reached (C)','stat_punkfrogMech_reached_variantC',true)}
+      ${bossRow('Victories (C)','stat_punkfrogmech_victory_variantC',true)}`;
+    grid.appendChild(c1);grid.appendChild(c2);
+  });
+
+  container.insertBefore(bossWrap,container.firstChild);
+
+  bossWrap.addEventListener('click',e=>{
+    const btn=e.target.closest('.bs-btn');if(!btn)return;
+    const {action,key}=btn.dataset;
+    const delta=action==='inc'?1:-1;
+    const nv=Math.max(0,sv(key)+delta);
+    setStat(key,nv);
+    const el=document.getElementById('bsv-'+key);if(el)el.textContent=nv;
+
+    if(key.startsWith('stat_shredder_victory_')&&key!=='stat_shredder_victory_hard')recomputeShredder();
+    if(key.startsWith('stat_karai_victory_')&&key!=='stat_karai_victory_any')recomputeKarai();
+    if(key.startsWith('stat_leatherhead_victory_')&&key!=='stat_leatherhead_victory'&&key!=='stat_leatherhead_victory_any')recomputeLeatherhead();
+    if(key==='stat_beboprocksteady_victory')recomputeBebop();
+
+    markDirty();
+  });
+}
+
+function renderGlobalStats(){
+  const st=save.state.lifetime.stats;
+  const filter=(document.getElementById('ss')||{}).value?.toLowerCase()||'';
+  const HIDE=new Set([...ADV_KEYS,...CHAR_STAT_KEYS,...BOSS_SECTIONS_KEYS]);
+
+  const container=document.getElementById('stat-sections');
+  const bossEl=document.getElementById('boss-sections');
+  container.innerHTML='';
+  if(bossEl)container.appendChild(bossEl);
+
+  STAT_SECTIONS.forEach(section=>{
+    const rows=section.keys.filter(([k,l])=>{
+      if(HIDE.has(k))return false;
+      if(!filter)return true;
+      return k.includes(filter)||l.toLowerCase().includes(filter);
+    });
+    if(!rows.length)return;
+    const sec=collapsible(section.title,'var(--mu)',body=>{
+      const list=document.createElement('div');list.className='stat-list';body.appendChild(list);
+      rows.forEach(([k,l])=>{
+        const val=st[k]&&st[k].value!==undefined?Math.round(st[k].value):0;
+        const row=document.createElement('div');row.className='stat-row';
+        row.innerHTML=`<div class="stat-key"><span class="stat-label">${l}</span>${k}</div><input class="stat-val" type="number" value="${val}" data-key="${k}" step="1" min="0">`;
+        list.appendChild(row);
+        row.querySelector('input').addEventListener('change',e=>{
+          const nv=parseFloat(e.target.value);if(isNaN(nv))return;
+          setStat(k,nv);markDirty();
+        });
+      });
+    });
+    container.appendChild(sec);
+  });
+
+  const advKeys=Object.keys(st).filter(k=>ADV_KEYS.has(k));
+  const advList=document.getElementById('adv-list');advList.innerHTML='';
+  advKeys.forEach(k=>{
+    const val=st[k]&&st[k].value!==undefined?Math.round(st[k].value):0;
+    const row=document.createElement('div');row.className='stat-row';
+    row.innerHTML=`<div class="stat-key"><span class="stat-label">${k.replace(/_/g,' ')}</span>${k}</div><input class="stat-val" type="number" value="${val}" data-key="${k}" step="1" min="0">`;
+    advList.appendChild(row);
+    row.querySelector('input').addEventListener('change',e=>{
+      const nv=parseFloat(e.target.value);if(isNaN(nv))return;setStat(k,nv);markDirty();
+    });
+  });
+}
+
+document.getElementById('fi').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+document.getElementById('save-btn').addEventListener('click',exportSave);
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+}));
+document.getElementById('adv-toggle').addEventListener('click',()=>{
+  const s=document.getElementById('adv-section');const show=s.classList.toggle('show');
+  document.getElementById('adv-toggle').textContent=show?'hide advanced stats':'show advanced / hidden stats';
+});
+document.getElementById('ss').addEventListener('input',renderGlobalStats);
+
+document.getElementById('art-grid').addEventListener('click',e=>{
+  if(!save)return;
+  const add=e.target.closest('[data-action="add"]');
+  const lb=e.target.closest('.lv-btn');
+  const inv=save.state.lifetime.artifact_inventory;
+  if(add){
+    const sym=add.dataset.s;
+    const symInt=parseInt(sym);
+    inv.artifact_symbols.push(symInt);
+    inv.artifact_levels.push(1);
+    coopAddArtifact(symInt,1);
+    markDirty();render();
+  }
+  if(lb){
+    const sym=lb.dataset.s,dir=parseInt(lb.dataset.d);
+    const symInt=parseInt(sym);
+    const idx=inv.artifact_symbols.indexOf(symInt);
+    if(idx!==-1){
+      const newLv=inv.artifact_levels[idx]+dir;
+      if(newLv<1){
+        inv.artifact_symbols.splice(idx,1);inv.artifact_levels.splice(idx,1);
+        coopRemoveArtifact(symInt);
+        markDirty();render();return;
+      }
+      const lv=Math.min(artMaxLevel(sym),newLv);
+      inv.artifact_levels[idx]=lv;
+      coopSetLevel(symInt,lv);
+      const lvEl=document.getElementById('lv'+sym);if(lvEl)lvEl.textContent='Lv '+lv;
+      const descEl=document.getElementById('desc'+sym);if(descEl)descEl.textContent=artDesc(sym,lv);
+      markDirty();
+    }
+  }
+});
+
+document.getElementById('char-grid').addEventListener('click',e=>{
+  if(!save)return;
+  const btn=e.target.closest('[data-action]');if(!btn)return;
+  const {char,uid,action}=btn.dataset;
+  const delta=action==='inc'?1:-1;
+  const c=CHARS.find(x=>x.name===char);if(!c)return;
+  const st=save.state.lifetime.stats;
+  if(uid==='__deaths__'){
+    const arr=st.deaths?st.deaths.values:[];
+    const found=arr.find(x=>x.key===c.id);
+    const cur=found?found.value:0;const nv=Math.max(0,cur+delta);
+    if(found)found.value=nv;else arr.push({key:c.id,value:nv});
+    const el=document.getElementById(`cv-${char}-${uid}`);if(el)el.textContent=Math.round(nv);
+  } else if(uid==='__victories__'){
+    const arr=st.victories?st.victories.values:[];
+    const found=arr.find(x=>x.key===c.id);
+    const cur=found?found.value:0;const nv=Math.max(0,cur+delta);
+    if(found)found.value=nv;else arr.push({key:c.id,value:nv});
+    const el=document.getElementById(`cv-${char}-${uid}`);if(el)el.textContent=Math.round(nv);
+  } else {
+    const cur=sv(uid);const nv=Math.max(0,cur+delta);
+    setStat(uid,nv);
+    const el=document.getElementById(`cv-${char}-${uid}`);if(el)el.textContent=nv;
+  }
+  markDirty();
+});
+
+})();
+</script>
