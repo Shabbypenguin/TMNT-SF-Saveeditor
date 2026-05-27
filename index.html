@@ -1,3 +1,4 @@
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap');
 :root{--g:#4caf50;--gdim:rgba(76,175,80,0.12);--y:#ffd600;--r:#e53935;--bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--bd:rgba(76,175,80,0.25);--tx:#e8e8e8;--mu:#777;--fd:'Bebas Neue',sans-serif;--fb:'IBM Plex Sans',sans-serif;--fm:'IBM Plex Mono',monospace;}
@@ -96,6 +97,36 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .bs-btn{background:var(--s1);border:1px solid var(--bd);color:var(--tx);width:24px;height:24px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:background .1s;font-size:15px;line-height:1;}
 .bs-btn:hover{background:var(--gdim);border-color:var(--g);}
 
+/* POWER INJECT GRID */
+.power-inject-section{margin-top:18px;}
+.power-tree-block{margin-bottom:14px;}
+.power-tree-title{font-family:var(--fd);font-size:15px;letter-spacing:1px;margin-bottom:8px;padding:4px 0;border-bottom:1px solid var(--bd);}
+.power-inject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px;}
+.pi-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:8px 12px;display:flex;align-items:center;gap:8px;}
+.pi-row.active{border-color:rgba(76,175,80,0.4);background:rgba(76,175,80,0.05);}
+.pi-row.mapped{border-color:rgba(76,175,80,0.2);}
+.pi-info{flex:1;min-width:0;}
+.pi-name{font-size:13px;font-weight:500;line-height:1.2;}
+.pi-sym{font-family:var(--fm);font-size:10px;color:#444;margin-top:2px;}
+.pi-ctrl{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.pi-lv{font-family:var(--fm);font-size:12px;min-width:30px;text-align:center;color:var(--g);}
+.pi-lv.zero{color:#444;}
+
+/* ROOM SEQUENCE */
+.room-seq{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-bottom:18px;}
+.room-card{background:var(--s1);border:1px solid var(--bd);border-radius:6px;padding:12px 14px;}
+.room-card.current{border-color:var(--g);background:rgba(76,175,80,0.06);}
+.room-card.past{opacity:.4;}
+.room-num{font-family:var(--fd);font-size:13px;color:var(--mu);letter-spacing:.5px;margin-bottom:6px;}
+.room-num .current-tag{color:var(--g);font-size:11px;margin-left:6px;}
+.room-field{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.room-field:last-child{border-bottom:none;}
+.room-field label{color:var(--mu);font-family:var(--fm);}
+.room-select{font-family:var(--fm);font-size:12px;color:var(--tx);background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:2px 6px;}
+.room-select:focus{outline:none;border-color:var(--g);}
+
+.enh-row.enh-inactive{opacity:.45;}
+.enh-row.enh-inactive:hover{opacity:.7;}
 /* STATS */
 .stat-search{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:5px;color:var(--tx);padding:9px 14px;font-family:var(--fm);font-size:14px;margin-bottom:14px;}
 .stat-search:focus{outline:none;border-color:var(--g);}
@@ -109,6 +140,30 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .adv-section{display:none;}
 .adv-section.show{display:block;}
 
+.run-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:22px;}
+.run-card{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:18px;}
+.run-card-title{font-family:var(--fd);font-size:18px;letter-spacing:1px;color:var(--g);margin-bottom:14px;}
+.run-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.run-row:last-child{border-bottom:none;}
+.run-lbl{color:var(--mu);font-family:var(--fm);}
+.run-val{font-family:var(--fm);font-size:14px;color:var(--g);width:100px;text-align:right;background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:4px 8px;}
+.run-val:focus{outline:none;border-color:var(--g);}
+.run-select{font-family:var(--fm);font-size:13px;color:var(--g);background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:4px 8px;width:200px;text-align:right;}
+.run-select:focus{outline:none;border-color:var(--g);}
+.no-run{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--mu);text-align:center;gap:12px;}
+.no-run i{font-size:48px;color:var(--bd);}
+.no-run-title{font-family:var(--fd);font-size:24px;letter-spacing:2px;color:var(--mu);}
+.enh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px;}
+.enh-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.enh-info{flex:1;min-width:0;}
+.enh-sym{font-family:var(--fm);font-size:11px;color:var(--mu);}
+.enh-name{font-size:13px;color:var(--tx);margin-bottom:2px;}
+.enh-ctrl{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.drop-zone.dz-loaded{padding:8px 20px;margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;}
+.drop-zone.dz-loaded .dz-title{display:none;}
+.drop-zone.dz-loaded .dz-sub{display:none;}
+.drop-zone.dz-loaded i{display:none;}
+.drop-zone.dz-loaded::after{content:'drop a new save file here to reload';font-family:var(--fm);font-size:11px;color:var(--mu);}
 .save-bar{position:sticky;bottom:0;background:var(--s1);border-top:1px solid var(--bd);padding:13px 20px;display:flex;align-items:center;gap:12px;}
 .save-btn{background:var(--g);border:none;color:#000;padding:11px 24px;border-radius:5px;cursor:pointer;font-family:var(--fd);font-size:19px;letter-spacing:1px;transition:background .15s,transform .1s;}
 .save-btn:hover{background:#66bb6a;}
@@ -136,11 +191,19 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
   <div class="psbar" id="psbar"></div>
   <div class="tabs">
     <button class="tab active" data-tab="artifacts">Artifacts</button>
+    <button class="tab" data-tab="run">Current Run</button>
+    <button class="tab" data-tab="upgrades">Upgrades</button>
     <button class="tab" data-tab="stats">Stats</button>
   </div>
   <div class="tc active" id="tab-artifacts">
     <div class="sec-title"><i class="ti ti-shield" aria-hidden="true"></i>Artifact inventory</div>
     <div class="art-grid" id="art-grid"></div>
+  </div>
+  <div class="tc" id="tab-run">
+    <div id="run-content"></div>
+  </div>
+  <div class="tc" id="tab-upgrades">
+    <div id="upgrades-content"></div>
   </div>
   <div class="tc" id="tab-stats">
     <div class="sec-title"><i class="ti ti-coin" aria-hidden="true"></i>Currency</div>
@@ -174,7 +237,7 @@ const _M = ['10%','12.5%','15%','17%','20%','22.5%'];
 const _md = (el) => _M.map(p=>`Guarantees next power is ${el}. +${p} double select on ${el}.`);
 
 const ARTIFACTS = {
-  // -- CONFIRMED (pak canonical name + user verified) --
+  // ── CONFIRMED (pak canonical name + user verified) ──
   '-1890023709':['Manhole Cover',        6, _md('Water')],
   '620203132':  ['Foot Clan Medallion',  6, _md('Flame')],
   '118435057':  ['Broken Ooze Canister', 6, _md('Ooze')],
@@ -188,7 +251,7 @@ const ARTIFACTS = {
   '-1216430156':['Vintage Blowtorch',       3, ['Every 7s, your next Final Strike Stuns non-boss enemies.','Every 6s, your next Final Strike Stuns non-boss enemies.','Every 5s, your next Final Strike Stuns non-boss enemies.']],
   '1639908458': ['Astral Charm',         6, ['+3s invulnerability after consuming a Splinter\'s Revive.','+3.5s invulnerability after consuming a Splinter\'s Revive.','+4s invulnerability after consuming a Splinter\'s Revive.','+4.5s invulnerability after consuming a Splinter\'s Revive.','+5s invulnerability after consuming a Splinter\'s Revive.','+5.5s invulnerability after consuming a Splinter\'s Revive.']],
   '-2131893020':['Mysterious Gofu',      3, ['Gain a random level 1 Tool at the start of each Chapter.','Gain a random level 2 Tool at the start of each Chapter.','Gain a random level 3 Tool at the start of each Chapter.']],
-  // -- UNCONFIRMED � canonical internal name in parentheses --
+  // ── UNCONFIRMED — canonical internal name in parentheses ──
   '152828709':  ['Busted Snare',            3, ['When you finish a room, all players heal 2 Health. This effect does not stack.','When you finish a room, all players heal 3 Health. This effect does not stack.','When you finish a room, all players heal 4 Health. This effect does not stack.']],
   '1801399113': ["Casey's Portrait",        3, ['When you finish a room, all players gain +10 Max Health. This effect does not stack.','When you finish a room, all players gain +15 Max Health. This effect does not stack.','When you finish a room, all players gain +20 Max Health. This effect does not stack.']],
   '-1582634853':['Positronic Motherboard',  6, ['+10% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+12.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+15% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+17.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+20% double select chance when selecting Robotics powers. Guarantees next power is Robotics.','+22.5% double select chance when selecting Robotics powers. Guarantees next power is Robotics.']],
@@ -214,7 +277,281 @@ function artDesc(sym, lv){
   return descs[Math.min(lv-1, descs.length-1)];
 }
 
-// Sync artifact changes to all coop slots that have inventory data
+// All known power names mapped to their tree — used for display once buff_symbol is confirmed
+// Format: name -> [tree, unlock, desc_with_slashes]
+const POWER_INFO = {
+  // Astral Dark
+  'Nightfall':['Astral (Dark)','Initial','Attacks apply Darkness for 3/4/5s. Enemies in Darkness take 10/15/20% more damage.'],
+  'Cloak of Shadow':['Astral (Dark)','Initial','Special or Tool grants Dark Shell for 1.8/2.4/3.2s, dealing 10/25/40 Dark damage and applying 1 stack of Darkness to nearby enemies.'],
+  'Nightfall':['Astral (Dark)','Initial','Final Strike applies 1 stack of Darkness for 3/4/5s and deals 10/15/25 Dark damage.'],
+  'Call of the Void':['Astral (Dark)','Secondary','Deal 10/15/20 Dark damage and pull in nearby enemies upon defeating an enemy affected by Darkness.'],
+  'Core Collapse':['Astral (Dark)','Secondary','Stun nearby enemies for 0.5/1/1.5s upon defeating an enemy affected by Darkness.'],
+  'Dark Attacks':['Astral (Dark)','Secondary','+25/40/60% Attack damage against enemies affected by Darkness.'],
+  'Dark Embrace':['Astral (Dark)','Secondary','+3/4/5% damage dealt and +5/7/10% Move Speed for each Astral Dark power obtained.'],
+  'Dark Star':['Astral (Dark)','Secondary',"Remove all Splinter's Revives. Gain +20% damage, plus 40% damage and heal 15% of Max HP for each removed."],
+  "Dragon's Claw":['Astral (Dark)','Secondary','+10% increased damage dealt. Gain an additional 15/20/25% whenever you select Dragon Coins in Room Rewards.'],
+  'Eternal Darkness':['Astral (Dark)','Secondary','+50/80/100% duration of Negative Effects you apply to enemies.'],
+  'Gift of the Dragon':['Astral (Dark)','Secondary','Gain 120 Dragon coins and 200 Scrap.'],
+  'Lingering Darkness':['Astral (Dark)','Secondary','Darkness deals 10/15/25 Dark damage per second to affected enemies.'],
+  'Shifting Shadow':['Astral (Dark)','Secondary','Dash deals 15/25/35 Dark damage, increased by 300% to targets affected by Darkness.'],
+  // Astral Light
+  'Light Attacks':['Astral (Light)','Initial','Attack damage increased by 4/7/10% of Max Health.'],
+  'Gift of the Dreamer':['Astral (Light)','Initial','Attacks deal 10/20/30% bonus Light damage.'],
+  'Shimmering Shield':['Astral (Light)','Initial','Grant Light Shell for 1.5/2.5/3.5s at the start of your Dash.'],
+  'Ancestral Guardian':['Astral (Light)','Secondary','Light Shell increases Elemental damage by 20/30/40% while active.'],
+  'Piercing Light':    ['Astral (Light)','Secondary','Light Shell deals 15/25/35 Light damage per second to nearby enemies while active.'],
+  'Daybreak':['Astral (Light)','Secondary','Attacks apply 1/2/3 stack(s) of Blinding Light for 3/4/5s. Each stack reduces damage dealt by 4/6/8%. Max 5 stacks.'],
+  'Eternal Light':['Astral (Light)','Secondary','+40/60/80% Positive Effect duration.'],
+  'Light Embrace':['Astral (Light)','Secondary','Reduce damage received by 2/2.5/3% for each Astral Light power obtained.'],
+  'Radiant Warrior':['Astral (Light)','Secondary','Special and Tool grants Light Shell for 1.5/3/4.5s.'],
+  'Revival':['Astral (Light)','Secondary',"Gain 1 Splinter's Revive. +30/60 Max Health."],
+  'Astral Insight':['Astral (Light)','After Shimmering Shield','Increase damage by 30/40/60% while Light Shell is active.'],
+  'Illumination':['Astral (Light)','After Shimmering Shield','Light Shell reflects projectiles. Reflected projectiles deal 45/60/75% of Max Health as Light damage.'],
+  'Revved Up':['Astral (Light)','After Daybreak','+20/25/30% chance of dodging enemy attacks when they are affected by Blinding Light.'],
+  // Flame
+  'Flame Abilities':['Flame','Initial','Special and Tool deals 15/25/40 Flame damage.'],
+  'Flame Dash':['Flame','Initial','Deal 30/50/70 Flame damage to nearby enemies at the start of a Dash.'],
+  'Flame Dash':['Flame','Initial','Dash leaves a fire trail dealing 10/15/20 Flame damage per second.'],
+  'Flame Strike':['Flame','Initial','Final Strike causes an explosion, dealing 23/35/45 Flame damage to nearby enemies.'],
+  'Furious Attacks':['Flame','Initial','+20/35/50% Attack Critical Hit chance.'],
+  'Blazing Inferno':['Flame','Secondary','Damage from Inferno is increased by 10/20/30%.'],
+  'Focus Fire':     ['Flame','Secondary','Inferno targets the same enemy, dealing 30/60/90% more damage.'],
+  'Rage':['Flame','Initial','Deal 40/70/100% increased damage while below 35% Health.'],
+  'Rapid Fire':['Flame','Initial','+20/25/50% damage dealt and +25/40/55% Move Speed for 25/35/45s after the start of combat.'],
+  'Focus Fire':['Flame','After Flame damage','+15/20/30% Flame damage against Bosses.'],
+  'Inferno':['Flame','After Flame damage','Apply Inferno to enemies hit by Flame damage for 3s. Inferno deals 15/20/25 Flame damage per second.'],
+  'Precision':['Flame','After Furious Attacks','+60/120/180% Critical Hit damage.'],
+  'Incendiary Strikes':['Flame','After Furious Attacks','Deal 50/75/100 Flame damage when scoring a Critical Hit.'],
+  'Blazing Inferno':['Flame','After Inferno','+3/4/5s Inferno duration.'],
+  'Preheated':['Flame','After Inferno','+15/30/60% Global Critical Hit chance against targets affected by Inferno.'],
+  'Trailblazer':['Flame','After Rapid Fire','+15s duration of Rapid Fire. Whilst active, defeating an enemy grants +1/2/3s duration and +5/10/15% damage.'],
+  // Ninja
+  'Adrenaline':['Ninja','Initial','Gain a stack of Adrenaline upon defeating an enemy. Adrenaline increases Physical damage by 5/10/15%. 5 stacks max.'],
+  'First Strike':['Ninja','Initial','+30/45/60% damage dealt for 1s after a Dash.'],
+  'Quick Feet':['Ninja','Initial','+1 Dash charge.'],
+  'Shinobi Supremacy':['Ninja','Initial','+10/15/20% Dodge chance.'],
+  'Shuriken Attacks':['Ninja','Initial','Attacks have a 30/60/100% chance to throw a Shuriken forward.'],
+  'Art of Darkness':['Ninja','After Adrenaline','Adrenaline now also increases Elemental damage by 15/20/25%.'],
+  'Heightened Senses':['Ninja','After Adrenaline','Gain 1/2/3 stack(s) of Adrenaline upon a Final Strike.'],
+  'Quick Hands':['Ninja','After Shuriken Attacks','+1/2/3 Shuriken and Kunai thrown.'],
+  'Shuriken Breaker':['Ninja','After Shuriken Attacks','Shuriken apply Guard Break to enemy targets for 2s. Guard Break increases damage received by 15/25/35%.'],
+  'Shuriken Engineer':['Ninja','After Shuriken Attacks','Shuriken have a 30/60/100% chance of triggering Tool bonuses.'],
+  'Throwing Arts: Chakram':['Ninja','After Shuriken Attacks','Shuriken now boomerang, returning to your current position. -30/-5/+20% Shuriken damage.'],
+  'Throwing Arts: Chakram':['Ninja','Secondary','Shurikens return after hitting, dealing 15/25/35% damage on return.'],
+  'Throwing Arts: Ricochet':['Ninja','After Shuriken Attacks','Shuriken now ricochet, bouncing off enemies. -20/+10/+40% Shuriken damage.'],
+  'Throwing Mastery':['Ninja','After Shuriken Attacks','+40/65/90% Shuriken and Kunai damage.'],
+  'Ninjutsu Tactics':['Ninja','After Shinobi Supremacy','+15/25/25% Global Critical Hit chance for 2/2.5/3s upon Dodge.'],
+  'Extended Assault':['Ninja','After Shuriken + Chakram/Ricochet + Quick Feet/First Strike','Throw 1/2/3 Shuriken forward at the start of your Dash.'],
+  // Ooze
+  'Ooze Abilities':['Ooze','Initial','Special and Tool applies 1/2/3 stack(s) of Ooze.'],
+  'Ooze Attack':['Ooze','Initial','Attacks have a 25/33/50% chance to apply 1 stack of Ooze.'],
+  'Ooze Dash':['Ooze','Initial','Apply 1/2/3 stack(s) of Ooze to enemies hit by your Dash.'],
+  'Ooze Strike':['Ooze','Initial','Final Strike applies 2/4/6 stack(s) of Ooze.'],
+  'Shelf Life':['Ooze','Initial','Boosts last for an additional 4/5/6 rooms.'],
+  'Special Spice':['Ooze','Initial','50/75/100% increased effectiveness of Boosts.'],
+  'Catalytic Consequence':['Ooze','After Ooze','Deal +15/25/35 damage with your Dash Attack for each Stack of Ooze on the enemy.'],
+  'Chunky Mixture':['Ooze','After Ooze','Ooze can now stack up to 6/8/10 times.'],
+  'Ooze Abilities':       ['Ooze','Initial','Deal 20/35/50 Ooze damage and apply 1 Ooze stack to nearby enemies.'],
+  'Ooze Dash':            ['Ooze','Initial','Dash leaves an Ooze trail. Enemies take 10/15/20 Ooze damage and gain 1 stack/s.'],
+  'Ooze Strike':          ['Ooze','Secondary','Final Strike deals 30/50/70% more damage and applies 3 Ooze stacks.'],
+  'Ooze Attack':          ['Ooze','Initial','Attacks deal 10/15/20 bonus Ooze damage and apply 1 Ooze stack.'],
+  'Unfortunate Odor':     ['Ooze','Secondary','Enemies with Ooze stacks have -20/-30/-40% damage reduction.'],
+  'Catalytic Consequence':['Ooze','Secondary','Ooze explosions deal 20/35/50% more damage.'],
+  'Goo':['Ooze','After Ooze','+60/120/180% Ooze damage per second.'],
+  "Goo'dbye":['Ooze','After Ooze','Enemies affected by Ooze explode on defeat, dealing 50/100/150 Ooze damage to nearby enemies.'],
+  'Living Ingredients':['Ooze','After Ooze','When Ooze expires, it is reapplied to 1/2/3 nearby unaffected enemies.'],
+  'Potency':['Ooze','After Ooze','Ooze is now applied with an additional 1/2/3 stack(s).'],
+  'Unfortunate Odor':['Ooze','After Ooze','Deal 10/45/80 Ooze damage and Stun enemies for 1s when applying Ooze. Bosses are not stunned.'],
+  // Robotics
+  'Wireless Charging':    ['Robotics','Initial','Charge Effect activates 20/30/40% faster.'],
+  'Overdrive':            ['Robotics','Initial','While at full charge, deal 10/15/20% bonus damage.'],
+  'Synthetic Rush':       ['Robotics','Secondary','Gain 10/15/20% Move Speed when Charge Effect activates.'],
+  'Thunderheart':         ['Robotics','Secondary','Charge Effect deals 15/25/35 Utrom damage to nearby enemies.'],
+  'Biomechanical Speed':  ['Robotics','Secondary','Special and Tool charge 15/25/35% faster at full charge.'],
+  'Ancestral Tech':       ['Robotics','Secondary','Charge Effect heals you for 5/8/12 Health.'],
+  'Compound Interest':    ['Robotics','Secondary','Each consecutive Charge Effect deals 5/8/12% more damage.'],
+  'Quick Study':          ['Robotics','Secondary','Gain a stacking 3/5/7% damage bonus per room cleared.'],
+  'Aggressive Savings':['Robotics','Initial','The more Scrap you have, the more damage you deal. Up to 100/150/200 at 2000 Scrap.'],
+  'Ascendancy':['Robotics','Initial',"Whenever you trigger a Splinter's Revive, refresh Cooldowns and gain +25/50/80% Elemental damage."],
+  'Blade Matrix':['Robotics','Initial','After reaching full Charge, attack to deal 25/35/50 in an area around you.'],
+  'Challenge Seeker':['Robotics','Initial','+75/100/150 Scrap when you enter a Gauntlet Challenge or Shimmering Portal.'],
+  'Compound Interest':['Robotics','Initial','Whenever you enter a room, gain 2/3/4% more Scrap.'],
+  'Laser Strike':['Robotics','Initial','After reaching full charge, attack to shoot a laser that deals 15/25/35 damage. Ricochets 2 times.'],
+  'Last Stand Protocol':['Robotics','Initial','The lower your HP, the higher your Charge Speed (up to 50/80/120%).'],
+  'Overdrive':['Robotics','Initial','After reaching full charge, attack to enhance all attacks with 15/20/30 Utrom damage for 5s.'],
+  'Regular Customer':['Robotics','Initial','Whenever you reach a Store, gain +1 Lucky Dice and 50/75/100 Scrap.'],
+  'Spare Bot':['Robotics','Initial',"Gain +1 Splinter's Revive. Splinter's Revive heals 10/25/50% more."],
+  'Survival Matrix':['Robotics','Initial',"If you're below 50% HP, your Tool fills 100/125/150% more quickly."],
+  'Wireless Charging':['Robotics','Initial','Dashing through an enemy fills your Special by +15/25/35% over 2s (does not stack).'],
+  'Biomechanical Speed':['Robotics','After Charge','Whenever your Charge Effect activates, gain 10/15/20% Special.'],
+  'Charge Attacks':['Robotics','After Charge','Whenever you Attack, gain +10/12/15% Charge.'],
+  'Empowerment':['Robotics','After Charge','Whenever your Charge Effect activates, gain +5/10/15% elemental damage for that Room.'],
+  'Photon Lance':['Robotics','After Charge','After reaching full Charge, attack to cause a lightning bolt to fall, dealing 90/150/150 damage.'],
+  'Power Surge':['Robotics','After Charge','Whenever you use a Tool or Special, gain +50/75/100% Charge.'],
+  'Quick Study':['Robotics','After Charge','Gain +100/120/150% Charge Speed.'],
+  'Synthetic Rush':['Robotics','After Charge','Whenever your Charge Effect activates, gain 1/2/3 Adrenaline.'],
+  'System Calibration':['Robotics','After Charge','Whenever your Charge Effect activates, gain +15/20/30% Charge Speed for this room.'],
+  'Thunderheart':['Robotics','After Charge',"You take no damage from Lightning Storms. Whenever you're hit by Lightning, gain 30/60/100% Charge."],
+  // Utrom
+  'Utrom Abilities':['Utrom','Initial','Special and Tool deals 20/30/40 Utrom damage.'],
+  'Utrom Attacks':['Utrom','Initial','Attacks have a 30/45/60% chance to deal 20/25/30 Utrom damage.'],
+  'Utrom Battery':['Utrom','Initial','At the start of each Room, fill your Tool by 10/15/20% per second for 10s.'],
+  'Utrom Dash':['Utrom','Initial','Dash deals 15 Utrom damage to 3/4/5 enemies near where you end up.'],
+  'Utrom Strike':['Utrom','Initial','Final Strike calls lightning to hit 2 nearby enemies for 20/25/30 Utrom damage.'],
+  'Chain Lightning':['Utrom','After Utrom damage','Utrom damage will strike again and chain out to two nearby enemies for 10/15/20 Utrom damage.'],
+  'Charged Up':['Utrom','After Utrom damage','Gain 1/2/3 stack(s) of Adrenaline upon using your Tool.'],
+  'Electrifying':['Utrom','After Utrom damage','Utrom damage applies Electrified to enemies for 3s. Electrified deals 10/15/20 Utrom damage per second. Max 3 stacks.'],
+  'Stormy Weather':['Utrom','After Utrom damage','Periodically deal 15/20/25 Utrom damage to 1 nearby enemy.'],
+  'Techno-Organic Interface':['Utrom','After Utrom damage','+10/20/30% Max Health. +15 Move Speed.'],
+  'Utrom Relay':['Utrom','After Utrom damage','Using your Special or Tool causes a Lightning Strike that deals 20/25/30 damage.'],
+  'Alternating Current':['Utrom','After Electrifying','Electrified additionally increases damage received by 30/50/70%.'],
+  // Legendary (cross-tree powers, always Lv1, unlock requires specific power combos)
+  'Dark Flame':             ['Legendary', 'Astral & Fire',      '+40% Flame damage against targets affected by Darkness.'],
+  'Finisher':               ['Legendary', 'Astral & Ninja',     'Attacks and Specials instantly defeat enemies below 15% health.'],
+  'Bright Spring':          ['Legendary', 'Astral & Water',     'Attacks restore 2 health.'],
+  'Light Hammer':           ['Legendary', 'Astral & Utrom',     'Utrom damage is increased by 10% of your Max Health.'],
+  'Critical Flow':          ['Legendary', 'Fire & Robotics',    'Whenever your Charge Effect activates, gain 3% Critical Hit Chance for this room.'],
+  'Frostfire':              ['Legendary', 'Fire & Water',       'Dealing Flame or Water damage deals 30% damage of the opposite element.'],
+  'Spontaneous Combustion': ['Legendary', 'Fire & Ooze',        '30% chance to deal 100 Flame damage when applying Ooze.'],
+  'Tempered Shuriken':      ['Legendary', 'Fire & Ninja',       '+40% Critical Hit chance with Shuriken.'],
+  'Revolution':             ['Legendary', 'Ninja & Utrom',      "Dash Attack's damage increased by 1% of the enemies' Max Health."],
+  'Slippery':               ['Legendary', 'Ninja & Ooze',       'Gain 20% Move Speed and charge Tool/Special 100% faster at maximum Adrenaline.'],
+  'Solution to Pollution':  ['Legendary', 'Ooze & Water',       '+3s Ooze duration. Enemies affected by Ooze gain 1 stack per second.'],
+  'Secret of the Ooze':     ['Legendary', 'Ooze & Utrom',       'Reduce damage received by 30%.'],
+  'Cascade Drive':          ['Legendary', 'Robotics & Water',   'Whenever your Charge Effect activates, gain 3% Multi-Hit Chance for this room.'],
+  'Shocking':               ['Legendary', 'Robotics & Utrom',   'After reaching full charge, deal 20 Utrom damage and Stun nearby enemies for 0.8s.'],
+  'Shatter':                ['Legendary', 'Utrom & Water',      'Deal 200 Water and Utrom damage when applying a Stun. Enemies no longer Stunned.'],
+  // Water
+  'Water Abilities':['Water','Initial','Special and Tool have a 60/80/100% chance to deal 55/70/85 Water damage.'],
+  'Water Attacks':['Water','Initial','Attacks deal 15/20/25 Water damage.'],
+  'Water Dash':['Water','Initial','Deal 45/60/75 Water damage to nearby enemies at the end of a Dash.'],
+  'Dilution':['Water','Initial','+20/30/40% Attack and Special damage area.'],
+  'Still Waters':['Water','Initial','If you have not attacked for 2s gain +80/100/120% damage and your next attack is a Final Strike. Lost upon Attack.'],
+  'Torrential Strike':['Water','Initial','Final Strike grants a stack of Torrent for 4s. Torrent increases Multi-Hit chance by 8/10/12%. Max 5 stacks.'],
+  'Frost':['Water','After Water damage','Water damage applies Frost for 5s, slowing the enemy by 50/60/70%.'],
+  'Heavy Rain':['Water','After Water damage','Deal 40/60/80% increased Water damage. The increase is double during Heavy Rain.'],
+  'Splash Damage':['Water','After Water damage','40/55/70% of Water damage is also dealt to nearby enemies.'],
+  'Pressure Nozzle':['Water','After Water damage','+15/20/30% damage dealt against Bosses.'],
+  'Flash Freeze':['Water','After Frost','Frost Stuns enemies for 0.7/1.2/1.5s when first applied. Does not affect bosses.'],
+  'Freeze':['Water','After Frost','Apply Frost to nearby enemies every 5/4/3s.'],
+  'High Tide':['Water','After Still Waters','While Still Waters is active, Final Strike causes +70/100/130 Water damage and +15% Movement Speed.'],
+  'Torrential Rain':['Water','After Torrential Strike','When you use Special or Tool, gain a Torrent Stack. Attacks deal +4/7/10 Water damage per Torrent stack.'],
+  'When it Rains':['Water','After Torrential Strike','Multi-Hits deal 30/45/60 Water damage.'],
+};
+
+// Replace slash-separated values with the one for the given level (1-3)
+function powerDesc(name, level){
+  const info=POWER_INFO[name];
+  if(!info||!info[2])return '';
+  const lv=Math.max(1,Math.min(3,level))-1;
+  return info[2].replace(/(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/g,(m,a,b,c)=>{
+    return [a,b,c][lv];
+  });
+}
+
+
+// category: 'inspiration' | 'tool' | 'power' | 'special'
+// Tools — descriptions confirmed, IDs partially mapped
+// Default tools: Leo=Shuriken, Don=Hardened Shell, Mike=Taunt, Raph=Turtle Line, Casey=The Juice, Metalhead=Mines, Alopex=TBD
+const TOOLS = {
+  'Shuriken':         'Throws 3 Shurikens in a cone. Each deals 15 damage. (Leonardo default)',
+  'Hardened Shell':   'Deal 40 Physical damage nearby. Immune to all damage for 1.8s. (Donatello default)',
+  'Taunt':            'Taunts nearby enemies for 8s. Taunted take 60 damage and are stunned 0.5s when hit. (Michelangelo default)',
+  'Turtle Line':      'Throw a line dealing 30 Physical damage. Pulls you to Bosses or pulls enemies to you. (Raphael default)',
+  'The Juice':        '+30% damage and rapid Special charge recovery for 6s. (Casey Jones default)',
+  'Mines':            'Deploy 3 mines, each dealing 30 damage. (Metalhead default)',
+  'Utrom Drone':      'Deploy a Utrom Drone that attacks nearby enemies.',
+  'Fireball':         'Fire 3 seeking fireballs. Each deals 100 Flame damage in an area on impact.',
+  'Meteor Storm':     'Call a meteor storm lasting 8s. Meteors deal 80 Flame damage on impact.',
+  'Ooze Shuriken':    'Throw 2 Ooze Shurikens. Each deals 25 Ooze damage.',
+  'Ride The Wave':    '+40% Move Speed for 6s. Deal 15 Water damage/s to nearby enemies during.',
+  'Smoke Bomb':       'Teleport forward dealing 70 Physical damage where you land. Triggers Dodge effect.',
+  'Shuriken Storm':   'Throw 8 Shurikens at nearby targets. Each deals 30 Physical damage.',
+  'Unstable Canister':'Deal 60 Ooze damage and apply 3 Ooze stacks to all nearby enemies.',
+  'Utrom Shuriken':   'Throw 2 Electric Shurikens. Each deals 25 Utrom damage.',
+  'Utrom Rod':        'Strike a nearby enemy with lightning 4 times for 25 Utrom damage.',
+  'Water Sweeper':    'Deal 80 Water damage to nearby enemies. Knocked back.',
+};
+
+const ENHANCEMENTS = {
+  // Michelangelo kit (confirmed)
+  '201029333':   ['Michelangelo - Inspiration 1', 'inspiration'],
+  '-1053443010': ['Michelangelo - Inspiration 2', 'inspiration'],
+  '-1070220629': ['Michelangelo - Tool (Taunt)',  'tool'],
+  // Casey Jones (insp 1 confirmed)
+  '1844912779':  ['Casey Jones - Inspiration 1',  'inspiration'],
+  '1861690398':  ['Casey Jones - Inspiration 2',  'inspiration'],
+  '-876652360':  ['Casey Jones - Tool (The Juice)',    'tool'],
+  '228613591':   ['Tool (Utrom Drone)',                  'tool'],
+  // Alopex kit (IDs confirmed, slot order unknown)
+  '498986860':   ['Alopex - Unknown A (Tool or Insp)', 'inspiration'],
+  '831103151':   ['Alopex - Unknown B (Tool or Insp)', 'inspiration'],
+  '847880770':   ['Alopex - Unknown C (Tool or Insp)', 'inspiration'],
+  // Metalhead kit (IDs confirmed, slot order unknown)
+  '-580224395':  ['Metalhead - Inspiration 2',               'inspiration'],
+  '1212610709':  ['Unknown - seen in Casey run Lv2 (not an inspiration)', 'power'],
+
+  '1389435912':  ['Metalhead - Unknown C (Tool or Insp)', 'inspiration'],
+  // Raphael kit (tool confirmed, inspirations are 2 of the remaining 4 unknowns)
+  '-619638694':  ['Raphael - Tool (Turtle Line)',       'tool'],
+  '-1425859366': ['Raphael - Unknown A (Insp or power)','inspiration'],
+  '-2900911':    ['Raphael - Unknown B (Insp or power)','inspiration'],
+  '-2087857272': ['Raphael - Inspiration 2',             'inspiration'],
+  '-2037524415': ['Raphael - Unknown D (Insp or power)','inspiration'],
+  '-120344244':  ['Raphael - Unknown E (Insp or power)','inspiration'],
+  // Leo kit (IDs confirmed, slot order unknown)
+  '-1615068019': ['Leo - Unknown A (Tool or Insp)', 'inspiration'],
+  '1864026597':  ['Leo - Unknown B (Tool or Insp)', 'inspiration'],
+  '1813693740':  ['Leo - Unknown C (Tool or Insp)', 'inspiration'],
+  // Confirmed powers
+  '1725144541':  ['Water Attacks',        'power'],
+  '-351582946':  ['Light Attacks',        'power'],
+  '-1569557381': ['Water Abilities',      'power'],
+  '-1032506597': ['Quick Feet',            'power'],
+  '2133655172':  ['Shuriken Attacks',     'power'],
+  '-630557252':  ['Gift of the Dreamer',  'power'],
+  '-2122367194': ['Shelf Life',           'power'],
+  '-194026468':  ['Art of Darkness',      'power'],
+  '1144465955':  ['Ninjutsu Tactics',     'power'],
+  '-899837152':  ['Shinobi Supremacy',    'power'],
+  '1587780353':  ['Special Spice',        'power'],
+  '-1364872862': ['Wireless Charging',    'power'],
+  '-54411067':   ['Ooze Dash',            'power'],
+  '325923318':   ['Ooze Strike',          'power'],
+  // Ooze powers (confirmed via acquisition order)
+  '-1526079192': ['Goo',                'power'],
+  '1867113587':  ["Goo'dbye",           'power'],
+  '1715176274':  ['Living Ingredients', 'power'],
+  '-1974803373': ['Chunky Mixture',     'power'],
+  '-2060029603': ['Potency',            'power'],
+  // Flame powers (confirmed via acquisition order)
+  '-160562649':  ['Blazing Inferno',    'power'],
+  '1746825681':  ['Focus Fire',         'power'],
+  // Legendaries (confirmed via acquisition order)
+  '1935875699':  ['Spontaneous Combustion', 'power'],
+  '1155280766':  ['Slippery',           'power'],
+  // Raph masteries (confirmed via acquisition order — defer full mastery mapping)
+  '-19678530':   ['Mastery - Unknown (Raph: +50% dmg vs barrier)', 'inspiration'],
+  '1312854464':  ['Mastery - Unknown (Raph: +50% crit hit dmg)',   'inspiration'],
+  // Legendaries confirmed from Raph save (3 of these 4, one is a mastery)
+  '1583289433':  ['Legendary - Unknown A (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
+  '874267031':   ['Legendary - Unknown B (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
+  '1847681499':  ['Legendary - Unknown C (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
+  '-311294544':  ['Legendary or Mastery - Unknown D', 'power'],
+  '-1247950504': ['Adrenaline',   'power'],
+  '-2095601647': ['First Strike', 'power'],
+};
+
+function enhName(buff_sym){
+  const e=ENHANCEMENTS[String(buff_sym)];
+  return e?e[0]:null;
+}
+function enhCat(buff_sym){
+  const e=ENHANCEMENTS[String(buff_sym)];
+  return e?e[1]:'power';
+}
+
+
 function coopInvs(){
   return (save.state.coop||[])
     .map(c=>c&&c.lifetime&&c.lifetime.artifact_inventory)
@@ -242,13 +579,13 @@ function coopSetLevel(symInt, lv){
 }
 
 const CHARS = [
-  {name:'Michelangelo',color:'#f97316',id:195141004,tal:'michelangelo_talismans',wrap:'michelangelo_wraps',win:'stat_shredder_victory_michelangelo'},
-  {name:'Leonardo',color:'#3b82f6',id:190203475,tal:'leonardo_talismans',wrap:'leonardo_wraps',win:'stat_shredder_victory_leonardo'},
-  {name:'Raphael',color:'#ef4444',id:343331501,tal:'raphael_talismans',wrap:'raphael_wraps',win:'stat_shredder_victory_raphael'},
+  {name:'Michelangelo',color:'#f97316',id:1773431475,tal:'michelangelo_talismans',wrap:'michelangelo_wraps',win:'stat_shredder_victory_michelangelo'}, // UNCONFIRMED
+  {name:'Leonardo',color:'#3b82f6',id:-1842996619,tal:'leonardo_talismans',wrap:'leonardo_wraps',win:'stat_shredder_victory_leonardo'},
+  {name:'Raphael',color:'#ef4444',id:195141004,tal:'raphael_talismans',wrap:'raphael_wraps',win:'stat_shredder_victory_raphael'},
   {name:'Donatello',color:'#a855f7',id:313913754,tal:'donatello_talismans',wrap:'donatello_wraps',win:'stat_shredder_victory_donatello'},
-  {name:'Casey Jones',color:'#6b7280',id:1252917672,tal:'caseyjones_talismans',wrap:'caseyjones_wraps',win:'stat_shredder_victory_caseyjones'},
+  {name:'Casey Jones',color:'#6b7280',id:-917669266,tal:'caseyjones_talismans',wrap:'caseyjones_wraps',win:'stat_shredder_victory_caseyjones'},
   {name:'Metalhead',color:'#f5bb0b',id:1751315127,tal:'metalhead_talismans',wrap:'metalhead_wraps',win:'stat_shredder_victory_metalhead'},
-  {name:'Alopex',color:'#14b8a6',id:1773431475,tal:'alopex_talismans',wrap:'alopex_wraps',win:'stat_shredder_victory_alopex'},
+  {name:'Alopex',color:'#14b8a6',id:1252917672,tal:'alopex_talismans',wrap:'alopex_wraps',win:'stat_shredder_victory_alopex'},
 ];
 
 const ADV_KEYS = new Set([
@@ -426,7 +763,7 @@ function md5(str){
   return(h(a)+h(b)+h(c)+h(d)).toUpperCase();
 }
 
-// MD5 over a Uint8Array directly � avoids string encoding issues
+// MD5 over a Uint8Array directly — avoids string encoding issues
 function md5bytes(by){
   function sa(x,y){const l=(x&0xFFFF)+(y&0xFFFF);return(((x>>16)+(y>>16)+(l>>16))<<16)|(l&0xFFFF);}
   function brl(n,c){return(n<<c)|(n>>>(32-c));}
@@ -600,7 +937,7 @@ function exportSave(){
 }
 
 function setStatus(msg,cls){const el=document.getElementById('status');el.textContent=msg;el.className='status'+(cls?' '+cls:'');}
-function markDirty(){dirty=true;document.getElementById('save-btn').disabled=false;setStatus('unsaved changes','');}
+function markDirty(){dirty=true;document.getElementById('save-btn').disabled=false;setStatus('unsaved changes','');syncCoop();}
 
 function collapsible(title, colorHex, buildFn){
   const id='coll-'+Math.random().toString(36).slice(2);
@@ -615,7 +952,7 @@ function collapsible(title, colorHex, buildFn){
 }
 
 function pmBtn(action,key,extra){
-  return `<button class="bs-btn" data-action="${action}" data-key="${key}" ${extra||''}>${action==='inc'?'<img src="media/images/plus.png" alt="increase" class="btn-icon">':'<img src="media/images/minus.png" alt="decrease" class="btn-icon">'}</button>`;
+  return `<button class="bs-btn" data-action="${action}" data-key="${key}" ${extra||''}>${action==='inc'?'<img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span>':'<img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span>'}</button>`;
 }
 
 function bossRow(label, key, editable, extraClass){
@@ -645,7 +982,753 @@ function render(){
     ['dreamer coins',(sv('light_coins')-sv('spent_light_coins')).toLocaleString()],
     ['dragon coins',(sv('dark_coins')-sv('spent_dark_coins')).toLocaleString()],
   ].map(([l,v])=>`<div class="psc"><div class="psc-l">${l}</div><div class="psc-v">${v}</div></div>`).join('');
-  renderArtifacts();renderCoins();renderCharStats();renderGlobalStats();renderBossStats();
+  renderArtifacts();renderRun();renderUpgrades();renderCoins();renderCharStats();renderGlobalStats();renderBossStats();
+}
+
+// Upgrade name lookups — populated as buff_symbols are identified
+// Format: buff_symbol -> [name, altar, maxLevel]
+// altar: 'dreamer' | 'dragon'
+// Upgrade lookup: buff_symbol -> [name, altar ('dragon'|'dreamer'), maxLevel, descFn(level)]
+// descFn receives current level and returns description string
+const UPGRADE_LOOKUP = {
+  // === DRAGON — TRAINING (wiki order, sort 0-6) ===
+  '-353295134': ['Max Health',           'dragon', 25, lv=>`+${lv*10}% Max Health.`,                                                          false, 0],
+  '-452842831': ['Dash Charge',          'dragon',  3, lv=>`+${lv} Dash Charge${lv>1?'s':''}.`,                                               true,  1],
+  '16033804':   ["Splinter's Revive",    'dragon',  3, lv=>`Start each run with ${lv} Splinter's Revive${lv>1?'s':''}.`,                      false, 2],
+  '-780204194': ['Swiftness',            'dragon', 10, lv=>`+${lv*5}% Move Speed.`,                                                           false, 3],
+  '-1678942679':['Savor the Flavor',     'dragon',  5, lv=>`Health recovery is ${lv*20}% more effective.`,                                    false, 4],
+  '-1982027413':['Slice of Life',        'dragon',  5, lv=>`${lv*4}% chance to spawn a Pizza Slice upon defeating a Foot Clan enemy.`,        false, 5],
+  '-319407307': ['Astral Rejuvenation',  'dragon',  3, lv=>`Splinter's Revive restores ${lv*10}% additional Health.`,                         false, 6],
+  // === DRAGON — TECHNIQUE (wiki order, sort 10-17) ===
+  '-437453079': ['Attack Damage',        'dragon', 16, lv=>`+${lv*10}% Attack damage.`,                                                       false, 10],
+  '-599919028': ['Critical Chance',      'dragon', 10, lv=>`+${lv*2}% Attack Critical Hit chance.`,                                           false, 11],
+  '1996465767': ['Focused Forces',       'dragon', 10, lv=>`+${lv*7.5}% Elemental damage.`,                                                   false, 12],
+  '-1457745644':['Special Damage',       'dragon', 17, lv=>`+${lv*10}% Special damage.`,                                                      false, 13],
+  '-1651661104':['Tool Damage',          'dragon', 10, lv=>`+${lv*15}% Tool damage.`,                                                         false, 14],
+  '-254421389': ['Mechanical Genius',    'dragon',  5, lv=>`Tool charges ${lv*10}% faster.`,                                                  false, 15],
+  '-699088449': ['Stronger Stuff',       'dragon',  5, lv=>`+${lv*5}% Negative Effect damage.`,                                               false, 16],
+  '-154448305': ['Enduring Effects',     'dragon',  5, lv=>`+${lv*10}% duration of Negative Effects you apply.`,                              false, 17],
+  // === DRAGON — SPECIALTY (wiki order, sort 20-39) ===
+  '-1408321765':['Fast Attacks',         'dragon', 10, lv=>`+${lv*10}% Dash Attack damage. (Leonardo)`,                                       false, 20],
+  '953701167':  ['Multi-Hit',            'dragon', 10, lv=>`+${lv*2}% Multi-Hit chance. (Michelangelo)`,                                      false, 21],
+  '570400205':  ['Fast Abilities',       'dragon', 10, lv=>`Special charges ${lv*5}% faster. (Donatello)`,                                    false, 22],
+  '1548527547': ['Hammertime',           'dragon',  5, lv=>`+${lv*4}% Dodge chance. (Leonardo)`,                                              false, 23],
+  '1538472382': ['Pizza Entree',         'dragon',  5, lv=>`+${lv*3}% HP restored entering the Shop. (Michelangelo)`,                         false, 24],
+  '-1313957089':['Reliable Allies',      'dragon',  5, lv=>`Support units twice as likely to spawn. +${lv*20}% Support unit Max Health. (Donatello)`, false, 25],
+  '-2131612450':["Leo's Inspiration 1",  'dragon',  3, lv=>`+${lv*5} Master Strike damage. (Leonardo)`,                                       false, 26],
+  '139671976':  ["Mike's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Attack area. +${lv*5}% Attack damage. (Michelangelo)`,                  false, 27],
+  '-1212524326':["Don's Inspiration 1",  'dragon',  3, lv=>`Restore +${lv} Health upon starting an encounter. (Donatello)`,                   false, 28],
+  '-242760785': ['Critical Damage',      'dragon', 10, lv=>`+${lv*5}% Critical Hit damage.`,                                                  false, 29],
+  '2146577227': ["Leo's Inspiration 2",  'dragon',  2, lv=>`+${lv} Special charge. (Leonardo)`,                                               true,  30],
+  '1269087358': ["Raph's Inspiration 2", 'dragon',  3, lv=>`+${lv*3}% Attack Crit chance. +${lv*3}% Crit damage. (Raphael)`,                  false, 31],
+  '1132806170': ['Confidence',           'dragon',  3, lv=>`Clearing a room without damage grants +${lv}% Special damage. (Raphael)`,          false, 32],
+  '190004833':  ["Mike's Inspiration 2", 'dragon',  3, lv=>`+${lv*5}% Multi-Hit chance. (Michelangelo)`,                                      false, 33],
+  '-1229301945':["Don's Inspiration 2",  'dragon',  2, lv=>`Tool charges ${lv*20}% faster. (Donatello)`,                                      false, 34],
+  '1252309739': ["Raph's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Special Critical Hit chance. (Raphael)`,                                false, 35],
+  '1301944744': ["Casey's Inspiration 1",'dragon',  3, lv=>`Special applies Guard Break for +${lv}s. (Casey Jones)`,                          false, 36],
+  '1352277601': ["Casey's Inspiration 2",'dragon',  3, lv=>`Next attack after Special is Final Attack +${lv?(lv==3?100:lv*33):0}% Crit Chance. (Casey Jones)`, true, 37],
+  '-1142077053':["Metalhead Insp 1",     'dragon',  3, lv=>`On Boss defeat, upgrade a random enhancement and gain Scrap. (Metalhead)`,         true,  38],
+  '-1125299434':["Metalhead Insp 2",     'dragon',  3, lv=>`Tool applies Guard Break for ${lv?lv+3:0}s. (Metalhead)`,                             true,  39],
+  '-907883883': ["Alopex Insp 1",        'dragon',  3, lv=>`+${lv*2+6}% Dodge chance (doubled vs projectiles). (Alopex)`,                         true,  40],
+  '-958216740': ["Alopex Insp 2",        'dragon',  3, lv=>`+${lv*2+6}% Crit chance and Move Speed. (Alopex)`,                                    true,  41],
+  // === DREAMER (wiki order, sort 100+) ===
+  // Turtle Power section
+  '-1763992616':['Perchance',              'dreamer',10, lv=>`+${lv*2}% chance to draw Turtle Powers in Room Rewards. (Max: 20%)`,                              false, 100],
+  '-626179616': ['Do Over',               'dreamer', 3, lv=>`Start each run with ${lv} Lucky Dice. Lucky Dice can re-roll Room Rewards or Shop offers.`,         false, 101],
+  '498977639':  ['Polish',                'dreamer',10, lv=>`+${lv*2}% chance Turtle Powers are offered at level 2. (Max: 20%)`,                                false, 102],
+  '-221974076': ['Double Trouble',        'dreamer', 3, lv=>`+${lv*5}% Double Select chance during any Turtle Power selection. (Max: 15%)`,                     false, 103],
+  '73644934':   ['Lucky Spoils',          'dreamer', 3, lv=>`Chance to gain up to ${lv} Lucky ${lv>1?'Dice':'Die'} from Bosses.`,                               true,  104],
+  '1356448149': ['Double Double',         'dreamer', 3, lv=>`+${lv*10}% chance a Double Select will offer Turtle Powers at level 2. (Max: 30%)`,                false, 105],
+  // Scrap & Currency section
+  '-516092780': ['Running Start',         'dreamer',10, lv=>`+${lv*25} Scrap upon starting a run. (Max: +250 Scrap)`,                                           false, 106],
+  '2055001189': ['Scrappy Bosses',        'dreamer', 5, lv=>`+${lv*20}% Scrap granted by Bosses. (Max: +100%)`,                                                 false, 107],
+  '-405782207': ['Scavenger',             'dreamer', 3, lv=>`+${lv*100} Scrap gained from destroying crates. (Max: +300 Scrap)`,                                false, 108],
+  '-611797745': ["Pantheon's Blessing",   'dreamer', 5, lv=>`+${lv*10}% Dragon and Dreamer Coins from Room Rewards. (Max: +50%)`,                               false, 109],
+  '-386336970': ['Scrap King',            'dreamer', 5, lv=>`+${lv*10}% Scrap from Room Rewards. (Max: +50%)`,                                                  false, 110],
+  '-154024465': ['Recycling',             'dreamer', 5, lv=>`+${lv*5}% chance for Bonus Currency Room Rewards. (Max: +25%)`,                                    false, 111],
+  // Bonus section
+  '-792546313': ['Mouse Scrap',           'dreamer', 3, lv=>`+${lv*15}% chance a MOUSER drops triple Scrap upon defeat. (Max: +45%)`,                           false, 112],
+  '-1734720141':['Fortune Favors the Bold','dreamer', 3, lv=>`+${lv} Dragon and Dreamer Coins upon defeating Veteran and Champion enemies. (Max: +3)`,           false, 113],
+  '-1227395869':['Arcade Fixer',          'dreamer', 2, lv=>`+${lv*25}% chance a Bonus Currency applies to all Room Reward options. (Max: 50%)`,                false, 114],
+  '-1853417476':['Busted Coin Slot',      'dreamer', 1, lv=>`Dragon Coins are always granted as Bonus Currency Room Rewards for Masteries and Inspirations.`,   true,  115],
+  '641018994':  ['Dojo',                  'dreamer', 4, lv=>`${lv===4?'100':'Increased'}% chance to upgrade your Turtle Power to a Mastery in Rooftops entry room.`, true, 116],
+};
+
+// Max levels observed in your fully-upgraded save (used to cap non-advanced mode)
+const UPGRADE_OBSERVED_MAX = {
+  '-2131612450':3,'-1982027413':5,'-1853417476':1,'-1763992616':10,'-1734720141':3,
+  '-1678942679':5,'-1651661104':10,'-1457745644':17,'-1408321765':10,'-1313957089':5,
+  '-1229301945':2,'-1227395869':2,'-1212524326':3,'-1142077053':3,'-1125299434':3,
+  '-958216740':3,'-907883883':3,'-792546313':3,'-780204194':10,'-699088449':5,
+  '-626179616':3,'-611797745':5,'-599919028':10,'-516092780':10,'-452842831':3,
+  '-437453079':16,'-405782207':3,'-386336970':5,'-353295134':25,'-319407307':3,
+  '-254421389':5,'-242760785':10,'-221974076':5,'-154448305':5,'-154024465':5,
+  '16033804':3,'73644934':3,'139671976':3,'190004833':3,'498977639':10,
+  '570400205':10,'641018994':4,'953701167':10,'1132806170':3,'1252309739':3,
+  '1269087358':3,'1301944744':3,'1352277601':3,'1356448149':3,'1538472382':5,
+  '1548527547':5,'1996465767':10,'2055001189':5,'2146577227':2,
+};
+
+let upgradeAdvanced=false;
+
+function renderUpgrades(){
+  const upgrades=save.state.lifetime.upgrades;
+  const el=document.getElementById('upgrades-content');
+
+  // Partition and sort upgrades by wiki order using sort index (field 5)
+  const sortIdx=u=>UPGRADE_LOOKUP[String(u.buff_symbol)]?.[5]??999;
+  const dragon=upgrades.filter(u=>UPGRADE_LOOKUP[String(u.buff_symbol)]?.[1]==='dragon').sort((a,b)=>sortIdx(a)-sortIdx(b));
+  const dreamer=upgrades.filter(u=>UPGRADE_LOOKUP[String(u.buff_symbol)]?.[1]==='dreamer').sort((a,b)=>sortIdx(a)-sortIdx(b));
+  const unknown=upgrades.filter(u=>!dragon.includes(u)&&!dreamer.includes(u));
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+      <div class="sec-title" style="margin-bottom:0"><i class="ti ti-flame" aria-hidden="true"></i>Dragon Altar</div>
+      <div class="sec-title" style="margin-bottom:0;margin-left:auto;color:var(--mu)"><i class="ti ti-moon" aria-hidden="true"></i>Dreamer Altar</div>
+    </div>
+    <div id="upg-advanced-bar" style="margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="adv-toggle" id="upg-adv-toggle" style="${upgradeAdvanced?'color:var(--r)':''}">${upgradeAdvanced?'disable overleveling':'enable overleveling'}</button>
+      <span style="font-family:var(--fm);font-size:12px;color:var(--mu);" id="upg-adv-label">${upgradeAdvanced?'overleveling enabled — no cap enforced':'capped at observed max'}</span>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="adv-toggle" id="upg-zero-btn" style="color:var(--r);border-color:rgba(229,57,53,0.4);">zero all upgrades</button>
+        <button class="adv-toggle" id="upg-max-btn" style="color:var(--g);border-color:rgba(76,175,80,0.4);">max all upgrades</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div>
+        <div class="sec-title" style="font-size:15px;color:#a78bfa;margin-bottom:10px;">Dreamer Coin Upgrades</div>
+        <div class="enh-grid" id="dreamer-grid"></div>
+        ${unknown.length?`<div class="sec-title" style="font-size:13px;color:var(--mu);margin:14px 0 8px;">Unmapped (${unknown.length})</div><div class="enh-grid" id="unknown-grid"></div>`:''}
+      </div>
+      <div>
+        <div class="sec-title" style="font-size:15px;color:#fb923c;margin-bottom:10px;">Dragon Coin Upgrades</div>
+        <div class="enh-grid" id="dragon-grid"></div>
+      </div>
+    </div>`;
+
+  buildUpgradeGrid('dreamer-grid', dreamer, '#a78bfa');
+  buildUpgradeGrid('dragon-grid', dragon, '#fb923c');
+  if(unknown.length) buildUpgradeGrid('unknown-grid', unknown, 'var(--mu)');
+
+  document.getElementById('upg-adv-toggle').addEventListener('click',()=>{
+    upgradeAdvanced=!upgradeAdvanced;
+    const btn=document.getElementById('upg-adv-toggle');
+    const lbl=document.getElementById('upg-adv-label');
+    if(upgradeAdvanced){
+      btn.textContent='disable overleveling';
+      btn.style.color='var(--r)';
+      lbl.textContent='overleveling enabled — no cap enforced';
+    } else {
+      btn.textContent='enable overleveling';
+      btn.style.color='';
+      lbl.textContent='capped at observed max';
+    }
+  });
+
+  document.getElementById('upg-zero-btn').addEventListener('click',()=>{
+    save.state.lifetime.upgrades.forEach(u=>{u.level=0;});
+    markDirty();renderUpgrades();
+    setStatus('all upgrades zeroed','ok');
+  });
+
+  document.getElementById('upg-max-btn').addEventListener('click',()=>{
+    save.state.lifetime.upgrades.forEach(u=>{
+      const sym=String(u.buff_symbol);
+      const known=UPGRADE_LOOKUP[sym];
+      const wikiMax=known?known[2]:0;
+      const obsMax=UPGRADE_OBSERVED_MAX[sym]||0;
+      const locked=known?known[4]===true:false;
+      if(locked){
+        // locked: always cap at wiki max regardless of overlevel setting
+        u.level=wikiMax||obsMax||u.level;
+      } else if(upgradeAdvanced){
+        u.level=99;
+      } else {
+        u.level=wikiMax||obsMax||u.level;
+      }
+    });
+    markDirty();renderUpgrades();
+    setStatus('all upgrades maxed','ok');
+  });
+}
+
+function buildUpgradeGrid(gridId, upgrades, color){
+  const grid=document.getElementById(gridId);
+  if(!grid||!upgrades.length)return;
+  // Map from buff_symbol to index in full upgrades array for editing
+  const allUpgrades=save.state.lifetime.upgrades;
+  upgrades.forEach(u=>{
+    const globalIdx=allUpgrades.indexOf(u);
+    const sym=String(u.buff_symbol);
+    const known=UPGRADE_LOOKUP[sym];
+    const label=known?known[0]:'Unknown ('+u.buff_symbol+')';
+    const observedMax=UPGRADE_OBSERVED_MAX[sym]||999;
+    const locked=known?known[4]===true:false;
+    const desc=known?known[3](u.level):'';
+    const row=document.createElement('div');row.className='enh-row';
+    row.innerHTML=`
+      <div class="enh-info">
+        <div class="enh-name" style="${known?'':'color:var(--mu)'}">${label}${locked?' <span style="font-family:var(--fm);font-size:10px;color:var(--r);letter-spacing:.5px;">LOCKED</span>':''}</div>
+        ${desc?`<div class="art-desc" id="upg-desc-${globalIdx}" style="margin-top:3px;">${desc}</div>`:''}
+        <div class="enh-sym" style="margin-top:2px;">buff: ${u.buff_symbol}</div>
+      </div>
+      <div class="enh-ctrl">
+        <button class="c-btn" data-gidx="${globalIdx}" data-d="-1"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+        <span class="enh-lv" id="upg-lv-${globalIdx}">Lv ${u.level}</span>
+        <button class="c-btn" data-gidx="${globalIdx}" data-d="1"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+      </div>`;
+    grid.appendChild(row);
+  });
+  grid.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-gidx]');if(!btn)return;
+    const gi=parseInt(btn.dataset.gidx),d=parseInt(btn.dataset.d);
+    const u=allUpgrades[gi];
+    const sym=String(u.buff_symbol);
+    const known=UPGRADE_LOOKUP[sym];
+    const observedMax=UPGRADE_OBSERVED_MAX[sym]||999;
+    const locked=known?known[4]===true:false;
+    const cap=(upgradeAdvanced&&!locked)?99999:(known?known[2]:observedMax);
+    u.level=Math.min(cap,Math.max(0,u.level+d));
+    document.getElementById('upg-lv-'+gi).textContent='Lv '+u.level;
+    const descEl=document.getElementById('upg-desc-'+gi);
+    if(descEl&&known)descEl.textContent=known[3](u.level);
+    markDirty();
+  });
+}
+
+function runActive(){
+  const ln=save.state.level.level_name||'';
+  return ln!=='' && ln!=='GAME_MODE_HOME_LAIR' && ln!=='GAME_MODE_SUB_LAIR';
+}
+
+// Known enhancement_symbol values (needed for valid injection)
+// Known enhancement_symbols per power at specific levels
+// Format: buff_symbol_str -> {level -> enh_sym}
+// enh_sym is fixed per power regardless of level — confirmed across multiple runs
+const POWER_ENH_SYMS = {
+  '-194026468':  1339677536,   // Art of Darkness
+  '1144465955':  1892944909,   // Ninjutsu Tactics
+  '-899837152':  -92189772,    // Shinobi Supremacy
+  '-1247950504': -190135704,   // Adrenaline
+  '-1032506597': -699146727,   // Quick Feet
+  '-876652360':  -2085879898,  // The Juice
+  '228613591':   -1314267959,  // Utrom Drone
+  '1844912779':  1032868229,   // Casey Insp 1
+  '1861690398':  -611779718,   // Casey Insp 2
+};
+
+const TOOL_ENH_SYMS = {
+  '-876652360':  -2085879898,  // The Juice
+  '228613591':   -1314267959,  // Utrom Drone
+};
+// Known enhancement_symbols for kit items
+const KIT_ENH_SYMS = {
+  '1844912779':  1032868229,   // Casey Insp 1
+  '1861690398':  -611779718,   // Casey Insp 2
+};
+
+const UNMAPPED_POWERS = [
+  {sym:-523953124,hint:'Lv1 — in run but not visible in-game powers screen, category unknown'},
+  {sym:1938928338,hint:'Lv3 — in run but not visible in-game powers screen, category unknown'},
+  {sym:1922146599,hint:'Lv2 — in run but not visible in-game powers screen, category unknown'},
+  {sym:-1911145177,hint:'seen in Metalhead + Casey runs Lv1 — category unknown, not displaying correctly'},
+  {sym:1212610709,hint:'seen in Casey run Lv2 — not an inspiration, unknown power'},
+  {sym:-2097731964,hint:'seen in Casey run — set to Lv2, unknown power'},
+  {sym:-1984093787,hint:'seen in Casey run — Lv3, unknown power'},
+  {sym:-2105683899,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-2097731964,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-2023653963,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1984093787,hint:'seen in Casey run'},
+  {sym:-1837571790,hint:'seen in Casey run'},
+  {sym:-1752657340,hint:'seen in Casey run'},
+  {sym:-1732795265,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1731294535,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1724689305,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1463821367,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1415779635,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1391222310,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1375537276,hint:'seen in Casey run'},
+  {sym:-1303223760,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1299775965,hint:'seen in Casey run'},
+  {sym:-1186504473,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-1109671216,hint:'seen in Casey run'},
+  {sym:-1068283913,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-997119924,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-955543693,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-948395547,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-722931231,hint:'seen in Casey run'},
+  {sym:-708443022,hint:'seen in Casey run'},
+  {sym:-662594691,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-619310296,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-519095219,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-388807946,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-311294544,hint:'Legendary or Mastery'},
+  {sym:-235787709,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-196974294,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-150579913,hint:'seen in Casey run'},
+  {sym:-147856574,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:-14461045,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:133185293,hint:'seen in Casey run'},
+  {sym:138635578,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:228613591,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:347186936,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:415064718,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:590707888,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:788412624,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:834996524,hint:'seen in Casey run'},
+  {sym:874267031,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
+  {sym:1166508037,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:1212610709,hint:'seen in Casey run'},
+  {sym:1583289433,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
+  {sym:1646991356,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:1789795819,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:1821891108,hint:'seen in Casey run'},
+  {sym:1847681499,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
+  {sym:1922146599,hint:'seen in Casey run'},
+  {sym:1938928338,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
+  {sym:1953603970,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'}
+];
+
+// Sync coop[3].run to match state.run (they must be identical mirrors)
+function syncCoop(){
+  if(!save||!save.state.coop)return;
+  // Find coop slot that mirrors run (same enhancement set)
+  const runSymSet=new Set(save.state.run.enhancements.map(e=>e.buff_symbol));
+  for(let i=0;i<save.state.coop.length;i++){
+    const c=save.state.coop[i];
+    if(!c||!c.run||!c.run.enhancements||c.run.enhancements.length===0)continue;
+    const cSymSet=new Set(c.run.enhancements.map(e=>e.buff_symbol));
+    // If significant overlap (>50% match), this is the mirror slot
+    const overlap=[...runSymSet].filter(s=>cSymSet.has(s)).length;
+    if(overlap>runSymSet.size*0.5){
+      // Deep copy run.enhancements to this coop slot
+      c.run.enhancements=save.state.run.enhancements.map(e=>({...e}));
+      return;
+    }
+  }
+}
+
+function renderRun(){
+  const el=document.getElementById('run-content');
+  if(!runActive()){
+    el.innerHTML=`<div class="no-run"><i class="ti ti-player-pause" aria-hidden="true"></i><div class="no-run-title">NO RUN IN PROGRESS</div><div>Start a run in-game, save &amp; quit, then reload the save file here.</div></div>`;
+    return;
+  }
+  const run=save.state.run;
+  const lv=save.state.level;
+  const lt=save.state.lifetime;
+  const rs=run.stats;
+
+  const chapterNames=['Sewers','Docks','Streets','Rooftops'];
+  const chapterDisplay=chapterNames[lv.current_chapter-1]||(lv.current_chapter===0?'Lair':'Chapter '+lv.current_chapter);
+  const scrapAvail=rs.coins?Math.round(rs.coins.value):0;
+  // Dice available = lucky_dice - spent_lucky_dice (run-scoped)
+  const diceEarned=rs.lucky_dice?Math.round(rs.lucky_dice.value):0;
+  const diceSpent=rs.spent_lucky_dice?Math.round(rs.spent_lucky_dice.value):0;
+  const diceAvail=Math.max(0,diceEarned-diceSpent);
+  // Revive tokens
+  const revives=rs.revive_tokens?Math.round(rs.revive_tokens.value):0;
+  // Equipped artifact
+  const eqArt=lt.artifact;
+  const eqSym=String(eqArt.artifact_symbol);
+  const artName=(ARTIFACTS[eqSym]||['Unknown ('+eqSym+')'])[0];
+
+  // Character name
+  const charMap={};CHARS.forEach(c=>charMap[c.id]=c);
+  const heroChar=charMap[run.hero];
+  const heroName=heroChar?heroChar.name:'Unknown ('+run.hero+')';
+  const heroColor=heroChar?heroChar.color:'var(--tx)';
+
+  // Tools are stored in run.enhancements (active + collected tools)
+  const coopEnhs=save.state.coop&&save.state.coop[0]?save.state.coop[0].run.enhancements:[];
+  // Active tool = last tool in run.enhancements (most recently equipped)
+  const toolEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='tool');
+  const toolEnh=toolEnhs[0]||null;  // first tool = active tool
+  const toolSym=toolEnh?String(toolEnh.buff_symbol):'';
+  const toolRawName=toolSym?(ENHANCEMENTS[toolSym]?.[0]||'Unknown ('+toolSym+')'):'None';
+  // Strip "Michelangelo - Tool (Taunt)" -> "Taunt" for the tool name portion
+  const toolNameMatch=toolRawName.match(/Tool \((.+?)\)/);
+  const toolName=toolNameMatch?toolNameMatch[1]:toolRawName;
+  const toolDesc=TOOLS[toolName]||'';
+  const toolLevel=toolEnh?toolEnh.level:0;
+
+  el.innerHTML=`
+    <div class="run-grid">
+      <div class="run-card">
+        <div class="run-card-title">Run Status</div>
+        <div class="run-row"><span class="run-lbl">Character</span><span style="font-family:var(--fm);font-size:13px;color:${heroColor}">${heroName}</span></div>
+        <div class="run-row"><span class="run-lbl">Chapter</span><span style="font-family:var(--fm);font-size:13px;color:var(--tx)">${chapterDisplay}</span></div>
+        <div class="run-row"><span class="run-lbl">Room</span><span style="font-family:var(--fm);font-size:13px;color:var(--tx)">${lv.current_room===-1?'Starting':lv.current_room+1}</span></div>
+      </div>
+      <div class="run-card">
+        <div class="run-card-title">Health</div>
+        <div class="run-row"><span class="run-lbl">Current HP</span><input class="run-val" id="run-hp" type="number" min="1" value="${Math.round(run.player_health)}"></div>
+        <div class="run-row"><span class="run-lbl">Max HP</span><input class="run-val" id="run-maxhp" type="number" min="1" value="${Math.round(run.player_max_health)}"></div>
+        <div class="run-row"><span class="run-lbl">Splinter Revives</span><input class="run-val" id="run-revives" type="number" min="0" max="9" value="${revives}"></div>
+      </div>
+      <div class="run-card">
+        <div class="run-card-title">Resources</div>
+        <div class="run-row"><span class="run-lbl">Scrap</span><input class="run-val" id="run-scrap" type="number" min="0" value="${scrapAvail}"></div>
+        <div class="run-row"><span class="run-lbl">Lucky Dice</span><input class="run-val" id="run-dice" type="number" min="0" value="${diceAvail}"></div>
+      </div>
+      <div class="run-card">
+        <div class="run-card-title">Artifact &amp; Tool</div>
+        <div class="run-row"><span class="run-lbl">Artifact</span>
+          <select class="run-select" id="run-art-sym">
+            ${Object.keys(ARTIFACTS).map(s=>`<option value="${s}"${s===eqSym?' selected':''}>${ARTIFACTS[s][0]}</option>`).join('')}
+          </select>
+        </div>
+        <div class="run-row"><span class="run-lbl">Artifact Lv</span><span style="font-family:var(--fm);font-size:13px;color:var(--g)">Lv ${eqArt.level}</span></div>
+        <div class="run-row"><span class="run-lbl">Tool</span>
+          <select class="run-select" id="run-tool-sym" style="color:#fb923c;">
+            <option value="">None</option>
+            ${Object.entries(ENHANCEMENTS).filter(([s,v])=>v[1]==='tool').map(([s,v])=>{
+              const tname=v[0].match(/Tool \((.+?)\)/)?.[1]||v[0];
+              return `<option value="${s}"${toolSym===s?' selected':''}>${tname}</option>`;
+            }).join('')}
+          </select>
+        </div>
+        <div class="art-desc" id="run-tool-desc" style="margin:2px 0 6px;font-size:11px;color:var(--mu);padding:0 4px;">${toolDesc}</div>
+        ${toolEnh?`<div class="run-row"><span class="run-lbl">Tool Lv</span>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <button class="c-btn" id="run-tool-dec"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+            <span style="font-family:var(--fm);font-size:13px;color:#fb923c;min-width:34px;text-align:center;" id="run-tool-lv">Lv ${toolLevel}</span>
+            <button class="c-btn" id="run-tool-inc"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+          </div>
+        </div>`:''}
+      </div>
+    </div>
+    <div class="sec-title" style="margin-top:18px;"><i class="ti ti-map" aria-hidden="true"></i>Room sequence</div>
+    <div class="room-seq" id="room-seq"></div>
+    <div class="sec-title" style="margin-top:4px;"><i class="ti ti-bolt" aria-hidden="true"></i>Powers this run</div>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="save-btn" id="powers-zero-btn" style="background:var(--r);font-size:14px;padding:8px 18px;">ZERO ALL POWERS</button>
+      <button class="save-btn" id="powers-max-btn" style="font-size:14px;padding:8px 18px;">MAX ALL POWERS</button>
+    </div>
+    <div id="enh-grid"></div>
+`;
+
+  // Build enhancements list — grouped by tree
+  renderRoomSequence();
+  const treeColor={'Astral (Dark)':'#a78bfa','Astral (Light)':'#e0c97f','Flame':'#f97316','Ninja':'#14b8a6',
+                   'Ooze':'#7c3aed','Robotics':'#c0c0c0','Utrom':'#38bdf8','Water':'#3b82f6','Legendary':'#ffd600'};
+  const catColor={'inspiration':'#a78bfa','tool':'#fb923c','power':'var(--g)','special':'#38bdf8'};
+  const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Robotics','Utrom','Water','Legendary'];
+
+  function buildEnhGrid(){
+    const container=document.getElementById('enh-grid');
+    container.innerHTML='';
+
+    // Build lookup: buff_symbol -> enhancement object (for active powers)
+    const activeByName={};
+    run.enhancements.forEach(e=>{
+      const name=enhName(e.buff_symbol);
+      if(name)activeByName[name]=e;
+    });
+
+    // Inspirations section (active only)
+    const inspEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='inspiration');
+    if(inspEnhs.length){
+      const kitSec=collapsible('Inspirations & Masteries ('+inspEnhs.length+')','var(--mu)',body=>{
+        const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
+        inspEnhs.forEach(e=>appendEnhRow(g,e));
+      });
+      kitSec.querySelector('.coll-header').click();
+      container.appendChild(kitSec);
+    }
+
+    // Powers — render from POWER_INFO as master list, Lv0 if not in run
+    treeOrder.forEach(tree=>{
+      const treePowers=Object.entries(POWER_INFO).filter(([n,info])=>info[0]===tree);
+      if(!treePowers.length)return;
+      const color=treeColor[tree]||'var(--mu)';
+      const activeCount=treePowers.filter(([n])=>activeByName[n]).length;
+      const sec=collapsible(`${tree} (${activeCount}/${treePowers.length})`,color,body=>{
+        const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
+        treePowers.forEach(([name,info])=>{
+          const active=activeByName[name];
+          // Create a virtual enhancement object for display
+          const eObj=active||{buff_symbol:null,level:0,_name:name};
+          appendEnhRowFromInfo(g,name,info,eObj,active);
+        });
+      });
+      sec.querySelector('.coll-header').click();
+      container.appendChild(sec);
+    });
+
+    // Unknown powers in run (unmapped buff_symbols)
+    const unknownPowers=run.enhancements.filter(e=>{
+      const cat=enhCat(e.buff_symbol);
+      if(cat==='inspiration'||cat==='tool')return false;
+      const name=enhName(e.buff_symbol);
+      return !name||!POWER_INFO[name];
+    });
+    if(unknownPowers.length){
+      const sec=collapsible('Unknown in run ('+unknownPowers.length+') — buff_symbol not yet mapped','#555',body=>{
+        const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
+        unknownPowers.forEach(e=>appendEnhRow(g,e));
+      });
+      sec.querySelector('.coll-header').click();
+      container.appendChild(sec);
+    }
+
+    // Injectable unmapped symbols
+    const allMappedSyms=new Set(run.enhancements.map(e=>e.buff_symbol));
+    const injectables=UNMAPPED_POWERS.filter(u=>!allMappedSyms.has(u.sym));
+    if(injectables.length){
+      const sec=collapsible('Add unmapped power to run ('+injectables.length+' available) — inject & load in-game to confirm','var(--y)',body=>{
+        body.style.padding='10px 14px';
+        const note=document.createElement('div');
+        note.style.cssText='font-family:var(--fm);font-size:11px;color:var(--mu);margin-bottom:10px;';
+        note.textContent='These buff_symbols have been seen in saves but not yet named. Add one to your run, export, load in-game, and tell me what appeared.';
+        body.appendChild(note);
+        const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
+        injectables.forEach(u=>{
+          const row=document.createElement('div');row.className='enh-row';
+          row.innerHTML=`
+            <div class="enh-info">
+              <div class="enh-name" style="color:var(--mu);">Unknown (${u.sym})</div>
+              <div class="enh-sym" style="margin-top:3px;"><span style="color:var(--y);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">${u.hint||'unmapped'}</span> &middot; buff: ${u.sym}</div>
+            </div>
+            <div class="enh-ctrl">
+              <button class="c-btn" data-inject="${u.sym}"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+            </div>`;
+          g.appendChild(row);
+        });
+        g.addEventListener('click',ev=>{
+          const btn=ev.target.closest('[data-inject]');if(!btn)return;
+          const sym=parseInt(btn.dataset.inject);
+          const eSym=TOOL_ENH_SYMS[String(sym)]||0;
+          run.enhancements.push({version:1,buff_symbol:sym,enhancement_symbol:eSym,level:1,aux:0,roomDuration:0});
+          markDirty();buildEnhGrid();
+        });
+      });
+      container.appendChild(sec);
+    }
+  }
+
+  // Render a power row from POWER_INFO — handles both active (in run) and inactive (Lv0)
+  function appendEnhRowFromInfo(grid,name,info,eObj,active){
+    const tree=info[0];
+    const unlock=info[1];
+    const color=treeColor[tree]||'var(--mu)';
+    const showUnlock=unlock&&unlock!=='Initial'&&unlock!=='Secondary';
+    const lv=active?eObj.level:0;
+    const desc=lv>0?powerDesc(name,lv):(info[2]?info[2].split('/')[0]:'');
+    const isLocked=tree==='Legendary'||name.startsWith('Mastery');
+    const symStr=active?` &middot; buff: ${eObj.buff_symbol}`:'';
+    const lvStyle=lv===0?'color:#444':'';
+
+    const row=document.createElement('div');
+    row.className='enh-row'+(lv===0?' enh-inactive':'');
+    row.dataset.powerName=name;
+    row.innerHTML=`
+      <div class="enh-info">
+        <div class="enh-name" style="${lv===0?'color:#555':''}">${name}</div>
+        <div class="art-desc" id="pdesc-${name.replace(/[^a-z0-9]/gi,'_')}" style="margin-top:3px;${lv===0?'color:#444':''}">${desc}</div>
+        <div class="enh-sym" style="margin-top:3px;"><span style="color:${color};font-size:10px;text-transform:uppercase;letter-spacing:.5px;">${tree}</span>${showUnlock?' &middot; '+unlock:''}${symStr}</div>
+      </div>
+      <div class="enh-ctrl">
+        <button class="c-btn" data-pname="${name}" data-d="-1" ${lv===0?'disabled style="opacity:.3"':''}><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+        <span class="enh-lv" id="plv-${name.replace(/[^a-z0-9]/gi,'_')}" style="${lvStyle}">${lv===0?'—':'Lv '+lv}</span>
+        <button class="c-btn" data-pname="${name}" data-d="1" ${isLocked&&lv>=1?'disabled style="opacity:.3"':''}><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+      </div>`;
+    grid.appendChild(row);
+  }
+
+  function appendEnhRow(grid,e){
+    const origIdx=run.enhancements.indexOf(e);
+    const known=enhName(e.buff_symbol);
+    const cat=enhCat(e.buff_symbol);
+    const pinfo=known?POWER_INFO[known]:null;
+    const tree=pinfo?pinfo[0]:null;
+    const unlock=pinfo?pinfo[1]:null;
+    const label=known||`Unknown (${e.buff_symbol})`;
+    const badgeColor=tree?treeColor[tree]:catColor[cat]||'var(--mu)';
+    const badge=tree?tree:(cat==='inspiration'?'inspiration':cat==='tool'?'tool':'?');
+    const showUnlock=unlock&&unlock!=='Initial'&&unlock!=='Secondary';
+    const desc=known?powerDesc(known,e.level):'';
+    const row=document.createElement('div');row.className='enh-row';
+    row.innerHTML=`
+      <div class="enh-info">
+        <div class="enh-name" style="${known?'':'color:var(--mu)'}">${label}</div>
+        ${desc?`<div class="art-desc" id="enh-desc-${origIdx}" style="margin-top:3px;">${desc}</div>`:''}
+        <div class="enh-sym" style="margin-top:3px;"><span style="color:${badgeColor};font-size:10px;text-transform:uppercase;letter-spacing:.5px;">${badge}</span>${showUnlock?' &middot; '+unlock:''} &middot; buff: ${e.buff_symbol}</div>
+      </div>
+      <div class="enh-ctrl">
+        <button class="c-btn" data-enh="${origIdx}" data-d="-1"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+        <span class="enh-lv" id="enh-lv-${origIdx}">Lv ${e.level}</span>
+        <button class="c-btn" data-enh="${origIdx}" data-d="1"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+      </div>`;
+    grid.appendChild(row);
+  }
+
+  buildEnhGrid();
+
+
+
+  document.getElementById('powers-zero-btn').addEventListener('click',()=>{
+    run.enhancements=run.enhancements.filter(e=>['inspiration','tool'].includes(enhCat(e.buff_symbol)));
+    markDirty();buildEnhGrid();
+  });
+
+  document.getElementById('powers-max-btn').addEventListener('click',()=>{
+    run.enhancements.forEach(e=>{
+      if(enhCat(e.buff_symbol)!=='power')return;
+      const name=enhName(e.buff_symbol);
+      if(!name)return;
+      const tree=POWER_INFO[name]?POWER_INFO[name][0]:null;
+      if(tree==='Legendary')return; // legendaries locked at Lv1
+      if(name.startsWith('Mastery'))return; // masteries locked at Lv1
+      e.level=3;
+    });
+    markDirty();buildEnhGrid();
+  });
+
+  document.getElementById('enh-grid').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-pname]');
+    if(btn){
+      const name=btn.dataset.pname;
+      const d=parseInt(btn.dataset.d);
+      const info=POWER_INFO[name];if(!info)return;
+      const isLocked=info[0]==='Legendary'||name.startsWith('Mastery');
+      // Find buff_symbol for this power from ENHANCEMENTS reverse lookup
+      const sym=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name)?.[0];
+      const symInt=sym?parseInt(sym):null;
+      const idx=symInt!==null?run.enhancements.findIndex(e=>e.buff_symbol===symInt):-1;
+      if(d>0){
+        if(idx>=0){
+          if(!isLocked)run.enhancements[idx].level=Math.min(3,run.enhancements[idx].level+1);
+        } else if(symInt!==null){
+          const pEnhSym=POWER_ENH_SYMS[String(symInt)]||0;
+          run.enhancements.push({version:1,buff_symbol:symInt,enhancement_symbol:pEnhSym,level:1,aux:0,roomDuration:0});
+        }
+      } else {
+        if(idx>=0){
+          const newLv=run.enhancements[idx].level-1;
+          if(newLv<=0)run.enhancements.splice(idx,1);
+          else run.enhancements[idx].level=newLv;
+        }
+      }
+      markDirty();buildEnhGrid();return;
+    }
+    // Legacy: data-enh for unknown/insp rows
+    const btn2=e.target.closest('[data-enh]');if(!btn2)return;
+    const i=parseInt(btn2.dataset.enh),d=parseInt(btn2.dataset.d);
+    const enh=run.enhancements[i];if(!enh)return;
+    const newLv=enh.level+d;
+    if(newLv<=0){
+      run.enhancements.splice(i,1);
+      markDirty();buildEnhGrid();return;
+    }
+    enh.level=Math.min(3,newLv);
+    document.getElementById('enh-lv-'+i).textContent='Lv '+enh.level;
+    const known=enhName(enh.buff_symbol);
+    const descEl=document.getElementById('enh-desc-'+i);
+    if(descEl&&known)descEl.textContent=powerDesc(known,Math.min(3,enh.level));
+    markDirty();
+  });
+  document.getElementById('run-hp').addEventListener('change',e=>{
+    run.player_health=Math.max(1,parseFloat(e.target.value)||1);markDirty();});
+  document.getElementById('run-maxhp').addEventListener('change',e=>{
+    run.player_max_health=Math.max(1,parseFloat(e.target.value)||1);markDirty();});
+  document.getElementById('run-revives').addEventListener('change',e=>{
+    const v=Math.max(0,parseInt(e.target.value)||0);
+    if(!rs.revive_tokens)rs.revive_tokens={value:v,values:[{key:0,value:v}]};
+    else{rs.revive_tokens.value=v;if(rs.revive_tokens.values?.length)rs.revive_tokens.values[0].value=v;}
+    markDirty();});
+  document.getElementById('run-scrap').addEventListener('change',e=>{
+    const want=Math.max(0,parseInt(e.target.value)||0);
+    if(!rs.coins)rs.coins={value:want,values:[{key:0,value:want}]};
+    else{rs.coins.value=want;if(rs.coins.values?.length)rs.coins.values[0].value=want;}
+    markDirty();});
+  document.getElementById('run-dice').addEventListener('change',e=>{
+    const want=Math.max(0,parseInt(e.target.value)||0);
+    const spent=rs.spent_lucky_dice?Math.round(rs.spent_lucky_dice.value):0;
+    const total=want+spent;
+    if(!rs.lucky_dice)rs.lucky_dice={value:total,values:[{key:0,value:total}]};
+    else{rs.lucky_dice.value=total;if(rs.lucky_dice.values?.length)rs.lucky_dice.values[0].value=total;}
+    markDirty();});
+  document.getElementById('run-art-sym').addEventListener('change',e=>{
+    eqArt.artifact_symbol=parseInt(e.target.value);markDirty();});
+  document.getElementById('run-tool-sym').addEventListener('change',e=>{
+    const sym=parseInt(e.target.value);
+    // Remove ALL existing tools from run first, then add selected one
+    run.enhancements=run.enhancements.filter(e=>enhCat(e.buff_symbol)!=='tool');
+    if(e.target.value!==''){
+      const realEnhSym=POWER_ENH_SYMS[String(sym)]||TOOL_ENH_SYMS[String(sym)]||0;
+      const newEnh={version:1,buff_symbol:sym,enhancement_symbol:realEnhSym,level:1,aux:0,roomDuration:0};
+      run.enhancements.unshift(newEnh);
+    }
+    // Update description
+    const rawName=ENHANCEMENTS[String(sym)]?.[0]||'';
+    const tname=rawName.match(/Tool \((.+?)\)/)?.[1]||rawName;
+    const desc=TOOLS[tname]||'';
+    const descEl=document.getElementById('run-tool-desc');
+    if(descEl)descEl.textContent=desc;
+    markDirty();buildEnhGrid();});
+  if(toolEnh){
+    document.getElementById('run-tool-dec').addEventListener('click',()=>{
+      toolEnh.level=Math.max(1,toolEnh.level-1);
+      document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
+      markDirty();});
+    document.getElementById('run-tool-inc').addEventListener('click',()=>{
+      toolEnh.level=Math.min(3,toolEnh.level+1);
+      document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
+      markDirty();});
+  }
+
+
+}
+
+function renderRoomSequence(){
+  if(!runActive())return;
+  const lv=save['state']['level'];
+  const rooms=lv['room_sequence_elements']||[];
+  const curIdx=lv['current_room_sequence_index']||0;
+  const container=document.getElementById('room-seq');
+  if(!container)return;
+  container.innerHTML='';
+
+  const ROOM_TYPE_NAMES={2:'Start',3:'Reward',4:'Shop',5:'Boss',6:'Miniboss',7:'Challenge'};
+  const REWARD_OPTS={2:'Forced Power',3:'Tool',9:'Scrap',11:'Coins',15:'Boss Reward',5:'Mixed'};
+  const PORTAL_OPTS={0:'None',1:'Hard (red)',2:'Normal',3:'Shimmering',6:'?',7:'?',12:'?',14:'?'};
+
+  rooms.forEach((room,i)=>{
+    const isPast=i<curIdx;
+    const isCurrent=i===curIdx;
+    const typeName=ROOM_TYPE_NAMES[room.room_type]||('Type '+room.room_type);
+
+    const card=document.createElement('div');
+    card.className='room-card'+(isCurrent?' current':isPast?' past':'');
+
+    // Build reward select options
+    const rewardOpts=Object.entries(REWARD_OPTS).map(([v,n])=>
+      `<option value="${v}"${room.reward==v?' selected':''}>${n}</option>`).join('');
+
+    // Build portal select options
+    const portalOpts=Object.entries(PORTAL_OPTS).map(([v,n])=>
+      `<option value="${v}"${room.portal==v?' selected':''}>${n}</option>`).join('');
+
+    card.innerHTML=`
+      <div class="room-num">Room ${i+1} — ${typeName}${isCurrent?'<span class="current-tag">● CURRENT</span>':''}</div>
+      <div class="room-field"><label>Reward</label>
+        <select class="room-select" data-room="${i}" data-field="reward"${isPast?' disabled':''}>${rewardOpts}</select>
+      </div>
+      <div class="room-field"><label>Portal</label>
+        <select class="room-select" data-room="${i}" data-field="portal"${isPast?' disabled':''}>${portalOpts}</select>
+      </div>`;
+    container.appendChild(card);
+  });
+
+  container.addEventListener('change',e=>{
+    const sel=e.target.closest('[data-room]');if(!sel)return;
+    const ri=parseInt(sel.dataset.room);
+    const field=sel.dataset.field;
+    rooms[ri][field]=parseInt(sel.value);
+    markDirty();
+  });
 }
 
 function renderArtifacts(){
@@ -671,9 +1754,9 @@ function renderArtifacts(){
       </div>
       <div class="art-ctrl">
         ${isOwned?`
-          <button class="lv-btn" data-s="${sym}" data-d="-1" title="decrease level"><img src="media/images/minus.png" alt="decrease" class="btn-icon"></button>
+          <button class="lv-btn" data-s="${sym}" data-d="-1" title="decrease level"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
           <span class="lv-disp" id="lv${sym}">Lv ${lv}</span>
-          <button class="lv-btn" data-s="${sym}" data-d="1" title="increase level"><img src="media/images/plus.png" alt="increase" class="btn-icon"></button>
+          <button class="lv-btn" data-s="${sym}" data-d="1" title="increase level"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
         `:`<button class="add-btn" data-s="${sym}" data-action="add">+ add</button>`}
       </div>`;
     grid.appendChild(d);
@@ -736,9 +1819,9 @@ function renderCharStats(){
       <div class="char-stat">
         <span class="ck">${lbl}</span>
         <div class="cvc">
-          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="dec"><img src="media/images/minus.png" alt="decrease" class="btn-icon"></button>
+          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="dec"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
           <span class="cv" id="cv-${c.name}-${uid}">${Math.round(val)}</span>
-          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="inc"><img src="media/images/plus.png" alt="increase" class="btn-icon"></button>
+          <button class="c-btn" data-char="${c.name}" data-uid="${uid}" data-action="inc"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
         </div>
       </div>`;
     return `<div class="char-card">
