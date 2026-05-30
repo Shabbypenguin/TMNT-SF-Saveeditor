@@ -1,165 +1,102 @@
 # TMNT: Splintered Fate — Save Editor
 
-A save editor for TMNT: Splintered Fate (Steam / Epic). Made with the help of Claude after the game softlocked me out of a few artifacts with no way to recover them without restarting. No one else had made one, so here we are.
+A browser-based save editor for TMNT: Splintered Fate Steam or Epic. This was made with the help of claude, the game softlocked me out of a few artifacts and there was no way to try and get them without restarting progress. I saw no one else had made one so I wanted to make one.
 
----
+## Usage
 
-## Web editor (no install)
+https://shabbypenguin.github.io/TMNT-SF-Saveeditor/
 
-**https://shabbypenguin.github.io/TMNT-SF-Saveeditor/**
+https://tmntsf.shabbygames.club/ - Beta newer changes get pushed here first.
 
-**https://tmntsf.shabbygames.club/**
-
-Load a save file by dragging it onto the drop zone or clicking to browse. Save files are named:
+### Loading a save
+Drag and drop a save file onto the drop zone, or click to browse. Save files are named:
 ```
-saveSlot.GameState0.cloud.json
-saveSlot.GameState1.cloud.json
-saveSlot.GameState2.cloud.json
+saveSlot_GameState0_cloud.json
+saveSlot_GameState1_cloud.json
 ```
-On Windows they live in `%appdata%\TMNTSF`. Make a backup before editing. When you're done, click **EXPORT SAVE** and drop the file back into your TMNTSF folder.
+Located in the game's local data folder. On Windows that is `%appdata%\TMNTSF`. Make copies of your saves before editing.
 
----
-
-## Desktop app (exe)
-
-A standalone Windows app that finds your save folder automatically, lets you pick a slot, saves directly back to the right place, and keeps automatic backups of every change.
-
-### Download
-
-Grab the latest `TMNTSF_SaveEditor.exe` from the [Releases](../../releases) page. No installation needed — just double-click it.
-
-> **Requirement:** Windows 10 or 11 with [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) installed. This is pre-installed on most up-to-date Windows systems. If the app does not open, install the WebView2 runtime from that link.
-
-### Features
-
-- **Auto-detects your save folder** — opens straight to a slot picker showing all three save slots with their character names
-- **Saves directly back** — no downloading and copying files manually
-- **Automatic backups** — every time you save, a timestamped backup is written to a `TMNTSF_backups` folder next to the exe before anything is overwritten
-- **Backup restore** — view all backups for a slot and restore any of them with one click
-- **Switch slot** — jump between save slots without restarting
-- Closing the window fully exits the app — no background processes left running
-
----
-
-## Building the exe yourself
-
-Requirements: Python 3.10+ on Windows.
-
-**1. Install dependencies**
-```
-pip install flask pywebview pyinstaller
-```
-
-**2. Clone the repo**
-```
-git clone https://github.com/Shabbypenguin/TMNT-SF-Saveeditor.git
-cd TMNT-SF-Saveeditor
-```
-
-**3. Build**
-```
-pyinstaller tool-src/TMNTSF_SaveEditor.spec
-```
-
-The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-contained — the editor, all images, and the Python runtime are bundled inside. Copy it anywhere and run it.
-
-> **Note:** The spec file expects `index.html` and `media/` to be in the repo root (one level above `tool-src/`). Do not move things around.
+### Exporting
+Click **EXPORT SAVE** and drop the downloaded file back into your TMNTSF save folder, replacing the original.
 
 ---
 
 ## What you can edit
 
 ### Artifacts tab
-- Add any artifact to your inventory (starts at Lv 1)
-- Remove an artifact by decreasing its level below 1
-- Adjust level between 1 and the artifact's max using +/−
-
-### Current Run tab
-
-**Powers**
-- Full power grid across all trees: Flame, Water, Ooze, Ninja, Utrom, Robotics, Astral Light, Astral Dark, Legendary, and Dash
-- All 132 powers mapped with correct enhancement symbols — upgrades apply properly in-game
-- Slot enforcement: picking a Strike/Abilities/Dash/Charged power automatically removes the conflicting one
-- Level powers from Lv 1 to Lv 3
-- Conflict indicator shows which power will be replaced before you commit
-- SELECT ALL, DESELECT, MAX ALL, ZERO ALL bulk controls
-- Per-tree SELECT TREE toggle
-
-**Tools**
-- All pool tools selectable: Shuriken Storm, Ooze Shuriken, Fireball, Meteor Storm, Smoke Bomb, Ride the Wave
-- Default character tools: Leo Shuriken, Utrom Drone, Raphael Turtle Line, Michelangelo Taunt, Casey Juice, Donatello Hardened Shell, Alopex Kunai, Utrom Rod
-
-**Inspirations & Masteries**
-- All 14 character inspirations injectable with correct altar sync
-- Confirmed masteries for Leo, Alopex, and shared masteries (Dash Attack, Special charges 30% faster, Crit Damage, Barrier Damage, and more)
-
-**Other**
-- Adjust scrap, dice, revives, and HP for the current run
-- Set active artifact
-- View current rooms and adjust portals or rewards. I have not mapped these out yet, I am kind of tired of this project for now.
+- **Add** any artifact to your inventory (starts at Lv 1)
+- **Remove** an artifact by decreasing its level below 1
+- **Adjust level** between 1 and the artifact's max level using +/−
 
 ### Stats tab
 
 **Currency**
-- Set available Dreamer Coins and Dragon Coins directly
+- Set available Dreamer Coins (light) and Dragon Coins (dark) directly
 
 **Per character**
 - Shredder victories, deaths, victories, talismans, and wraps per character
 
-**Boss records**
-- Leatherhead, Karai, Bebop & Rocksteady, Shredder (by character and by build), Punk Frog Mech — victories, variants, hard clears
-
 **Global stats**
-- Runs, kills, room clears, portal entries, enemy kills broken down by type, miniboss records, arena victories, and more
-- Search bar filters all sections
-- Advanced / hidden stats toggle
+- Runs, kills, room clears, portal entries, enemy kills broken down by type, miniboss and boss records, arena victories, and more
+- Search bar filters across all stat sections
+- Advanced / hidden stats toggle for internal fields
 
-### Upgrades tab
+### Current Run tab
+- View and inject any power from the full power grid (all trees, all tiers)
+- Set power levels (Lv 1–3)
+- Select active tool from all confirmed tools
+- Set current artifact
+- Adjust scrap, dice, revives, and health for this run
+- Add and adjust inspirations and masteries
+- SELECT ALL / DESELECT, MAX ALL, ZERO ALL bulk controls
+- Per-tree SELECT TREE toggle
+- Conflict detection — shows which powers will be replaced in a given slot
+
+### Upgrades Tab
 - View Dragon and Dreamer altar upgrades and set levels
 - Zero out all upgrades
-- Max all upgrades
-- Toggle overleveling — some upgrades go as high as level 99
-
----
-
-## TO-DO
-
-- I am missing many of the required ID's for mastery powers. Ones i have yet to map will be darker blocked out in the editor.
-- Should you wish to help, I need a copy of your save right after you have gotten a missing mastery, tell me what one you got. if you give me a save at the end of a run with multiple i wont be able to ID which one is which.
-- I need to work on mapping out the portal and rewards options, After mapping the powers, tools, artifcats, and inspirations I am a bit drained and tired of working on it.
+- Max level all upgrades
+- Toggle overleveling (some upgrades can go as high as level 99)
 
 ---
 
 ## Notes
 
 - The editor preserves the original save's binary format exactly — header, MD5 checksum, size fields, and zlib compression are all recalculated correctly on export
-- Power injection writes the correct `enhancement_symbol` for each power so in-game upgrade rooms display and apply properly
-- All buff_syms and enh_syms were sourced from live save files, not decompiles — several decompile IDs were wrong and have been corrected
+- Power injection writes the correct `enhancement_symbol` for each power so upgrades apply properly in-game
+- Tool injection sets the correct per-tool `kit_sym` in `run.stats.equipped` so the game recognises the active tool
 
 ---
 
 ## Changelog
 
-### 2026-05-30 — Desktop app
-
-- Standalone Windows exe via PyInstaller + pywebview
-- Opens as a native app window (no browser tab needed)
-- Auto-detects `%appdata%\TMNTSF` save folder
-- Slot picker on launch with character names
-- Direct save-back to game folder
-- Automatic timestamped backups before every write
-- Backup viewer and one-click restore
-- Closing the window fully exits — no background processes
-
 ### 2026-05-29 — Major run editor overhaul
 
-- All 132 powers fully mapped with confirmed buff_syms and enh_syms from live saves
-- Complete tool coverage with per-tool kit_syms (Ride the Wave, Smoke Bomb, Fireball, Meteor Storm, Shuriken Storm, Ooze Shuriken all confirmed)
-- All 14 character inspirations confirmed with altar syms
-- 19+ masteries confirmed including Leo, Alopex, and shared masteries
-- Slot enforcement and conflict detection for all power trees
-- Removed stale/wrong decompile IDs (Unknown Ninja C, Unknown Astral Dark B, Unknown Utrom B, wrong Shuriken Breaker/Laser Strike IDs)
-- Fixed Frostfire, Bright Spring, and Slippery display (mislabeled or duplicate entries)
+**Power system**
+- All **132 powers** fully mapped with confirmed buff_syms and enh_syms, sourced from live saves
+- All 7 power trees (Flame, Water, Ooze, Ninja, Utrom, Robotics, Astral Light/Dark) plus Legendary, Dash, and cross-tree powers
+- Slot enforcement: selecting a Strike/Abilities/Dash/Charged power removes the conflicting one
+- Throwing Arts Ricochet ↔ Chakram mutual exclusion
+- Powers without a confirmed enh_sym are blocked from injection (prevents broken upgrades)
+- Conflict indicator shows which power will be replaced before you commit
+
+**Tools**
+- All pool tools now injectable with correct enh_sym and per-tool kit_sym:
+  - Shuriken Storm, Ooze Shuriken, Smoke Bomb, Fireball, Meteor Storm, Ride the Wave all confirmed
+  - Default tools (Leo Shuriken, Utrom Drone, Raphael Turtle Line, Michelangelo Taunt, Casey Juice, Donatello Hardened Shell, Alopex Kunai, Utrom Rod) all confirmed
+  - Water Sweep ID unconfirmed — hidden from list until resolved
+- Each pool tool uses its own `kit_sym` key (Ride the Wave = `1002778670`; all others share `-751219635`)
+
+**Inspirations & Masteries**
+- All 14 character inspirations confirmed with altar syms and enh_syms (Mikey, Leo, Raph, Don, Casey, Metalhead, Alopex — both slots each)
+- 19 masteries confirmed with enh_syms including shared masteries (Dash Attack, Special charges 30% faster, Barrier Damage, Crit Damage) and character-specific ones for Leo, Alopex, and others
+- Altar level display synced from run kit_sym to lifetime altar stat
+
+**Bug fixes**
+- Removed stale/wrong decompile IDs that were blocking correct powers (Unknown Ninja C, Unknown Astral Dark B, Unknown Utrom B, wrong Shuriken Breaker/Laser Strike IDs)
+- Fixed Frostfire and Bright Spring display (duplicate ENHANCEMENTS entries caused wrong name lookup)
+- Slippery correctly identified (was mislabeled as Spontaneous Combustion)
+- JS syntax corruption from simultaneous insertion at same position — added post-edit syntax verification
 
 ---
 
