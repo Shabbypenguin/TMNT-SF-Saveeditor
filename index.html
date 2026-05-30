@@ -127,6 +127,7 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 
 .enh-row.enh-inactive{opacity:.45;}
 .enh-row.enh-inactive:hover{opacity:.7;}
+.enh-row.enh-noenh{opacity:.25;}
 /* STATS */
 .stat-search{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:5px;color:var(--tx);padding:9px 14px;font-family:var(--fm);font-size:14px;margin-bottom:14px;}
 .stat-search:focus{outline:none;border-color:var(--g);}
@@ -155,6 +156,20 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .no-run-title{font-family:var(--fd);font-size:24px;letter-spacing:2px;color:var(--mu);}
 .enh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px;}
 .enh-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.enh-row.enh-conflict{border:2px solid #ef4444;}
+.enh-cb{position:absolute;top:5px;right:5px;width:14px;height:14px;accent-color:var(--g);cursor:pointer;}
+.enh-row{position:relative;}
+.sel-tree-btn{font-family:var(--fm);font-size:10px;color:var(--mu);background:var(--s1);border:1px solid var(--bd);border-radius:3px;padding:2px 7px;cursor:pointer;margin-left:8px;transition:color .1s,border-color .1s;}
+.sel-tree-btn:hover{color:var(--g);border-color:var(--g);}
+.sel-tree-btn.active{color:var(--g);border-color:var(--g);}
+.enh-row.enh-selected{outline:1px solid var(--g);}
+.insp-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:8px 12px;display:flex;align-items:center;gap:10px;}
+.insp-row.insp-active{border-color:rgba(76,175,80,.4);}
+.insp-row.insp-noenh{opacity:.3;}
+.insp-name{font-size:13px;flex:1;}
+.insp-lv{font-family:var(--fm);font-size:11px;color:var(--mu);margin-right:4px;}
+.insp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px;}
+#mastery-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:6px;}
 .enh-info{flex:1;min-width:0;}
 .enh-sym{font-family:var(--fm);font-size:11px;color:var(--mu);}
 .enh-name{font-size:13px;color:var(--tx);margin-bottom:2px;}
@@ -280,163 +295,152 @@ function artDesc(sym, lv){
 // All known power names mapped to their tree — used for display once buff_symbol is confirmed
 // Format: name -> [tree, unlock, desc_with_slashes]
 const POWER_INFO = {
-  // Astral Dark
-  'Nightfall':['Astral (Dark)','Initial','Attacks apply Darkness for 3/4/5s. Enemies in Darkness take 10/15/20% more damage.'],
-  'Cloak of Shadow':['Astral (Dark)','Initial','Special or Tool grants Dark Shell for 1.8/2.4/3.2s, dealing 10/25/40 Dark damage and applying 1 stack of Darkness to nearby enemies.'],
-  'Nightfall':['Astral (Dark)','Initial','Final Strike applies 1 stack of Darkness for 3/4/5s and deals 10/15/25 Dark damage.'],
-  'Call of the Void':['Astral (Dark)','Secondary','Deal 10/15/20 Dark damage and pull in nearby enemies upon defeating an enemy affected by Darkness.'],
-  'Core Collapse':['Astral (Dark)','Secondary','Stun nearby enemies for 0.5/1/1.5s upon defeating an enemy affected by Darkness.'],
-  'Dark Attacks':['Astral (Dark)','Secondary','+25/40/60% Attack damage against enemies affected by Darkness.'],
-  'Dark Embrace':['Astral (Dark)','Secondary','+3/4/5% damage dealt and +5/7/10% Move Speed for each Astral Dark power obtained.'],
-  'Dark Star':['Astral (Dark)','Secondary',"Remove all Splinter's Revives. Gain +20% damage, plus 40% damage and heal 15% of Max HP for each removed."],
-  "Dragon's Claw":['Astral (Dark)','Secondary','+10% increased damage dealt. Gain an additional 15/20/25% whenever you select Dragon Coins in Room Rewards.'],
-  'Eternal Darkness':['Astral (Dark)','Secondary','+50/80/100% duration of Negative Effects you apply to enemies.'],
-  'Gift of the Dragon':['Astral (Dark)','Secondary','Gain 120 Dragon coins and 200 Scrap.'],
-  'Lingering Darkness':['Astral (Dark)','Secondary','Darkness deals 10/15/25 Dark damage per second to affected enemies.'],
-  'Shifting Shadow':['Astral (Dark)','Secondary','Dash deals 15/25/35 Dark damage, increased by 300% to targets affected by Darkness.'],
-  // Astral Light
-  'Light Attacks':['Astral (Light)','Initial','Attack damage increased by 4/7/10% of Max Health.'],
-  'Gift of the Dreamer':['Astral (Light)','Initial','Attacks deal 10/20/30% bonus Light damage.'],
-  'Shimmering Shield':['Astral (Light)','Initial','Grant Light Shell for 1.5/2.5/3.5s at the start of your Dash.'],
-  'Ancestral Guardian':['Astral (Light)','Secondary','Light Shell increases Elemental damage by 20/30/40% while active.'],
-  'Piercing Light':    ['Astral (Light)','Secondary','Light Shell deals 15/25/35 Light damage per second to nearby enemies while active.'],
-  'Daybreak':['Astral (Light)','Secondary','Attacks apply 1/2/3 stack(s) of Blinding Light for 3/4/5s. Each stack reduces damage dealt by 4/6/8%. Max 5 stacks.'],
-  'Eternal Light':['Astral (Light)','Secondary','+40/60/80% Positive Effect duration.'],
-  'Light Embrace':['Astral (Light)','Secondary','Reduce damage received by 2/2.5/3% for each Astral Light power obtained.'],
-  'Radiant Warrior':['Astral (Light)','Secondary','Special and Tool grants Light Shell for 1.5/3/4.5s.'],
-  'Revival':['Astral (Light)','Secondary',"Gain 1 Splinter's Revive. +30/60 Max Health."],
-  'Astral Insight':['Astral (Light)','After Shimmering Shield','Increase damage by 30/40/60% while Light Shell is active.'],
-  'Illumination':['Astral (Light)','After Shimmering Shield','Light Shell reflects projectiles. Reflected projectiles deal 45/60/75% of Max Health as Light damage.'],
-  'Revved Up':['Astral (Light)','After Daybreak','+20/25/30% chance of dodging enemy attacks when they are affected by Blinding Light.'],
+  // Astral (Dark)
+  'Nightfall':["Astral (Dark)","Initial","Final Strike applies 1 stack of Darkness for 3/4/5s and deals 10/15/25 Dark damage."],
+  'Call of the Void':["Astral (Dark)","Secondary","Deal 10/15/20 Dark damage and pull in nearby enemies upon defeating an enemy affected by Darkness."],
+  'Core Collapse':["Astral (Dark)","Secondary","Stun nearby enemies for 0.5/1/1.5s upon defeating an enemy affected by Darkness."],
+  'Dark Attacks':["Astral (Dark)","Secondary","+25/40/60% Attack damage against enemies affected by Darkness."],
+  'Dark Embrace':["Astral (Dark)","Secondary","+3/4/5% damage dealt and +5/7/10% Move Speed for each Astral Dark power obtained."],
+  'Dark Star':["Astral (Dark)","Secondary","Remove all Splinter's Revives. Gain +20% damage, plus 40% damage and heal 15% of Max HP for each removed."],
+  'Eternal Darkness':["Astral (Dark)","Secondary","+50/80/100% duration of Negative Effects you apply to enemies."],
+  'Gift of the Dragon':["Astral (Dark)","Secondary","Gain 120 Dragon coins and 200 Scrap."],
+  "Dragon's Claw":["Astral (Dark)","Secondary","+10% damage dealt. +15/20/25% more when selecting Dragon Coins in Room Rewards."],
+  'Lingering Darkness':["Astral (Dark)","Secondary","Darkness deals 10/15/25 Dark damage per second to affected enemies."],
+  'Shifting Shadow':["Astral (Dark)","Secondary","Dash deals 15/25/35 Dark damage, increased by 300% to targets affected by Darkness."],
+  'Eclipse':["Astral (Dark)","Secondary","Darkness deals damage more often, but Dark Shell affects a smaller area."],
+  'Shadow Abilities':["Astral (Dark)","Initial","Special or Tool grants Dark Shell for 1.8/2.4/3.2s, dealing 10/25/40 Dark damage and applying 1 stack of Darkness to nearby enemies."],
+  'Dark Shroud':["Astral (Dark)","Secondary","Dark Shell affects a wider area, but you move slower while active."],
+  // Astral (Light)
+  'Light Attacks':["Astral (Light)","Initial","Attack damage increased by 4/7/10% of Max Health."],
+  'Gift of the Dreamer':["Astral (Light)","Initial","Attacks deal 10/20/30% bonus Light damage."],
+  'Shimmering Shield':["Astral (Light)","Initial","Grant Light Shell for 1.5/2.5/3.5s at the start of your Dash."],
+  'Ancestral Guardian':["Astral (Light)","Secondary","Light Shell increases Elemental damage by 20/30/40% while active."],
+  'Piercing Light':["Astral (Light)","Secondary","Light Shell deals 15/25/35 Light damage per second to nearby enemies while active."],
+  'Daybreak':["Astral (Light)","Secondary","Attacks apply 1/2/3 stack(s) of Blinding Light for 3/4/5s. Each stack reduces damage dealt by 4/6/8%. Max 5 stacks."],
+  'Eternal Light':["Astral (Light)","Secondary","+40/60/80% Positive Effect duration."],
+  'Light Embrace':["Astral (Light)","Secondary","Reduce damage received by 2/2.5/3% for each Astral Light power obtained."],
+  'Radiant Warrior':["Astral (Light)","Initial","Special and Tool grants Light Shell for 1.5/3/4.5s."],
+  'Revival':["Astral (Light)","Secondary","Gain 1 Splinter's Revive. +30/60 Max Health."],
+  'Astral Insight':["Astral (Light)","Initial","While Light Shell is active, gain bonus damage and Critical Hit Chance."],
+  'Illumination':["Astral (Light)","After Shimmering Shield","Light Shell reflects projectiles. Reflected projectiles deal 45/60/75% of Max Health as Light damage."],
+  'Revved Up':["Astral (Light)","After Daybreak","+20/25/30% chance of dodging enemy attacks when they are affected by Blinding Light."],
+  'Ancestral Tech':["Astral (Light)","Secondary","While Light Shell is active, fill your Tool over time."],
+  'Astral Presence':["Astral (Light)","Secondary","While Light Shell is active, gain bonus damage and Multi-hit."],
+  'Unknown Astral Light B':["Astral (Light)","Secondary","+Max Health. Gain additional Max Health when selecting Dreamer Coins."],
   // Flame
-  'Flame Abilities':['Flame','Initial','Special and Tool deals 15/25/40 Flame damage.'],
-  'Flame Dash':['Flame','Initial','Deal 30/50/70 Flame damage to nearby enemies at the start of a Dash.'],
-  'Flame Dash':['Flame','Initial','Dash leaves a fire trail dealing 10/15/20 Flame damage per second.'],
-  'Flame Strike':['Flame','Initial','Final Strike causes an explosion, dealing 23/35/45 Flame damage to nearby enemies.'],
-  'Furious Attacks':['Flame','Initial','+20/35/50% Attack Critical Hit chance.'],
-  'Blazing Inferno':['Flame','Secondary','Damage from Inferno is increased by 10/20/30%.'],
-  'Focus Fire':     ['Flame','Secondary','Inferno targets the same enemy, dealing 30/60/90% more damage.'],
-  'Rage':['Flame','Initial','Deal 40/70/100% increased damage while below 35% Health.'],
-  'Rapid Fire':['Flame','Initial','+20/25/50% damage dealt and +25/40/55% Move Speed for 25/35/45s after the start of combat.'],
-  'Focus Fire':['Flame','After Flame damage','+15/20/30% Flame damage against Bosses.'],
-  'Inferno':['Flame','After Flame damage','Apply Inferno to enemies hit by Flame damage for 3s. Inferno deals 15/20/25 Flame damage per second.'],
-  'Precision':['Flame','After Furious Attacks','+60/120/180% Critical Hit damage.'],
-  'Incendiary Strikes':['Flame','After Furious Attacks','Deal 50/75/100 Flame damage when scoring a Critical Hit.'],
-  'Blazing Inferno':['Flame','After Inferno','+3/4/5s Inferno duration.'],
-  'Preheated':['Flame','After Inferno','+15/30/60% Global Critical Hit chance against targets affected by Inferno.'],
-  'Trailblazer':['Flame','After Rapid Fire','+15s duration of Rapid Fire. Whilst active, defeating an enemy grants +1/2/3s duration and +5/10/15% damage.'],
+  'Flame Abilities':["Flame","Initial","Special and Tool deals 15/25/40 Flame damage."],
+  'Flame Dash':["Flame","Initial","Deal 30/50/70 Flame damage to nearby enemies at the start of a Dash."],
+  'Flame Strike':["Flame","Initial","Final Strike causes an explosion, dealing 23/35/45 Flame damage to nearby enemies."],
+  'Furious Attacks':["Flame","Initial","+20/35/50% Attack Critical Hit chance."],
+  'Blazing Inferno':["Flame","Secondary","Damage from Inferno is increased by 10/20/30%."],
+  'Focus Fire':["Flame","Secondary","Inferno targets the same enemy, dealing 30/60/90% more damage."],
+  'Rage':["Flame","Initial","Deal 40/70/100% increased damage while below 35% Health."],
+  'Rapid Fire':["Flame","Initial","+20/25/50% damage dealt and +25/40/55% Move Speed for 25/35/45s after the start of combat."],
+  'Inferno':["Flame","After Flame damage","Apply Inferno to enemies hit by Flame damage for 3s. Inferno deals 15/20/25 Flame damage per second."],
+  'Precision':["Flame","After Furious Attacks","+60/120/180% Critical Hit damage."],
+  'Incendiary Strikes':["Flame","After Furious Attacks","Deal 50/75/100 Flame damage when scoring a Critical Hit."],
+  'Preheated':["Flame","After Inferno","+15/30/60% Global Critical Hit chance against targets affected by Inferno."],
+  'Trailblazer':["Flame","After Rapid Fire","+15s duration of Rapid Fire. Whilst active, defeating an enemy grants +1/2/3s duration and +5/10/15% damage."],
   // Ninja
-  'Adrenaline':['Ninja','Initial','Gain a stack of Adrenaline upon defeating an enemy. Adrenaline increases Physical damage by 5/10/15%. 5 stacks max.'],
-  'First Strike':['Ninja','Initial','+30/45/60% damage dealt for 1s after a Dash.'],
-  'Quick Feet':['Ninja','Initial','+1 Dash charge.'],
-  'Shinobi Supremacy':['Ninja','Initial','+10/15/20% Dodge chance.'],
-  'Shuriken Attacks':['Ninja','Initial','Attacks have a 30/60/100% chance to throw a Shuriken forward.'],
-  'Art of Darkness':['Ninja','After Adrenaline','Adrenaline now also increases Elemental damage by 15/20/25%.'],
-  'Heightened Senses':['Ninja','After Adrenaline','Gain 1/2/3 stack(s) of Adrenaline upon a Final Strike.'],
-  'Quick Hands':['Ninja','After Shuriken Attacks','+1/2/3 Shuriken and Kunai thrown.'],
-  'Shuriken Breaker':['Ninja','After Shuriken Attacks','Shuriken apply Guard Break to enemy targets for 2s. Guard Break increases damage received by 15/25/35%.'],
-  'Shuriken Engineer':['Ninja','After Shuriken Attacks','Shuriken have a 30/60/100% chance of triggering Tool bonuses.'],
-  'Throwing Arts: Chakram':['Ninja','After Shuriken Attacks','Shuriken now boomerang, returning to your current position. -30/-5/+20% Shuriken damage.'],
-  'Throwing Arts: Chakram':['Ninja','Secondary','Shurikens return after hitting, dealing 15/25/35% damage on return.'],
-  'Throwing Arts: Ricochet':['Ninja','After Shuriken Attacks','Shuriken now ricochet, bouncing off enemies. -20/+10/+40% Shuriken damage.'],
-  'Throwing Mastery':['Ninja','After Shuriken Attacks','+40/65/90% Shuriken and Kunai damage.'],
-  'Ninjutsu Tactics':['Ninja','After Shinobi Supremacy','+15/25/25% Global Critical Hit chance for 2/2.5/3s upon Dodge.'],
-  'Extended Assault':['Ninja','After Shuriken + Chakram/Ricochet + Quick Feet/First Strike','Throw 1/2/3 Shuriken forward at the start of your Dash.'],
+  'Adrenaline':["Ninja","Initial","Gain a stack of Adrenaline upon defeating an enemy. Adrenaline increases Physical damage by 5/10/15%. 5 stacks max."],
+  'First Strike':["Ninja","Initial","+30/45/60% damage dealt for 1s after a Dash."],
+  'Unknown Ninja C':["Ninja","Initial","Unknown — buff_sym -1415415163"],
+  'Quick Feet':["Ninja","Initial","+1 Dash charge."],
+  'Shinobi Supremacy':["Ninja","Initial","+10/15/20% Dodge chance."],
+  'Shuriken Attacks':["Ninja","Initial","Attacks have a 30/60/100% chance to throw a Shuriken forward."],
+  'Art of Darkness':["Ninja","After Adrenaline","Adrenaline now also increases Elemental damage by 15/20/25%."],
+  'Heightened Senses':["Ninja","After Adrenaline","Gain 1/2/3 stack(s) of Adrenaline upon a Final Strike."],
+  'Quick Hands':["Ninja","After Shuriken Attacks","+1/2/3 Shuriken and Kunai thrown."],
+  'Shuriken Breaker':["Ninja","After Shuriken Attacks","Shuriken apply Guard Break to enemy targets for 2s. Guard Break increases damage received by 15/25/35%."],
+  'Shuriken Engineer':["Ninja","After Shuriken Attacks","Shuriken have a 30/60/100% chance of triggering Tool bonuses."],
+  'Throwing Arts: Chakram':["Ninja","After Shuriken Attacks","Shuriken now boomerang, returning to your current position. -30/-5/+20% Shuriken damage."],
+  'Throwing Arts: Ricochet':["Ninja","After Shuriken Attacks","Shuriken now ricochet, bouncing off enemies. -20/+10/+40% Shuriken damage."],
+  'Throwing Mastery':["Ninja","After Shuriken Attacks","+40/65/90% Shuriken and Kunai damage."],
+  'Ninjutsu Tactics':["Ninja","After Shinobi Supremacy","+15/25/25% Global Critical Hit chance for 2/2.5/3s upon Dodge."],
+  'Extended Assault':["Ninja","After Shuriken + Chakram/Ricochet + Quick Feet/First Strike","Throw 1/2/3 Shuriken forward at the start of your Dash."],
   // Ooze
-  'Ooze Abilities':['Ooze','Initial','Special and Tool applies 1/2/3 stack(s) of Ooze.'],
-  'Ooze Attack':['Ooze','Initial','Attacks have a 25/33/50% chance to apply 1 stack of Ooze.'],
-  'Ooze Dash':['Ooze','Initial','Apply 1/2/3 stack(s) of Ooze to enemies hit by your Dash.'],
-  'Ooze Strike':['Ooze','Initial','Final Strike applies 2/4/6 stack(s) of Ooze.'],
-  'Shelf Life':['Ooze','Initial','Boosts last for an additional 4/5/6 rooms.'],
-  'Special Spice':['Ooze','Initial','50/75/100% increased effectiveness of Boosts.'],
-  'Catalytic Consequence':['Ooze','After Ooze','Deal +15/25/35 damage with your Dash Attack for each Stack of Ooze on the enemy.'],
-  'Chunky Mixture':['Ooze','After Ooze','Ooze can now stack up to 6/8/10 times.'],
-  'Ooze Abilities':       ['Ooze','Initial','Deal 20/35/50 Ooze damage and apply 1 Ooze stack to nearby enemies.'],
-  'Ooze Dash':            ['Ooze','Initial','Dash leaves an Ooze trail. Enemies take 10/15/20 Ooze damage and gain 1 stack/s.'],
-  'Ooze Strike':          ['Ooze','Secondary','Final Strike deals 30/50/70% more damage and applies 3 Ooze stacks.'],
-  'Ooze Attack':          ['Ooze','Initial','Attacks deal 10/15/20 bonus Ooze damage and apply 1 Ooze stack.'],
-  'Unfortunate Odor':     ['Ooze','Secondary','Enemies with Ooze stacks have -20/-30/-40% damage reduction.'],
-  'Catalytic Consequence':['Ooze','Secondary','Ooze explosions deal 20/35/50% more damage.'],
-  'Goo':['Ooze','After Ooze','+60/120/180% Ooze damage per second.'],
-  "Goo'dbye":['Ooze','After Ooze','Enemies affected by Ooze explode on defeat, dealing 50/100/150 Ooze damage to nearby enemies.'],
-  'Living Ingredients':['Ooze','After Ooze','When Ooze expires, it is reapplied to 1/2/3 nearby unaffected enemies.'],
-  'Potency':['Ooze','After Ooze','Ooze is now applied with an additional 1/2/3 stack(s).'],
-  'Unfortunate Odor':['Ooze','After Ooze','Deal 10/45/80 Ooze damage and Stun enemies for 1s when applying Ooze. Bosses are not stunned.'],
+  'Ooze Abilities':["Ooze","Initial","Deal 20/35/50 Ooze damage and apply 1 Ooze stack to nearby enemies."],
+  'Ooze Attack':["Ooze","Initial","Attacks deal 10/15/20 bonus Ooze damage and apply 1 Ooze stack."],
+  'Ooze Dash':["Ooze","Initial","Dash leaves an Ooze trail. Enemies take 10/15/20 Ooze damage and gain 1 stack/s."],
+  'Ooze Strike':["Ooze","Secondary","Final Strike deals 30/50/70% more damage and applies 3 Ooze stacks."],
+  'Shelf Life':["Ooze","Initial","Boosts last for an additional 4/5/6 rooms."],
+  'Special Spice':["Ooze","Initial","50/75/100% increased effectiveness of Boosts."],
+  'Catalytic Consequence':["Ooze","After Ooze","Deal +15/25/35 damage with your Dash Attack for each Stack of Ooze on the enemy."],
+  'Chunky Mixture':["Ooze","After Ooze","Ooze can now stack up to 6/8/10 times."],
+  'Unfortunate Odor':["Ooze","After Ooze","Deal 10/45/80 Ooze damage and Stun enemies for 1s when applying Ooze. Bosses are not stunned."],
+  'Goo':["Ooze","After Ooze","+60/120/180% Ooze damage per second."],
+  "Goo'dbye":["Ooze","After Ooze","Enemies affected by Ooze explode on defeat, dealing 50/100/150 Ooze damage to nearby enemies."],
+  'Living Ingredients':["Ooze","After Ooze","When Ooze expires, it is reapplied to 1/2/3 nearby unaffected enemies."],
+  'Potency':["Ooze","After Ooze","Ooze is now applied with an additional 1/2/3 stack(s)."],
   // Robotics
-  'Wireless Charging':    ['Robotics','Initial','Charge Effect activates 20/30/40% faster.'],
-  'Overdrive':            ['Robotics','Initial','While at full charge, deal 10/15/20% bonus damage.'],
-  'Synthetic Rush':       ['Robotics','Secondary','Gain 10/15/20% Move Speed when Charge Effect activates.'],
-  'Thunderheart':         ['Robotics','Secondary','Charge Effect deals 15/25/35 Utrom damage to nearby enemies.'],
-  'Biomechanical Speed':  ['Robotics','Secondary','Special and Tool charge 15/25/35% faster at full charge.'],
-  'Ancestral Tech':       ['Robotics','Secondary','Charge Effect heals you for 5/8/12 Health.'],
-  'Compound Interest':    ['Robotics','Secondary','Each consecutive Charge Effect deals 5/8/12% more damage.'],
-  'Quick Study':          ['Robotics','Secondary','Gain a stacking 3/5/7% damage bonus per room cleared.'],
-  'Aggressive Savings':['Robotics','Initial','The more Scrap you have, the more damage you deal. Up to 100/150/200 at 2000 Scrap.'],
-  'Ascendancy':['Robotics','Initial',"Whenever you trigger a Splinter's Revive, refresh Cooldowns and gain +25/50/80% Elemental damage."],
-  'Blade Matrix':['Robotics','Initial','After reaching full Charge, attack to deal 25/35/50 in an area around you.'],
-  'Challenge Seeker':['Robotics','Initial','+75/100/150 Scrap when you enter a Gauntlet Challenge or Shimmering Portal.'],
-  'Compound Interest':['Robotics','Initial','Whenever you enter a room, gain 2/3/4% more Scrap.'],
-  'Laser Strike':['Robotics','Initial','After reaching full charge, attack to shoot a laser that deals 15/25/35 damage. Ricochets 2 times.'],
-  'Last Stand Protocol':['Robotics','Initial','The lower your HP, the higher your Charge Speed (up to 50/80/120%).'],
-  'Overdrive':['Robotics','Initial','After reaching full charge, attack to enhance all attacks with 15/20/30 Utrom damage for 5s.'],
-  'Regular Customer':['Robotics','Initial','Whenever you reach a Store, gain +1 Lucky Dice and 50/75/100 Scrap.'],
-  'Spare Bot':['Robotics','Initial',"Gain +1 Splinter's Revive. Splinter's Revive heals 10/25/50% more."],
-  'Survival Matrix':['Robotics','Initial',"If you're below 50% HP, your Tool fills 100/125/150% more quickly."],
-  'Wireless Charging':['Robotics','Initial','Dashing through an enemy fills your Special by +15/25/35% over 2s (does not stack).'],
-  'Biomechanical Speed':['Robotics','After Charge','Whenever your Charge Effect activates, gain 10/15/20% Special.'],
-  'Charge Attacks':['Robotics','After Charge','Whenever you Attack, gain +10/12/15% Charge.'],
-  'Empowerment':['Robotics','After Charge','Whenever your Charge Effect activates, gain +5/10/15% elemental damage for that Room.'],
-  'Photon Lance':['Robotics','After Charge','After reaching full Charge, attack to cause a lightning bolt to fall, dealing 90/150/150 damage.'],
-  'Power Surge':['Robotics','After Charge','Whenever you use a Tool or Special, gain +50/75/100% Charge.'],
-  'Quick Study':['Robotics','After Charge','Gain +100/120/150% Charge Speed.'],
-  'Synthetic Rush':['Robotics','After Charge','Whenever your Charge Effect activates, gain 1/2/3 Adrenaline.'],
-  'System Calibration':['Robotics','After Charge','Whenever your Charge Effect activates, gain +15/20/30% Charge Speed for this room.'],
-  'Thunderheart':['Robotics','After Charge',"You take no damage from Lightning Storms. Whenever you're hit by Lightning, gain 30/60/100% Charge."],
+  'Wireless Charging':["Robotics","Initial","Dashing through an enemy fills your Special by +15/25/35% over 2s (does not stack)."],
+  'Overdrive':["Robotics","Initial","After reaching full charge, attack to enhance all attacks with 15/20/30 Utrom damage for 5s."],
+  'Synthetic Rush':["Robotics","After Charge","Whenever your Charge Effect activates, gain 1/2/3 Adrenaline."],
+  'Thunderheart':["Robotics","After Charge","You take no damage from Lightning Storms. Whenever you're hit by Lightning, gain 30/60/100% Charge."],
+  'Biomechanical Speed':["Robotics","After Charge","Whenever your Charge Effect activates, gain 10/15/20% Special."],
+  'Compound Interest':["Robotics","Secondary","Each consecutive Charge Effect deals 5/8/12% more damage."],
+  'Quick Study':["Robotics","Secondary","Gain a stacking 3/5/7% damage bonus per room cleared."],
+  'Aggressive Savings':["Robotics","Initial","The more Scrap you have, the more damage you deal. Up to 100/150/200 at 2000 Scrap."],
+  'Ascendancy':["Robotics","Initial","Whenever you trigger a Splinter's Revive, refresh Cooldowns and gain +25/50/80% Elemental damage."],
+  'Blade Matrix':["Robotics","Initial","After reaching full Charge, attack to deal 25/35/50 in an area around you."],
+  'Challenge Seeker':["Robotics","Initial","+75/100/150 Scrap when you enter a Gauntlet Challenge or Shimmering Portal."],
+  'Laser Strike':["Robotics","Initial","After reaching full charge, attack to shoot a laser that deals 15/25/35 damage. Ricochets 2 times."],
+  'Last Stand Protocol':["Robotics","Initial","The lower your HP, the higher your Charge Speed (up to 50/80/120%)."],
+  'Regular Customer':["Robotics","Initial","Whenever you reach a Store, gain +1 Lucky Dice and 50/75/100 Scrap."],
+  'Spare Bot':["Robotics","Initial","Gain +1 Splinter's Revive. Splinter's Revive heals 10/25/50% more."],
+  'Survival Matrix':["Robotics","Initial","If you're below 50% HP, your Tool fills 100/125/150% more quickly."],
+  'Charge Attacks':["Robotics","After Charge","Whenever you Attack, gain +10/12/15% Charge."],
+  'Empowerment':["Robotics","After Charge","Whenever your Charge Effect activates, gain +5/10/15% elemental damage for that Room."],
+  'Photon Lance':["Robotics","After Charge","After reaching full Charge, attack to cause a lightning bolt to fall, dealing 90/150/150 damage."],
+  'Power Surge':["Robotics","After Charge","Whenever you use a Tool or Special, gain +50/75/100% Charge."],
+  'System Calibration':["Robotics","After Charge","Whenever your Charge Effect activates, gain +15/20/30% Charge Speed for this room."],
+  // Robotics & Flame
+  'Critical Flow':["Robotics & Flame","Initial","Whenever your Charge Effect activates, gain 3% Critical Hit Chance for this room."],
   // Utrom
-  'Utrom Abilities':['Utrom','Initial','Special and Tool deals 20/30/40 Utrom damage.'],
-  'Utrom Attacks':['Utrom','Initial','Attacks have a 30/45/60% chance to deal 20/25/30 Utrom damage.'],
-  'Utrom Battery':['Utrom','Initial','At the start of each Room, fill your Tool by 10/15/20% per second for 10s.'],
-  'Utrom Dash':['Utrom','Initial','Dash deals 15 Utrom damage to 3/4/5 enemies near where you end up.'],
-  'Utrom Strike':['Utrom','Initial','Final Strike calls lightning to hit 2 nearby enemies for 20/25/30 Utrom damage.'],
-  'Chain Lightning':['Utrom','After Utrom damage','Utrom damage will strike again and chain out to two nearby enemies for 10/15/20 Utrom damage.'],
-  'Charged Up':['Utrom','After Utrom damage','Gain 1/2/3 stack(s) of Adrenaline upon using your Tool.'],
-  'Electrifying':['Utrom','After Utrom damage','Utrom damage applies Electrified to enemies for 3s. Electrified deals 10/15/20 Utrom damage per second. Max 3 stacks.'],
-  'Stormy Weather':['Utrom','After Utrom damage','Periodically deal 15/20/25 Utrom damage to 1 nearby enemy.'],
-  'Techno-Organic Interface':['Utrom','After Utrom damage','+10/20/30% Max Health. +15 Move Speed.'],
-  'Utrom Relay':['Utrom','After Utrom damage','Using your Special or Tool causes a Lightning Strike that deals 20/25/30 damage.'],
-  'Alternating Current':['Utrom','After Electrifying','Electrified additionally increases damage received by 30/50/70%.'],
-  // Legendary (cross-tree powers, always Lv1, unlock requires specific power combos)
-  'Dark Flame':             ['Legendary', 'Astral & Fire',      '+40% Flame damage against targets affected by Darkness.'],
-  'Finisher':               ['Legendary', 'Astral & Ninja',     'Attacks and Specials instantly defeat enemies below 15% health.'],
-  'Bright Spring':          ['Legendary', 'Astral & Water',     'Attacks restore 2 health.'],
-  'Light Hammer':           ['Legendary', 'Astral & Utrom',     'Utrom damage is increased by 10% of your Max Health.'],
-  'Critical Flow':          ['Legendary', 'Fire & Robotics',    'Whenever your Charge Effect activates, gain 3% Critical Hit Chance for this room.'],
-  'Frostfire':              ['Legendary', 'Fire & Water',       'Dealing Flame or Water damage deals 30% damage of the opposite element.'],
-  'Spontaneous Combustion': ['Legendary', 'Fire & Ooze',        '30% chance to deal 100 Flame damage when applying Ooze.'],
-  'Tempered Shuriken':      ['Legendary', 'Fire & Ninja',       '+40% Critical Hit chance with Shuriken.'],
-  'Revolution':             ['Legendary', 'Ninja & Utrom',      "Dash Attack's damage increased by 1% of the enemies' Max Health."],
-  'Slippery':               ['Legendary', 'Ninja & Ooze',       'Gain 20% Move Speed and charge Tool/Special 100% faster at maximum Adrenaline.'],
-  'Solution to Pollution':  ['Legendary', 'Ooze & Water',       '+3s Ooze duration. Enemies affected by Ooze gain 1 stack per second.'],
-  'Secret of the Ooze':     ['Legendary', 'Ooze & Utrom',       'Reduce damage received by 30%.'],
-  'Cascade Drive':          ['Legendary', 'Robotics & Water',   'Whenever your Charge Effect activates, gain 3% Multi-Hit Chance for this room.'],
-  'Shocking':               ['Legendary', 'Robotics & Utrom',   'After reaching full charge, deal 20 Utrom damage and Stun nearby enemies for 0.8s.'],
-  'Shatter':                ['Legendary', 'Utrom & Water',      'Deal 200 Water and Utrom damage when applying a Stun. Enemies no longer Stunned.'],
+  'Utrom Abilities':["Utrom","Initial","Special and Tool deals 20/30/40 Utrom damage."],
+  'Utrom Attacks':["Utrom","Initial","Attacks have a 30/45/60% chance to deal 20/25/30 Utrom damage."],
+  'Utrom Battery':["Utrom","Initial","At the start of each Room, fill your Tool by 10/15/20% per second for 10s."],
+  'Utrom Dash':["Utrom","Initial","Dash deals 15 Utrom damage to 3/4/5 enemies near where you end up."],
+  'Utrom Strike':["Utrom","Initial","Final Strike calls lightning to hit 2 nearby enemies for 20/25/30 Utrom damage."],
+  'Chain Lightning':["Utrom","After Utrom damage","Utrom damage will strike again and chain out to two nearby enemies for 10/15/20 Utrom damage."],
+  'Charged Up':["Utrom","After Utrom damage","Gain 1/2/3 stack(s) of Adrenaline upon using your Tool."],
+  'Electrifying':["Utrom","After Utrom damage","Utrom damage applies Electrified to enemies for 3s. Electrified deals 10/15/20 Utrom damage per second. Max 3 stacks."],
+  'Stormy Weather':["Utrom","After Utrom damage","Periodically deal 15/20/25 Utrom damage to 1 nearby enemy."],
+  'Techno-Organic Interface':["Utrom","After Utrom damage","+10/20/30% Max Health. +15 Move Speed."],
+  'Utrom Relay':["Utrom","After Utrom damage","Using your Special or Tool causes a Lightning Strike that deals 20/25/30 damage."],
+  'Alternating Current':["Utrom","After Electrifying","Electrified additionally increases damage received by 30/50/70%."],
+  // Utrom & Robotics
+  'Shocking':["Utrom & Robotics","Initial","After reaching full charge, attack to deal 20 Utrom damage and Stun nearby enemies for 0.8s."],
   // Water
-  'Water Abilities':['Water','Initial','Special and Tool have a 60/80/100% chance to deal 55/70/85 Water damage.'],
-  'Water Attacks':['Water','Initial','Attacks deal 15/20/25 Water damage.'],
-  'Water Dash':['Water','Initial','Deal 45/60/75 Water damage to nearby enemies at the end of a Dash.'],
-  'Dilution':['Water','Initial','+20/30/40% Attack and Special damage area.'],
-  'Still Waters':['Water','Initial','If you have not attacked for 2s gain +80/100/120% damage and your next attack is a Final Strike. Lost upon Attack.'],
-  'Torrential Strike':['Water','Initial','Final Strike grants a stack of Torrent for 4s. Torrent increases Multi-Hit chance by 8/10/12%. Max 5 stacks.'],
-  'Frost':['Water','After Water damage','Water damage applies Frost for 5s, slowing the enemy by 50/60/70%.'],
-  'Heavy Rain':['Water','After Water damage','Deal 40/60/80% increased Water damage. The increase is double during Heavy Rain.'],
-  'Splash Damage':['Water','After Water damage','40/55/70% of Water damage is also dealt to nearby enemies.'],
-  'Pressure Nozzle':['Water','After Water damage','+15/20/30% damage dealt against Bosses.'],
-  'Flash Freeze':['Water','After Frost','Frost Stuns enemies for 0.7/1.2/1.5s when first applied. Does not affect bosses.'],
-  'Freeze':['Water','After Frost','Apply Frost to nearby enemies every 5/4/3s.'],
-  'High Tide':['Water','After Still Waters','While Still Waters is active, Final Strike causes +70/100/130 Water damage and +15% Movement Speed.'],
-  'Torrential Rain':['Water','After Torrential Strike','When you use Special or Tool, gain a Torrent Stack. Attacks deal +4/7/10 Water damage per Torrent stack.'],
-  'When it Rains':['Water','After Torrential Strike','Multi-Hits deal 30/45/60 Water damage.'],
+  'Water Abilities':["Water","Initial","Special and Tool have a 60/80/100% chance to deal 55/70/85 Water damage."],
+  'Water Attacks':["Water","Initial","Attacks deal 15/20/25 Water damage."],
+  'Water Dash':["Water","Initial","Deal 45/60/75 Water damage to nearby enemies at the end of a Dash."],
+  'Dilution':["Water","Initial","+20/30/40% Attack and Special damage area."],
+  'Still Waters':["Water","Initial","If you have not attacked for 2s gain +80/100/120% damage and your next attack is a Final Strike. Lost upon Attack."],
+  'Torrential Strike':["Water","Initial","Final Strike grants a stack of Torrent for 4s. Torrent increases Multi-Hit chance by 8/10/12%. Max 5 stacks."],
+  'Frost':["Water","After Water damage","Water damage applies Frost for 5s, slowing the enemy by 50/60/70%."],
+  'Heavy Rain':["Water","After Water damage","Deal 40/60/80% increased Water damage. The increase is double during Heavy Rain."],
+  'Splash Damage':["Water","After Water damage","40/55/70% of Water damage is also dealt to nearby enemies."],
+  'Pressure Nozzle':["Water","After Water damage","+15/20/30% damage dealt against Bosses."],
+  'Flash Freeze':["Water","After Frost","Frost Stuns enemies for 0.7/1.2/1.5s when first applied. Does not affect bosses."],
+  'Freeze':["Water","After Frost","Apply Frost to nearby enemies every 5/4/3s."],
+  'High Tide':["Water","After Still Waters","While Still Waters is active, Final Strike causes +70/100/130 Water damage and +15% Movement Speed."],
+  'Torrential Rain':["Water","After Torrential Strike","When you use Special or Tool, gain a Torrent Stack. Attacks deal +4/7/10 Water damage per Torrent stack."],
+  'When it Rains':["Water","After Torrential Strike","Multi-Hits deal 30/45/60 Water damage."],
+  // Legendary
+  'Dark Flame':["Legendary","Astral & Fire","+40% Flame damage against targets affected by Darkness."],
+  'Finisher':["Legendary","Astral-Dark & Ninja","Attacks and Specials instantly defeat enemies affected by Guard Break below 25% Health."],
+  'Bright Spring':["Legendary","Astral & Water","Attacks restore 2 health."],
+  'Light Hammer':["Legendary","Astral & Utrom","Utrom damage is increased by 10% of your Max Health."],
+  'Frostfire':["Legendary","Fire & Water","Dealing Flame or Water damage deals 30% damage of the opposite element."],
+  'Spontaneous Combustion':["Legendary","Fire & Ooze","30% chance to deal 100 Flame damage when applying Ooze."],
+  'Tempered Shuriken':["Legendary","Fire & Ninja","+40% Critical Hit chance with Shuriken."],
+  'Revolution':["Legendary","Ninja & Utrom","Dash Attack's damage increased by 1% of the enemies' Max Health."],
+  'Slippery':["Legendary","Ninja & Ooze","Gain 20% Move Speed and charge Tool/Special 100% faster at maximum Adrenaline."],
+  'Solution to Pollution':["Legendary","Ooze & Water","+3s Ooze duration. Enemies affected by Ooze gain 1 stack per second."],
+  'Secret of the Ooze':["Legendary","Ooze & Utrom","Reduce damage received by 30%."],
+  'Cascade Drive':["Legendary","Robotics & Water","Whenever your Charge Effect activates, gain 3% Multi-Hit Chance for this room."],
+  'Shatter':["Legendary","Utrom & Water","Deal 200 Water and Utrom damage when applying a Stun. Enemies are no longer Stunned."],
 };
 
 // Replace slash-separated values with the one for the given level (1-3)
@@ -468,87 +472,292 @@ const TOOLS = {
   'Smoke Bomb':       'Teleport forward dealing 70 Physical damage where you land. Triggers Dodge effect.',
   'Shuriken Storm':   'Throw 8 Shurikens at nearby targets. Each deals 30 Physical damage.',
   'Unstable Canister':'Deal 60 Ooze damage and apply 3 Ooze stacks to all nearby enemies.',
+  'Kunai':           'Throw Kunai that pierce enemies. (Alopex default)',
+  'Utrom Rod':       'Strike a nearby enemy with lightning 4 times for 25 Utrom damage.',
   'Utrom Shuriken':   'Throw 2 Electric Shurikens. Each deals 25 Utrom damage.',
+  'Kunai':           'Throw Kunai that pierce enemies. (Alopex default)',
   'Utrom Rod':        'Strike a nearby enemy with lightning 4 times for 25 Utrom damage.',
   'Water Sweeper':    'Deal 80 Water damage to nearby enemies. Knocked back.',
 };
 
 const ENHANCEMENTS = {
+  // Internal affinity buffs — not player-facing, filter from display
+  '-1048629535': ['Internal: Alopex Affinity 1',   'internal'],
+  '-1098962392': ['Alopex: Tool deals +25 Flame damage', 'mastery'],
+  '1105143980':  ['Internal: Casey Affinity 1',    'internal'],
+  '1155476837':  ['Internal: Casey Affinity 2',    'internal'],
+  '-1512743178': ['Internal: Donatello Affinity 1','internal'],
+  '-1529520797': ['Internal: Donatello Affinity 2','internal'],
+  '1344156015':  ['Internal: Leonardo Affinity 2', 'internal'],
+  '2113377231':  ['Internal: Metalhead Affinity 1','internal'],
+  '2130154850':  ['Internal: Metalhead Affinity 2','internal'],
+  '772501084':   ['Internal: Mikey Affinity 1',    'internal'],
+  '822833941':   ['Internal: Mikey Affinity 2',    'internal'],
+  '-1442636985': ['Internal: Raphael Affinity 1',  'internal'],
+  '-1425859366': ['Internal: Raphael Affinity 2',  'internal'],
+  // Alopex kit
   // Michelangelo kit (confirmed)
-  '201029333':   ['Michelangelo - Inspiration 1', 'inspiration'],
-  '-1053443010': ['Michelangelo - Inspiration 2', 'inspiration'],
+  '201029333':   ['Michelangelo - Inspiration 1', 'inspiration'],  // Lv1:+5% / Lv2:+10% / Lv3:+15% Attack area & dmg
+  '-1053443010': ['Michelangelo - Inspiration 2', 'inspiration'],  // Lv1:+5% / Lv2:+10% / Lv3:+15% Multi-Hit
   '-1070220629': ['Michelangelo - Tool (Taunt)',  'tool'],
   // Casey Jones (insp 1 confirmed)
   '1844912779':  ['Casey Jones - Inspiration 1',  'inspiration'],
   '1861690398':  ['Casey Jones - Inspiration 2',  'inspiration'],
+  '319898966':   ['Tool (Shuriken Storm)',          'tool'],
   '-876652360':  ['Casey Jones - Tool (The Juice)',    'tool'],
-  '228613591':   ['Tool (Utrom Drone)',                  'tool'],
-  // Alopex kit (IDs confirmed, slot order unknown)
-  '498986860':   ['Alopex - Unknown A (Tool or Insp)', 'inspiration'],
-  '831103151':   ['Alopex - Unknown B (Tool or Insp)', 'inspiration'],
-  '847880770':   ['Alopex - Unknown C (Tool or Insp)', 'inspiration'],
+  '1066694247':  ['Laser Strike',                      'power'],
+
+  // Internal affinity buffs — not player-facing, filter from display
+  '-1048629535': ['Internal: Alopex Affinity 1',   'internal'],
+  '-1098962392': ['Alopex: Tool deals +25 Flame damage', 'mastery'],
+  '1105143980':  ['Internal: Casey Affinity 1',    'internal'],
+  '1155476837':  ['Internal: Casey Affinity 2',    'internal'],
+  '-1512743178': ['Internal: Donatello Affinity 1','internal'],
+  '-1529520797': ['Internal: Donatello Affinity 2','internal'],
+  '1344156015':  ['Internal: Leonardo Affinity 2', 'internal'],
+  '2113377231':  ['Internal: Metalhead Affinity 1','internal'],
+  '2130154850':  ['Internal: Metalhead Affinity 2','internal'],
+  '772501084':   ['Internal: Mikey Affinity 1',    'internal'],
+  '822833941':   ['Internal: Mikey Affinity 2',    'internal'],
+  '-1442636985': ['Internal: Raphael Affinity 1',  'internal'],
+  '-1425859366': ['Internal: Raphael Affinity 2',  'internal'],
+  // Alopex kit
+  // Michelangelo kit
+  // Donatello kit (IDs confirmed, which is Insp1 vs Insp2 unknown)
+  '535333324':   ['Challenge Seeker',     'power'],
+  '2131492950':  ['Critical Flow',          'power'],  // Mixed Robotics/Flame
+  '1922146599':  ['Thunderheart',           'power'],
+  '-150579913':  ['Overdrive',              'power'],
+  '325923318':   ['Tool (Utrom Drone)',      'tool'],
+  '-519913461':  ['Wireless Charging',      'power'],
+  '2048730722':  ['Survival Matrix',        'power'],
+  '-1991309781': ['Spare Bot',              'power'],
+  '834996524':   ['Regular Customer',       'power'],
+  '133185293':   ['Quick Study',            'power'],
+  '1810794422':  ['System Calibration',     'power'],
+  '65597839':    ['Charge Attacks',         'power'],
+  '-1400563463': ['Power Surge',            'power'],
+  '1821891108':  ['Synthetic Rush',         'power'],
+  '-1837571790': ['Biomechanical Speed',    'power'],
+  '-1603745208': ['Empowerment',            'power'],
+  '-1299775965': ['Compound Interest',      'power'],
+  '-708443022':  ['Aggressive Savings',     'power'],
+  '-737089349':  ['Ascendancy',             'power'],
+  '-1850496697': ['Photon Lance',           'power'],
+  '152024873':   ['Last Stand Protocol',    'power'],
+  // Robotics
+  '-1034736680': ['Donatello - Inspiration 1',    'inspiration'],  // Lv1:1 / Lv2:2 / Lv3:3 HP on encounter start
+      '-984403823':  ['Donatello - Inspiration 2',          'inspiration'],  // Lv1:20% / Lv2:40% Tool charge speed
+  // Internal affinity buffs — not player-facing, filter from display
+  '-1048629535': ['Internal: Alopex Affinity 1',   'internal'],
+  '-1098962392': ['Alopex: Tool deals +25 Flame damage', 'mastery'],
+  '1105143980':  ['Internal: Casey Affinity 1',    'internal'],
+  '1155476837':  ['Internal: Casey Affinity 2',    'internal'],
+  '-1512743178': ['Internal: Donatello Affinity 1','internal'],
+  '-1529520797': ['Internal: Donatello Affinity 2','internal'],
+  '1344156015':  ['Internal: Leonardo Affinity 2', 'internal'],
+  '2113377231':  ['Internal: Metalhead Affinity 1','internal'],
+  '2130154850':  ['Internal: Metalhead Affinity 2','internal'],
+  '772501084':   ['Internal: Mikey Affinity 1',    'internal'],
+  '822833941':   ['Internal: Mikey Affinity 2',    'internal'],
+  '-1442636985': ['Internal: Raphael Affinity 1',  'internal'],
+  '-1425859366': ['Internal: Raphael Affinity 2',  'internal'],
+  // Alopex kit
+  '498986860':   ['Alopex - Tool (Kunai)',          'tool'],
+  '831103151':   ['Alopex - Inspiration 1',         'inspiration'],  // Lv1:+8% / Lv2:+10% / Lv3:+12% Dodge (x2 vs projectiles)
+  '847880770':   ['Alopex - Inspiration 2',         'inspiration'],  // Lv1:+8% / Lv2:+10% / Lv3:+12% Crit & Move Speed
   // Metalhead kit (IDs confirmed, slot order unknown)
   '-580224395':  ['Metalhead - Inspiration 2',               'inspiration'],
-  '1212610709':  ['Unknown - seen in Casey run Lv2 (not an inspiration)', 'power'],
-
-  '1389435912':  ['Metalhead - Unknown C (Tool or Insp)', 'inspiration'],
+  '1212610709':  ['Ooze Abilities',       'power'],
   // Raphael kit (tool confirmed, inspirations are 2 of the remaining 4 unknowns)
   '-619638694':  ['Raphael - Tool (Turtle Line)',       'tool'],
-  '-1425859366': ['Raphael - Unknown A (Insp or power)','inspiration'],
-  '-2900911':    ['Raphael - Unknown B (Insp or power)','inspiration'],
-  '-2087857272': ['Raphael - Inspiration 2',             'inspiration'],
-  '-2037524415': ['Raphael - Unknown D (Insp or power)','inspiration'],
-  '-120344244':  ['Raphael - Unknown E (Insp or power)','inspiration'],
-  // Leo kit (IDs confirmed, slot order unknown)
-  '-1615068019': ['Leo - Unknown A (Tool or Insp)', 'inspiration'],
-  '1864026597':  ['Leo - Unknown B (Tool or Insp)', 'inspiration'],
-  '1813693740':  ['Leo - Unknown C (Tool or Insp)', 'inspiration'],
+    '-1820198603': ['Tool (Ooze Shuriken)',            'tool'],
+    '1742040894':  ['Tool (Unstable Canister)',        'tool'],  // Deal 30/60/90 Ooze dmg, 2/3/4 Ooze stacks
+  '-640261974':  ['Tool (Utrom Rod)',                    'tool'],
+  '1642479731':  ['Donatello - Tool (Hardened Shell)',   'tool'],
+  '-2037524415': ['Raphael - Inspiration 1',             'inspiration'],  // Lv1:+5% / Lv2:+10% / Lv3:+15% Special Crit
+  // Leo kit
+    '-180578088':  ['Tool (Utrom Shuriken)',           'tool'],  // Throw 4 Utrom Shurikens, 15/25/35 Utrom dmg. Charge: 11.2%/atk
+  '-1615068019': ['Tool (Shuriken)',                  'tool'],
+  '1813693740':  ['Leo - Inspiration 1',            'inspiration'],  // Lv1:+5 / Lv2:+10 / Lv3:+15 Master Strike dmg
+  '1864026597':  ['Leo - Inspiration 2',            'inspiration'],  // Lv1:+1 / Lv2:+2 Special charges
   // Confirmed powers
   '1725144541':  ['Water Attacks',        'power'],
   '-351582946':  ['Light Attacks',        'power'],
+  '-1732795265': ['Shimmering Shield',     'power'],
+  '415064718':   ['Daybreak',              'power'],
+  '-1911145177': ['Gift of the Dreamer',  'power'],
+  '-2097731964': ['Illumination',          'power'],
+  '1646991356':  ['Ancestral Guardian',    'power'],
+  '-1109671216': ['Ancestral Tech',        'power'],
+  '347186936':   ['Astral Insight',        'power'],
+  '530038070':   ['Astral Presence',       'power'],
+  '-1616197290': ['Call of the Void',           'power'],
+  '-1746636050': ['Eclipse',               'power'],
+  '-1189980455': ['Eternal Darkness',       'power'],
+  '1747718790':  ['Gift of the Dragon',     'power'],
+  '-1752657340': ['Eternal Light',         'power'],
+  '-14461045':   ['Light Embrace',         'power'],
+  '-1475312023': ['Light Hammer',          'power'],
+  '652837307':   ['Lingering Darkness',    'power'],
+  '-1936580441': ['Nightfall',             'power'],
+  '788412624':   ['Piercing Light',        'power'],
+  '425857776':   ['Radiant Warrior',       'power'],
+  '-147856574':  ['Revved Up',             'power'],
+  '-312114001':  ['Shadow Abilities',      'power'],
+  '1357762756':  ['Shifting Shadow',       'power'],
+  '-1554599614': ['Dark Shroud',           'power'],
+  '-1468644612': ['Dark Star',             'power'],
+  '1775826162':  ['Core Collapse',         'power'],
+  '1862375159':  ['Dark Attacks',          'power'],
+  '1777325037':  ['Dark Embrace',          'power'],
   '-1569557381': ['Water Abilities',      'power'],
+  '1938928338':  ['Water Dash',            'power'],
+  '-997119924':  ['Dilution',              'power'],
+  '-1724689305': ['Flash Freeze',          'power'],
+  '-619310296':  ['Freeze',               'power'],
+  '-2105683899': ['Frost',                'power'],
+  '-662594691':  ['Heavy Rain',           'power'],
+  '-388807946':  ['High Tide',            'power'],
+  '-1186504473': ['Splash Damage',        'power'],
+  '-1731294535': ['Still Waters',         'power'],
+  '-812161723':  ['Torrential Rain',      'power'],
+  '85174008':    ['Torrential Strike',    'power'],
+  '876793573':   ['When it Rains',        'power'],
+  '874267031':   ['Bright Spring',        'power'],
+  '1789795819':  ['Pressure Nozzle',      'power'],
   '-1032506597': ['Quick Feet',            'power'],
   '2133655172':  ['Shuriken Attacks',     'power'],
-  '-630557252':  ['Gift of the Dreamer',  'power'],
-  '-2122367194': ['Shelf Life',           'power'],
+  '1929011532':  ['Alternating Current',  'power'],
+  '-1974786426': ['Chain Lightning',        'power'],
+  '-1151085959': ['Charged Up',             'power'],
+  '-1696174228': ['Electrifying',           'power'],
+  '-1516693114': ['Utrom Abilities',        'power'],
+  '742510723':   ['Utrom Attacks',          'power'],
+  '-1046008707': ['Utrom Battery',          'power'],
+  '1765260001':  ['Utrom Dash',             'power'],
+  '-27946384':   ['Utrom Strike',           'power'],
+  '-249594085':  ['Techno-Organic Interface','power'],
+  '-1663813465': ['Stormy Weather',         'power'],
+  '-630557252':  ['Metalhead - Inspiration 1',    'inspiration'],
+  '-2087857272':  ['Raphael - Inspiration 2', 'inspiration'],
+  '1361471662':  ['Unknown Mikey Mastery A', 'mastery'],
+  '-2122367194': ['Unknown (boost room duration effect — roomDuration:5 at Lv2)', 'power'],
   '-194026468':  ['Art of Darkness',      'power'],
+  '-519095219':  ['Extended Assault',      'power'],
+  '1953603970':  ['Heightened Senses',      'power'],
+  '-235787709':  ['Quick Hands',            'power'],
+  '-948395547':  ['Shuriken Engineer',      'power'],
+  '-1463821367': ['Throwing Arts: Ricochet','power'],
+  '420963323':   ['Throwing Arts: Chakram',  'power'],
+  '-1391222310': ['Throwing Mastery',       'power'],
   '1144465955':  ['Ninjutsu Tactics',     'power'],
   '-899837152':  ['Shinobi Supremacy',    'power'],
   '1587780353':  ['Special Spice',        'power'],
-  '-1364872862': ['Wireless Charging',    'power'],
-  '-54411067':   ['Ooze Dash',            'power'],
-  '325923318':   ['Ooze Strike',          'power'],
+  '-1303223760': ['Shelf Life',            'power'],
+  '-1364872862': ['Ooze Dash',            'power'],
+  '590707888':   ['Ooze Attack',          'power'],
+  '-54411067':   ['Ooze Strike',          'power'],
+  '325923318':   ['Tool (Utrom Drone)',      'tool'],
   // Ooze powers (confirmed via acquisition order)
-  '-1526079192': ['Goo',                'power'],
-  '1867113587':  ["Goo'dbye",           'power'],
-  '1715176274':  ['Living Ingredients', 'power'],
+  '-1526079192': ["Goo'dbye",           'power'],
+  '1867113587':  ['Focus Fire',          'power'],
+  '1715176274':  ['Goo',                  'power'],
   '-1974803373': ['Chunky Mixture',     'power'],
   '-2060029603': ['Potency',            'power'],
   // Flame powers (confirmed via acquisition order)
-  '-160562649':  ['Blazing Inferno',    'power'],
-  '1746825681':  ['Focus Fire',         'power'],
+  '-160562649':  ['Living Ingredients', 'power'],
+  '-549683561':  ['Flame Abilities',      'power'],
+  '-1917187826': ['Flame Dash',            'power'],
+  '-1068283913': ['Flame Strike',          'power'],
+  '-1731901020': ['Incendiary Strikes',    'power'],
+  '1166508037':  ['Inferno',               'power'],
+  '-2023653963': ['Rage',                  'power'],
+  '-1415779635': ['Rapid Fire',            'power'],
+  '138635578':   ['Trailblazer',           'power'],
+  '-196974294':  ['Precision',             'power'],
+  '-2061803411': ['Preheated',             'power'],
+  '1789795819':  ['Pressure Nozzle',       'power'],
+  '1746825681':  ['Blazing Inferno',    'power'],
   // Legendaries (confirmed via acquisition order)
-  '1935875699':  ['Spontaneous Combustion', 'power'],
-  '1155280766':  ['Slippery',           'power'],
+  '1935875699':  ['Slippery',               'power'],
+  '482644795':   ['Finisher',              'power'],
+  '1184088393':  ['Revolution',             'power'],
+  '1323371266':  ['Secret of the Ooze',     'power'],
+  '1385262376':  ['Shatter',               'power'],
+  '372735608':   ['Dark Flame',            'power'],
+  '1847681499':  ['Frostfire',             'power'],
+  '984786410':   ['Solution to Pollution', 'power'],
+  '-906772587':  ['Utrom Relay',                 'power'],
+  // Boosts (roomDuration > 0 in run — need to be in ENHANCEMENTS so enhCat works)
+  '-1340414882': ['Boost: Heal',              'boost'],
+  '617543826':   ['Boost: Damage',            'boost'],
+  '1009834748':  ['Boost: Critical Chance',   'boost'],
+  '143260484':   ['Boost: Critical Damage',   'boost'],
+  '-2122367194': ['Boost: Elemental Damage',  'boost'],
+  '-274920327':  ['Boost: Movement Speed',    'boost'],
+  '1557023907':  ['Boost: Barrier Damage',    'boost'],
+  '92011809':    ['Boost: Special Damage',    'boost'],
+  '-1854552503': ['Boost: Tool Damage',       'boost'],
+  '1141745441':  ['Boost: Attack Damage',     'boost'],
+  '-717407322':  ['Boost: Dash Attack Damage','boost'],
+  '-1274020767': ['Boost: Special Charge',    'boost'],
+  '1016348431':  ['Boost: Tool Charge',       'boost'],
+  // Powers missing from ENHANCEMENTS
+  '-722931231':  ['Catalytic Consequence',    'power'],
+  '-1375537276': ['Unfortunate Odor',         'power'],
+  '-955543693':  ['Shuriken Breaker',         'power'],
+  '-523953124':  ['Revival',                  'power'],
+  '-371414428':  ['Blade Matrix',              'power'],
+  '228613591':   ['Furious Attacks',          'power'],
+  '-1194047928': ['Cascade Drive',          'power'],
   // Raph masteries (confirmed via acquisition order — defer full mastery mapping)
-  '-19678530':   ['Mastery - Unknown (Raph: +50% dmg vs barrier)', 'inspiration'],
-  '1312854464':  ['Mastery - Unknown (Raph: +50% crit hit dmg)',   'inspiration'],
   // Legendaries confirmed from Raph save (3 of these 4, one is a mastery)
-  '1583289433':  ['Legendary - Unknown A (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
-  '874267031':   ['Legendary - Unknown B (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
-  '1847681499':  ['Legendary - Unknown C (Tempered Shuriken, Frostfire, or Bright Spring)', 'power'],
-  '-311294544':  ['Legendary or Mastery - Unknown D', 'power'],
-  '-1247950504': ['Adrenaline',   'power'],
-  '-2095601647': ['First Strike', 'power'],
+  '1583289433':  ['Shocking',               'power'],
+  '-311294544':  ['Tempered Shuriken',               'power'],
+  '-1247950504':  ['Adrenaline',    'power'],
+  '-2095601647':  ['First Strike',    'power'],
+  // ── Masteries (confirmed buff_syms only) ──
+  // ── Tools (no buff_sym confirmed — placeholder syms) ──
+  '456127606':  ['Tool (Attack Drone)',  'tool'],
+  '6':  ['Tool (Water Sweep)', 'tool'],  // 80/100/120 Water dmg nearby, knockback. Charge: ~12%/atk
+  '-839979647': ['Tool (Ride the Wave)',  'tool'],
+  '-1400536958': ['Tool (Smoke Bomb)',  'tool'],
+  '785524961':  ['Tool (Fireball)',   'tool'],
+  '-682882212':  ['Tool (Meteor Storm)', 'tool'],
+
+  // ── Masteries (confirmed buff_syms) ──
+  '1121725528':  ['+30% Dash Attack damage, +1 Dash on kill',   'mastery'],
+  '-19678530':   ['+50% damage to Barrier enemies',              'mastery'],
+  '1360933634':  ['+10% Utrom dmg per Utrom power',             'mastery'],
+  '1312854464':  ['+50% Crit Hit damage',                       'mastery'],
+  '1633481062':  ['Don: Tool charges 30% faster',               'mastery'],
+  '1801257252':  ['Don: Special/Tool next attack Final Strike',  'mastery'],
+  '1445359757':  ['Mikey: Improve Inspiration (Atk area/dmg)',  'mastery'],
+  '1395026900':  ['Mikey: Unknown Mastery 2',                   'mastery'],
+  '441330377':   ['Alopex: +2 Dashes',                          'mastery'],
+  '656276786':  ['+100% Special Missiles damage',               'mastery'],
+  '792487292':  ['Leo: Special grants Light Shell for 2s', 'mastery'],
+  '876375387':  ['Special charges 30% faster', 'mastery'],
+  '458107996':  ['Alopex: +25% Elemental damage', 'mastery'],
+  '491663234':  ['Alopex: Dashing through enemy Guard Break 2s', 'mastery'],
+  '859597768':  ['Leo: Dash Attack applies Master Strike', 'mastery'],
 };
 
 function enhName(buff_sym){
   const e=ENHANCEMENTS[String(buff_sym)];
   return e?e[0]:null;
 }
+// Symbols we don't have enh_sym for — injection won't work
+const NO_ENH_SYM = new Set([6]);
+function hasEnhSym(sym){return !NO_ENH_SYM.has(Number(sym))&&!NO_ENH_SYM.has(String(sym));}
 function enhCat(buff_sym){
   const e=ENHANCEMENTS[String(buff_sym)];
-  return e?e[1]:'power';
+  if(!e)return 'power';
+  return e[1]==='tool_hidden'?'tool':e[1];
+}
+function isInternalBuff(buff_sym){
+  return enhCat(buff_sym)==='internal';
 }
 
 
@@ -582,7 +791,7 @@ const CHARS = [
   {name:'Michelangelo',color:'#f97316',id:1773431475,tal:'michelangelo_talismans',wrap:'michelangelo_wraps',win:'stat_shredder_victory_michelangelo'}, // UNCONFIRMED
   {name:'Leonardo',color:'#3b82f6',id:-1842996619,tal:'leonardo_talismans',wrap:'leonardo_wraps',win:'stat_shredder_victory_leonardo'},
   {name:'Raphael',color:'#ef4444',id:195141004,tal:'raphael_talismans',wrap:'raphael_wraps',win:'stat_shredder_victory_raphael'},
-  {name:'Donatello',color:'#a855f7',id:313913754,tal:'donatello_talismans',wrap:'donatello_wraps',win:'stat_shredder_victory_donatello'},
+  {name:'Donatello',color:'#a855f7',id:-1076859241,tal:'donatello_talismans',wrap:'donatello_wraps',win:'stat_shredder_victory_donatello'},
   {name:'Casey Jones',color:'#6b7280',id:-917669266,tal:'caseyjones_talismans',wrap:'caseyjones_wraps',win:'stat_shredder_victory_caseyjones'},
   {name:'Metalhead',color:'#f5bb0b',id:1751315127,tal:'metalhead_talismans',wrap:'metalhead_wraps',win:'stat_shredder_victory_metalhead'},
   {name:'Alopex',color:'#14b8a6',id:1252917672,tal:'alopex_talismans',wrap:'alopex_wraps',win:'stat_shredder_victory_alopex'},
@@ -805,6 +1014,78 @@ function md5bytes(by){
   return(h(a)+h(b)+h(c)+h(d)).toUpperCase();
 }
 function wLE(v){return new Uint8Array([v&0xff,(v>>8)&0xff,(v>>16)&0xff,(v>>24)&0xff]);}
+// Maps run kit inspiration buff_symbol -> altar upgrade buff_symbol
+// Used to sync inspiration levels with altar upgrade levels
+const KIT_TO_ALTAR = {
+  // Casey Jones
+  '1844912779':  '1301944744',   // Casey Insp 1
+  '1861690398':  '1352277601',   // Casey Insp 2
+  // Alopex
+  '831103151':   '-907883883',   // Alopex Insp 1
+  '847880770':   '-958216740',   // Alopex Insp 2
+  // Leonardo
+  '1813693740':  '-2131612450',  // Leo Insp 1
+  '1864026597':  '2146577227',   // Leo Insp 2
+  // Metalhead
+  '-630557252':  '-1125299434',  // Metalhead Insp 1
+  '-580224395':  '-1142077053',  // Metalhead Insp 2
+  // Donatello (run syms not confirmed from fresh save yet)
+  '-1034736680': '-1212524326',  // Don Insp 1 (unconfirmed)
+  '-984403823':  '-1229301945',  // Don Insp 2 (unconfirmed)
+  // Raphael (run syms unclear — multiple unknowns)
+  // Michelangelo (run syms unclear — 201029333 / -1053443010)
+};
+// Maps tool buff_sym -> kit_sym used in run.stats.equipped
+// Each pool tool has its own kit_sym entry; value = acquisition order counter
+const TOOL_KIT_SYM = {
+  '319898966':   -751219635,   // Tool (Shuriken Storm) — confirmed
+  '-1820198603': -751219635,   // Tool (Ooze Shuriken) — assumed same key
+  '-1400536958': -751219635,   // Tool (Smoke Bomb) — confirmed
+  '785524961':   -751219635,   // Tool (Fireball) — confirmed
+  '-682882212':   -751219635,   // Tool (Meteor Storm) — confirmed
+  '-839979647':  1002778670,   // Tool (Ride the Wave) — confirmed
+};
+
+
+const INSP_TO_ALTAR = {
+  // Donatello
+  'Donatello - Inspiration 1':    '-1212524326',
+  'Donatello - Inspiration 2':    '-1229301945',
+  // Leonardo
+  'Leo - Inspiration 1':          '-2131612450',
+  'Leo - Inspiration 2':          '2146577227',
+  // Casey Jones
+  'Casey Jones - Inspiration 1':  '1301944744',
+  'Casey Jones - Inspiration 2':  '1352277601',
+  // Alopex
+  'Alopex - Inspiration 1':       '-907883883',
+  'Alopex - Inspiration 2':       '-958216740',
+  // Metalhead
+  'Metalhead - Inspiration 1':    '-1125299434',
+  'Metalhead - Inspiration 2':    '-1142077053',
+  'Raphael - Inspiration 1':      '1252309739',
+  'Raphael - Inspiration 2':      '1269087358',
+  'Michelangelo - Inspiration 1': '139671976',
+  'Michelangelo - Inspiration 2': '190004833',
+};
+const INSP_LEVELS = {
+  'Michelangelo - Inspiration 1': ['+5% Attack area & dmg', '+10% Attack area & dmg', '+15% Attack area & dmg'],
+  'Michelangelo - Inspiration 2': ['+5% Multi-Hit', '+10% Multi-Hit', '+15% Multi-Hit'],
+  'Leo - Inspiration 1':          ['+5 Master Strike dmg', '+10 Master Strike dmg', '+15 Master Strike dmg'],
+  'Leo - Inspiration 2':          ['+1 Special charge', '+2 Special charges'],
+  'Raphael - Inspiration 1':      ['+5% Special Crit', '+10% Special Crit', '+15% Special Crit'],
+  'Raphael - Inspiration 2':      ['+3% Atk Crit & Crit Dmg', '+6% Atk Crit & Crit Dmg', '+9% Atk Crit & Crit Dmg'],
+  'Donatello - Inspiration 1':    ['Restore 1 HP/encounter', 'Restore 2 HP/encounter', 'Restore 3 HP/encounter'],
+  'Donatello - Inspiration 2':    ['Tool charges 20% faster', 'Tool charges 40% faster'],
+  'Casey Jones - Inspiration 1':  ['Special Guard Break +1s', 'Special Guard Break +2s', 'Special Guard Break +3s'],
+  'Casey Jones - Inspiration 2':  ['Special: Final Strike +33% Crit', 'Special: Final Strike +66% Crit', 'Special: Final Strike +100% Crit'],
+  'Metalhead - Inspiration 1':    ['Boss kill: upgrade enh, +25 Scrap', 'Boss kill: upgrade enh, +50 Scrap', 'Boss kill: upgrade enh, +75 Scrap'],
+  'Metalhead - Inspiration 2':    ['Tool Guard Break 3s', 'Tool Guard Break 6s', 'Tool Guard Break 9s'],
+  'Alopex - Inspiration 1':       ['+8% Dodge (x2 vs projectiles)', '+10% Dodge (x2 vs projectiles)', '+12% Dodge (x2 vs projectiles)'],
+  'Alopex - Inspiration 2':       ['+8% Crit & Move Speed', '+10% Crit & Move Speed', '+12% Crit & Move Speed'],
+};
+
+
 function sv(k){const st=save.state.lifetime.stats;return st[k]?Math.round(st[k].value):0;}
 function setStat(k,v){
   const st=save.state.lifetime.stats;
@@ -825,6 +1106,7 @@ function loadFile(file){
       // Build set of JSON paths whose values were floats (X.0) in the original
       origFloatPaths=new Set();
       buildFloatPaths(JSON.parse(js),'',origFloatPaths,js);
+      syncInspirationLevels();
       render();setStatus('loaded: '+file.name,'ok');
     }catch(err){setStatus('error: '+err.message,'err');}
   };
@@ -968,6 +1250,20 @@ function bossRow(label, key, editable, extraClass){
   </div>`;
 }
 
+
+// Sync run inspiration levels to match altar upgrade levels (display only — does not affect injection)
+function syncInspirationLevels(){
+  if(!save||!save.state.run||!save.state.run.enhancements)return;
+  const altarMap={};
+  (save.state.lifetime.upgrades||[]).forEach(u=>{altarMap[String(u.buff_symbol)]=u.level;});
+  save.state.run.enhancements.forEach(e=>{
+    const altarSym=KIT_TO_ALTAR[String(e.buff_symbol)];
+    if(altarSym&&altarMap[altarSym]){
+      e._displayLevel=altarMap[altarSym];  // display only — never written to save
+    }
+  });
+}
+
 function render(){
   document.getElementById('dz').style.display='none';
   document.getElementById('editor').classList.add('active');
@@ -992,66 +1288,66 @@ function render(){
 // descFn receives current level and returns description string
 const UPGRADE_LOOKUP = {
   // === DRAGON — TRAINING (wiki order, sort 0-6) ===
-  '-353295134': ['Max Health',           'dragon', 25, lv=>`+${lv*10}% Max Health.`,                                                          false, 0],
-  '-452842831': ['Dash Charge',          'dragon',  3, lv=>`+${lv} Dash Charge${lv>1?'s':''}.`,                                               true,  1],
-  '16033804':   ["Splinter's Revive",    'dragon',  3, lv=>`Start each run with ${lv} Splinter's Revive${lv>1?'s':''}.`,                      false, 2],
-  '-780204194': ['Swiftness',            'dragon', 10, lv=>`+${lv*5}% Move Speed.`,                                                           false, 3],
-  '-1678942679':['Savor the Flavor',     'dragon',  5, lv=>`Health recovery is ${lv*20}% more effective.`,                                    false, 4],
-  '-1982027413':['Slice of Life',        'dragon',  5, lv=>`${lv*4}% chance to spawn a Pizza Slice upon defeating a Foot Clan enemy.`,        false, 5],
-  '-319407307': ['Astral Rejuvenation',  'dragon',  3, lv=>`Splinter's Revive restores ${lv*10}% additional Health.`,                         false, 6],
+    '-353295134': ['Max Health', 'dragon', 25, lv=>`+${lv*10}% Max Health.`, false, 0],
+    '-452842831': ['Dash Charge', 'dragon', 3, lv=>`+${lv} Dash Charge${lv>1?'s':''}.`, true, 1],
+    '16033804': ["Splinter's Revive", 'dragon', 3, lv=>`Start each run with ${lv} Splinter's Revive${lv>1?'s':''}.`, false, 2],
+    '-780204194': ['Swiftness', 'dragon', 10, lv=>`+${lv*5}% Move Speed.`, false, 3],
+    '-1678942679': ['Savor the Flavor', 'dragon', 5, lv=>`Health recovery is ${lv*20}% more effective.`, false, 4],
+    '-1982027413': ['Slice of Life', 'dragon', 5, lv=>`${lv*4}% chance to spawn Pizza Slice on Foot Clan defeat.`, false, 5],
+    '-319407307': ['Astral Rejuvenation', 'dragon', 3, lv=>`Splinter's Revive restores ${lv*10}% additional Health.`, false, 6],
   // === DRAGON — TECHNIQUE (wiki order, sort 10-17) ===
-  '-437453079': ['Attack Damage',        'dragon', 16, lv=>`+${lv*10}% Attack damage.`,                                                       false, 10],
-  '-599919028': ['Critical Chance',      'dragon', 10, lv=>`+${lv*2}% Attack Critical Hit chance.`,                                           false, 11],
-  '1996465767': ['Focused Forces',       'dragon', 10, lv=>`+${lv*7.5}% Elemental damage.`,                                                   false, 12],
-  '-1457745644':['Special Damage',       'dragon', 17, lv=>`+${lv*10}% Special damage.`,                                                      false, 13],
-  '-1651661104':['Tool Damage',          'dragon', 10, lv=>`+${lv*15}% Tool damage.`,                                                         false, 14],
-  '-254421389': ['Mechanical Genius',    'dragon',  5, lv=>`Tool charges ${lv*10}% faster.`,                                                  false, 15],
-  '-699088449': ['Stronger Stuff',       'dragon',  5, lv=>`+${lv*5}% Negative Effect damage.`,                                               false, 16],
-  '-154448305': ['Enduring Effects',     'dragon',  5, lv=>`+${lv*10}% duration of Negative Effects you apply.`,                              false, 17],
+    '-437453079': ['Attack Damage', 'dragon', 16, lv=>`+${lv*10}% Attack damage.`, false, 10],
+    '-599919028': ['Critical Chance', 'dragon', 10, lv=>`+${lv*2}% Attack Critical Hit chance.`, false, 11],
+    '1996465767': ['Focused Forces', 'dragon', 10, lv=>`+${lv*7.5}% Elemental damage.`, false, 12],
+    '-1457745644': ['Special Damage', 'dragon', 17, lv=>`+${lv*10}% Special damage.`, false, 13],
+    '-1651661104': ['Tool Damage', 'dragon', 10, lv=>`+${lv*15}% Tool Damage.`, false, 14],
+    '-254421389': ['Mechanical Genius', 'dragon', 5, lv=>`Tool charges ${lv*10}% faster.`, false, 15],
+    '-699088449': ['Stronger Stuff', 'dragon', 5, lv=>`+${lv*5}% Negative Effect damage.`, false, 16],
+    '-154448305': ['Enduring Effects', 'dragon', 5, lv=>`+${lv*10}% duration of Negative Effects you apply.`, false, 17],
   // === DRAGON — SPECIALTY (wiki order, sort 20-39) ===
-  '-1408321765':['Fast Attacks',         'dragon', 10, lv=>`+${lv*10}% Dash Attack damage. (Leonardo)`,                                       false, 20],
-  '953701167':  ['Multi-Hit',            'dragon', 10, lv=>`+${lv*2}% Multi-Hit chance. (Michelangelo)`,                                      false, 21],
-  '570400205':  ['Fast Abilities',       'dragon', 10, lv=>`Special charges ${lv*5}% faster. (Donatello)`,                                    false, 22],
-  '1548527547': ['Hammertime',           'dragon',  5, lv=>`+${lv*4}% Dodge chance. (Leonardo)`,                                              false, 23],
-  '1538472382': ['Pizza Entree',         'dragon',  5, lv=>`+${lv*3}% HP restored entering the Shop. (Michelangelo)`,                         false, 24],
-  '-1313957089':['Reliable Allies',      'dragon',  5, lv=>`Support units twice as likely to spawn. +${lv*20}% Support unit Max Health. (Donatello)`, false, 25],
-  '-2131612450':["Leo's Inspiration 1",  'dragon',  3, lv=>`+${lv*5} Master Strike damage. (Leonardo)`,                                       false, 26],
-  '139671976':  ["Mike's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Attack area. +${lv*5}% Attack damage. (Michelangelo)`,                  false, 27],
-  '-1212524326':["Don's Inspiration 1",  'dragon',  3, lv=>`Restore +${lv} Health upon starting an encounter. (Donatello)`,                   false, 28],
-  '-242760785': ['Critical Damage',      'dragon', 10, lv=>`+${lv*5}% Critical Hit damage.`,                                                  false, 29],
+    '-1408321765': ['Fast Attacks', 'dragon', 10, lv=>`+${lv*10}% Dash Attack damage.`, false, 20],
+    '953701167': ['Multi-Hit', 'dragon', 10, lv=>`+${lv*2}% Multi-Hit chance.`, false, 21],
+    '570400205': ['Fast Abilities', 'dragon', 10, lv=>`Special charges ${lv*5}% faster.`, false, 22],
+    '1548527547': ['Hammertime', 'dragon', 5, lv=>`+${lv*4}% Dodge chance.`, false, 23],
+    '1538472382': ['Pizza Entree', 'dragon', 5, lv=>`+${lv*3}% health restored upon entering the Shop.`, false, 24],
+    '-1313957089': ['Reliable Allies', 'dragon', 5, lv=>`Support units gain +${lv*20}% Max Health, more likely to spawn.`, false, 25],
+  '-2131612450':["Leo's Inspiration 1",  'dragon',  3, lv=>`+${lv*5} Master Strike damage. (Leonardo)`,                                       true,  26],
+  '139671976':  ["Mike's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Attack area. +${lv*5}% Attack damage. (Michelangelo)`,                  true,  27],
+  '-1212524326':["Don's Inspiration 1",  'dragon',  3, lv=>`Restore +${lv} Health upon starting an encounter. (Donatello)`,                   true,  28],
+    '-242760785': ['Critical Damage', 'dragon', 10, lv=>`+${lv*5}% Critical Damage.`, false, 29],
   '2146577227': ["Leo's Inspiration 2",  'dragon',  2, lv=>`+${lv} Special charge. (Leonardo)`,                                               true,  30],
-  '1269087358': ["Raph's Inspiration 2", 'dragon',  3, lv=>`+${lv*3}% Attack Crit chance. +${lv*3}% Crit damage. (Raphael)`,                  false, 31],
-  '1132806170': ['Confidence',           'dragon',  3, lv=>`Clearing a room without damage grants +${lv}% Special damage. (Raphael)`,          false, 32],
-  '190004833':  ["Mike's Inspiration 2", 'dragon',  3, lv=>`+${lv*5}% Multi-Hit chance. (Michelangelo)`,                                      false, 33],
-  '-1229301945':["Don's Inspiration 2",  'dragon',  2, lv=>`Tool charges ${lv*20}% faster. (Donatello)`,                                      false, 34],
-  '1252309739': ["Raph's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Special Critical Hit chance. (Raphael)`,                                false, 35],
-  '1301944744': ["Casey's Inspiration 1",'dragon',  3, lv=>`Special applies Guard Break for +${lv}s. (Casey Jones)`,                          false, 36],
+  '1269087358': ["Raph's Inspiration 2", 'dragon',  3, lv=>`+${lv*3}% Attack Crit chance. +${lv*3}% Crit damage. (Raphael)`,                  true,  31],
+    '1132806170': ['Confidence', 'dragon', 3, lv=>`Clearing a room without damage grants +${lv}% Special damage.`, false, 32],
+  '190004833':  ["Mike's Inspiration 2", 'dragon',  3, lv=>`+${lv*5}% Multi-Hit chance. (Michelangelo)`,                                      true,  33],
+  '-1229301945':["Don's Inspiration 2",  'dragon',  2, lv=>`Tool charges ${lv*20}% faster. (Donatello)`,                                      true,  34],
+  '1252309739': ["Raph's Inspiration 1", 'dragon',  3, lv=>`+${lv*5}% Special Critical Hit chance. (Raphael)`,                                true,  35],
+  '1301944744': ["Casey's Inspiration 1",'dragon',  3, lv=>`Special applies Guard Break for +${lv}s. (Casey Jones)`,                          true,  36],
   '1352277601': ["Casey's Inspiration 2",'dragon',  3, lv=>`Next attack after Special is Final Attack +${lv?(lv==3?100:lv*33):0}% Crit Chance. (Casey Jones)`, true, 37],
-  '-1142077053':["Metalhead Insp 1",     'dragon',  3, lv=>`On Boss defeat, upgrade a random enhancement and gain Scrap. (Metalhead)`,         true,  38],
-  '-1125299434':["Metalhead Insp 2",     'dragon',  3, lv=>`Tool applies Guard Break for ${lv?lv+3:0}s. (Metalhead)`,                             true,  39],
+  '-1142077053':["Metalhead Insp 1 (Boss Kill)",    'dragon',  3, lv=>`On Boss defeat, upgrade a random enhancement and gain Scrap. (Metalhead)`, true, 38],
+  '-1125299434':["Metalhead Insp 2 (Guard Break)",  'dragon',  3, lv=>`Tool applies Guard Break for ${lv?lv+3:0}s. (Metalhead)`,  true,  39],
   '-907883883': ["Alopex Insp 1",        'dragon',  3, lv=>`+${lv*2+6}% Dodge chance (doubled vs projectiles). (Alopex)`,                         true,  40],
   '-958216740': ["Alopex Insp 2",        'dragon',  3, lv=>`+${lv*2+6}% Crit chance and Move Speed. (Alopex)`,                                    true,  41],
   // === DREAMER (wiki order, sort 100+) ===
   // Turtle Power section
-  '-1763992616':['Perchance',              'dreamer',10, lv=>`+${lv*2}% chance to draw Turtle Powers in Room Rewards. (Max: 20%)`,                              false, 100],
-  '-626179616': ['Do Over',               'dreamer', 3, lv=>`Start each run with ${lv} Lucky Dice. Lucky Dice can re-roll Room Rewards or Shop offers.`,         false, 101],
-  '498977639':  ['Polish',                'dreamer',10, lv=>`+${lv*2}% chance Turtle Powers are offered at level 2. (Max: 20%)`,                                false, 102],
-  '-221974076': ['Double Trouble',        'dreamer', 3, lv=>`+${lv*5}% Double Select chance during any Turtle Power selection. (Max: 15%)`,                     false, 103],
-  '73644934':   ['Lucky Spoils',          'dreamer', 3, lv=>`Chance to gain up to ${lv} Lucky ${lv>1?'Dice':'Die'} from Bosses.`,                               true,  104],
-  '1356448149': ['Double Double',         'dreamer', 3, lv=>`+${lv*10}% chance a Double Select will offer Turtle Powers at level 2. (Max: 30%)`,                false, 105],
+    '-1763992616': ['Perchance', 'dreamer', 10, lv=>`+${lv*2}% chance to draw Turtle Powers in Room Rewards.`, false, 100],
+    '-626179616': ['Do Over', 'dreamer', 3, lv=>`Start each run with ${lv} Lucky Dice.`, false, 101],
+    '498977639': ['Polish', 'dreamer', 10, lv=>`${lv*2}% chance Turtle Powers are offered at level 2.`, false, 102],
+    '-221974076': ['Double Trouble', 'dreamer', 5, lv=>`${lv*3}% Double Select chance during any Turtle Power selection.`, false, 103],
+    '73644934': ['Lucky Spoils', 'dreamer', 3, lv=>`Chance to gain up to ${lv==1?1:lv==2?2:4} Lucky Dice from Bosses.`, true, 104],
+    '1356448149': ['Double Double', 'dreamer', 3, lv=>`${lv*10}% chance a Double Select will offer Turtle Powers at level 2.`, false, 105],
   // Scrap & Currency section
-  '-516092780': ['Running Start',         'dreamer',10, lv=>`+${lv*25} Scrap upon starting a run. (Max: +250 Scrap)`,                                           false, 106],
-  '2055001189': ['Scrappy Bosses',        'dreamer', 5, lv=>`+${lv*20}% Scrap granted by Bosses. (Max: +100%)`,                                                 false, 107],
-  '-405782207': ['Scavenger',             'dreamer', 3, lv=>`+${lv*100} Scrap gained from destroying crates. (Max: +300 Scrap)`,                                false, 108],
-  '-611797745': ["Pantheon's Blessing",   'dreamer', 5, lv=>`+${lv*10}% Dragon and Dreamer Coins from Room Rewards. (Max: +50%)`,                               false, 109],
-  '-386336970': ['Scrap King',            'dreamer', 5, lv=>`+${lv*10}% Scrap from Room Rewards. (Max: +50%)`,                                                  false, 110],
-  '-154024465': ['Recycling',             'dreamer', 5, lv=>`+${lv*5}% chance for Bonus Currency Room Rewards. (Max: +25%)`,                                    false, 111],
+    '-516092780': ['Running Start', 'dreamer', 10, lv=>`+${lv*25} Scrap upon starting a run.`, false, 106],
+    '2055001189': ['Scrappy Bosses', 'dreamer', 5, lv=>`+${lv*20}% Scrap granted by Bosses.`, false, 107],
+    '-405782207': ['Scavenger', 'dreamer', 3, lv=>`+${lv*100}% Scrap from destroying crates.`, true,  108],
+    '-611797745': ["Pantheon's Blessing", 'dreamer', 5, lv=>`+${lv*10}% Dragon and Dreamer Coins from Room Rewards.`, true,  109],
+    '-386336970': ['Scrap King', 'dreamer', 5, lv=>`+${lv*10}% Scrap from Room Rewards.`, true,  110],
+    '-154024465': ['Recycling', 'dreamer', 5, lv=>`+${lv*5}% chance for Bonus Currency Room Rewards.`, false, 111],
   // Bonus section
-  '-792546313': ['Mouse Scrap',           'dreamer', 3, lv=>`+${lv*15}% chance a MOUSER drops triple Scrap upon defeat. (Max: +45%)`,                           false, 112],
-  '-1734720141':['Fortune Favors the Bold','dreamer', 3, lv=>`+${lv} Dragon and Dreamer Coins upon defeating Veteran and Champion enemies. (Max: +3)`,           false, 113],
-  '-1227395869':['Arcade Fixer',          'dreamer', 2, lv=>`+${lv*25}% chance a Bonus Currency applies to all Room Reward options. (Max: 50%)`,                false, 114],
-  '-1853417476':['Busted Coin Slot',      'dreamer', 1, lv=>`Dragon Coins are always granted as Bonus Currency Room Rewards for Masteries and Inspirations.`,   true,  115],
-  '641018994':  ['Dojo',                  'dreamer', 4, lv=>`${lv===4?'100':'Increased'}% chance to upgrade your Turtle Power to a Mastery in Rooftops entry room.`, true, 116],
+    '-792546313': ['Mouse Scrap', 'dreamer', 3, lv=>`+${lv*15}% chance for MOUSER to drop triple Scrap on defeat.`, false, 112],
+    '-1734720141': ['Fortune Favors the Bold', 'dreamer', 3, lv=>`+${lv} Dragon and Dreamer Coins from Veteran/Champion enemies.`, false, 113],
+    '-1227395869': ['Arcade Fixer', 'dreamer', 2, lv=>`+${lv*25}% chance Bonus Currency applies to all Room Reward options.`, true,  114],
+    '-1853417476': ['Busted Coin Slot', 'dreamer', 1, lv=>`Dragon Coins always granted as Bonus Currency for Masteries and Inspirations.`, true, 115],
+    '641018994': ['Dojo', 'dreamer', 4, lv=>`${lv*25}% chance to upgrade Turtle Power to a Mastery in Rooftops entry room.`, true, 116],
 };
 
 // Max levels observed in your fully-upgraded save (used to cap non-advanced mode)
@@ -1206,106 +1502,346 @@ function runActive(){
 // Format: buff_symbol_str -> {level -> enh_sym}
 // enh_sym is fixed per power regardless of level — confirmed across multiple runs
 const POWER_ENH_SYMS = {
-  '-194026468':  1339677536,   // Art of Darkness
-  '1144465955':  1892944909,   // Ninjutsu Tactics
-  '-899837152':  -92189772,    // Shinobi Supremacy
-  '-1247950504': -190135704,   // Adrenaline
-  '-1032506597': -699146727,   // Quick Feet
-  '-876652360':  -2085879898,  // The Juice
-  '228613591':   -1314267959,  // Utrom Drone
-  '1844912779':  1032868229,   // Casey Insp 1
-  '1861690398':  -611779718,   // Casey Insp 2
+  '-1247950504': -190135704,  // Adrenaline
+  '-708443022': -2146352798,  // Aggressive Savings
+  '1929011532': -1218941732,  // Alternating Current
+  '-1109671216': -1151583032,  // Ancestral Tech
+  '-737089349': -935131335,  // Ascendancy
+  '347186936': 24575540,  // Astral Insight
+  '-371414428': 1325708856,  // Blade Matrix
+  '-1837571790': 1993579154,  // Biomechanical Speed
+  '1746825681': -1610604233,  // Blazing Inferno
+  '-1194047928': 1157262703,  // Cascade Drive
+  '1844912779': 1032868229,  // Casey Insp 1
+  '1861690398': -611779718,  // Casey Insp 2
+  '-722931231': -1013425813,  // Catalytic Consequence
+  '-1974786426': 1188161622,  // Chain Lightning
+  '535333324': -505885508,  // Challenge Seeker (Robotics)
+  '65597839': -163417683,  // Charge Attacks
+  '-1151085959': -1162013993,  // Charged Up
+  '-1974803373': -156358991,  // Chunky Mixture
+  '-1299775965': 718494749,  // Compound Interest
+  '1775826162': -2019864778,  // Core Collapse
+  '1009834748': 1550565670,  // Critical Chance (boost)
+  '2131492950': -1407761875,  // Critical Flow
+  '617543826': -166495116,  // Damage (boost)
+  '1862375159': 1266319361,  // Dark Attacks
+  '1777325037': 683449107,  // Dark Embrace
+  '372735608': -479173332,  // Dark Flame
+  '-1554599614': -62643742,  // Dark Shroud
+  '-1468644612': 2007842028,  // Dark Star
+  '-717407322': -278440328,  // Dash Attack Damage (boost)
+  '415064718': 1971303514,  // Daybreak
+  '-997119924': -1240175392,  // Dilution
+  '-1034736680': 235847484,  // Donatello Insp A
+  '-984403823': -401849133,  // Donatello Insp B
+  
+  '-1746636050': -641536422,  // Eclipse
+  '-1696174228': 1643283804,  // Electrifying
+  '-2122367194': 208743280,  // Elemental Damage (boost)
+  '-1603745208': 1294750864,  // Empowerment
+  '-1189980455': -970453309,  // Eternal Darkness
+  '-1752657340': -123058516,  // Eternal Light
+  '-519095219': -807857501,  // Extended Assault
+  '482644795': 1372486981,  // Finisher
+  '-2095601647': 1263976319,  // First Strike
+  '-549683561': 730518953,  // Flame Abilities
+  '-1917187826': -414130854,  // Flame Dash
+  '-1724689305': -723203375,  // Flash Freeze
+  '1867113587': 457872997,  // Focus Fire
+  '-619310296': 409546772,  // Freeze
+  '-2105683899': -765347549,  // Frost
+  '1847681499': 2051907870,  // Frostfire (Legendary)
+  '228613591': -1314267959,  // Furious Attacks (old enh_sym — may need update from real save)
+  '-1911145177': -440144407,  // Gift of the Dreamer Astral
+  '1715176274': 1774698362,  // Goo
+  '-1526079192': -2007059044,  // Goo'dbye
+  '1642479731': 1939668075,  // Hardened Shell (Don tool)
+  '-662594691': -1985590181,  // Heavy Rain
+  '1953603970': 1109455898,  // Heightened Senses
+  '-388807946': -1156244358,  // High Tide
+  '-2097731964': -1675634800,  // Illumination
+  '1166508037': -1555501721,  // Inferno
+  '152024873': 1251899811,  // Last Stand Protocol
+  '1583289433': -784344960,  // Legendary Unknown A
+  '874267031': 446311077,  // Legendary Unknown B
+  '-351582946': 604007250,  // Light Attacks
+  '-14461045': -816142351,  // Light Embrace
+  '652837307': 1388992997,  // Lingering Darkness
+  '-160562649': -1251358031,  // Living Ingredients
+  '1360933634': -772830566,  // Mastery: Utrom Domination
+  '-630557252':  547447264,  // Metalhead - Inspiration 1
+  '-1936580441': 293730993,  // Nightfall
+  '590707888': -1632094876,  // Ooze Attack
+  '-1850496697': 91719573,  // Photon Lance
+  '788412624': 1732526720,  // Piercing Light
+  '-196974294': 753957982,  // Precision
+  '-2061803411': 1140336599,  // Preheated
+  '1789795819': 59529173,  // Pressure Nozzle
+  '-1032506597': -699146727,  // Quick Feet
+  '-235787709': -2139260935,  // Quick Hands
+  '425857776': 1564442928,  // Radiant Warrior
+  '-2023653963': 429217979,  // Rage
+  '-1415779635': 1370640979,  // Rapid Fire
+  '834996524': -1864737700,  // Regular Customer
+  '-523953124': 1112379928,  // Revival
+  '1184088393': -322379448,  // Revolution
+  '-147856574': 1423694038,  // Revved Up
+  '-312114001': -1849653203,  // Shadow Abilities
+  '-1303223760': 38428320,  // Shelf Life
+  '1357762756': 309531604,  // Shifting Shadow
+  '-1732795265': 1953111525,  // Shimmering Shield
+  '2133655172': -880924056,  // Shuriken Attacks
+  '-955543693': -1806841223,  // Shuriken Breaker
+  '-948395547': -221408021,  // Shuriken Engineer
+  '984786410': 300296398,  // Solution to Pollution
+  '-1991309781': -475147119,  // Spare Bot
+  '92011809': -751076827,  // Special Damage (boost)
+  '1587780353': 1922647055,  // Special Spice
+  '-1186504473': -1854795579,  // Splash Damage
+  '1935875699': -1962358050,  // Spontaneous Combustion
+  '-1731294535': -1844096229,  // Still Waters
+  '-1663813465': 679285281,  // Stormy Weather
+  '2048730722': -392304362,  // Survival Matrix
+  '1821891108': 130212996,  // Synthetic Rush
+  '1810794422': -396419258,  // System Calibration
+  '-249594085': 1783218661,  // Techno-Organic Interface
+  '-311294544': 1510096679,  // Tempered Shuriken (Legendary)
+  '-876652360': -2085879898,  // The Juice
+  '-1463821367': -1515143957,  // Throwing Arts: Ricochet
+  '-1391222310': 283216182,  // Throwing Mastery
+  '1922146599': -193844015,  // Thunderheart
+  '1016348431': 527837195,  // Tool Charge (boost)
+  '138635578': -339028266,  // Trailblazer
+  '-1375537276': 515841388,  // Unfortunate Odor
+  '1747718790': 1346909886,  // Gift of the Dragon
+  '420963323': 776498099,  // Throwing Arts: Chakram
+  '-1984093787': 200384183,  // Unknown (Lv2, mixed run)
+  '-1616197290': -1629967754,  // Unknown Astral Dark power
+  '441330377': 459567075,  // Unknown kit/mastery
+  '-180578088': -1763016193,  // Unknown power (Ninja/Utrom/Robotics run)
+  '742510723': -106750543,  // Utrom Attacks
+  '-1046008707': 597663615,  // Utrom Battery
+  '1765260001': 121010935,  // Utrom Dash
+  '-906772587': -1657778465,  // Utrom Relay
+  '-1569557381': -60496067,  // Water Abilities
+  '1725144541': -248313637,  // Water Attacks
+  '1938928338': 1301516614,  // Water Dash
+  '-1053443010': -891509766,  // Michelangelo - Inspiration 2
+  '-899837152': -92189772,  // Shinobi Supremacy
+  '-194026468': 1339677536,  // Art of Darkness
+  '1144465955': 1892944909,  // Ninjutsu Tactics
+  '1864026597': -1676785753,  // Leo - Inspiration 2
+  '1813693740': -233763424,  // Leo - Inspiration 1
+  '-1364872862': 95406846,  // Ooze Dash
+  '-54411067': -26062589,  // Ooze Strike
+  '319898966': -1656781500,  // Tool: Shuriken Storm (already in TOOL_ENH_SYMS)
+  '1646991356': 1949317480,  // Ancestral Guardian
+  '1121725528': -273684411,  // Mastery: Dash Attack
+  '1212610709': -1148837345,  // Ooze Abilities
+  '-2060029603': 1350375699,  // Potency
+  '-2037524415': -1561387825,  // Unknown (Raph Insp or power)
+  '-1516693114': -2111342498,  // Utrom Abilities
+  '-1475312023': -1708487085,  // Light Hammer
+  '1633481062': 2053902222,  // Mastery: Tool Charge Speed (Don)
+  '-27946384': -1571012748,  // Utrom Strike
+  '-1400563463': 2055849703,  // Power Surge
+  '-150579913': 1866110045,  // Overdrive
+  '-519913461': 775899265,  // Wireless Charging
+  '1066694247': 1226593077,  // Laser Strike
+  '1801257252': 2056167888,  // Mastery: Special/Tool Final Strike (Don)
+  '1323371266':  1027590070,  // Secret of the Ooze
+  '-1526079192': -2007059044,  // Goo'dbye
+  '-580224395':  -895575065,  // Metalhead - Inspiration 2
+  '85174008':   -223512080,  // Torrential Strike
+  '876793573':  -702236093,  // When it Rains
+  '656276786':   784345826,   // +100% Special Missiles damage (Metalhead mastery)
+  '530038070':   270520654,   // Astral Presence
+  '201029333':   -104084995,   // Michelangelo - Inspiration 1
+  '1312854464':  422295100,   // +50% Crit Hit damage (mastery)
+  '-1731901020':  1278730748,   // Incendiary Strikes
+  '-1068283913':  1190583709,   // Flame Strike
+  '1361471662':  -380943050,   // Unknown Mikey A
+  '-2087857272':  418518312,   // Unknown Mikey B
+  '-812161723':  1395948407,  // Torrential Rain
+  '133185293':  1201889891,  // Quick Study
+  '792487292':  -956915548,  // Leo: Special grants Light Shell for 2s
+  '876375387':  -384357931,  // Special charges 30% faster (shared mastery)
+  '847880770':  -933769154,   // Alopex - Inspiration 2
+  '831103151':  1784646409,   // Alopex - Inspiration 1
+  '458107996':  -1720684752,  // Alopex: +25% Elemental damage
+  '-1098962392': -1470477712,  //
+  '491663234':  -1586757990,  // Alopex: Dashing through enemy Guard Break 2s Alope
+  '859597768':  -1089165024,  // Leo: Dash Attack applies Master Strikex: Tool deals +25 Flame damage
+  '1385262376':  -1469394016, // Shatter
 };
 
+
 const TOOL_ENH_SYMS = {
-  '-876652360':  -2085879898,  // The Juice
-  '228613591':   -1314267959,  // Utrom Drone
+  '-180578088':  -1763016193,  // Tool: Utrom Shuriken
+  '319898966':  -1656781500,  // Tool: Shuriken Storm
+  '325923318': 2143337380,  // Tool: Utrom Drone
+  '-876652360':  -2085879898,  // Casey Jones - Tool (The Juice)
+  '1642479731':  1939668075,  // Donatello - Tool (Hardened Shell)
+  '-1820198603': -692368899,   // Tool: Ooze Shuriken
+  '1742040894':  -803272084,    // Tool: Unstable Canister
+  '456127606':  -1111329948,  // Tool (Attack Drone)
+  '-1070220629': 753138181,    // Michelangelo - Tool (Taunt)
+  '-619638694': -1300874272,   // Raphael - Tool (Turtle Line)
+  '-1615068019': 1643532864,   // Tool (Shuriken) - Leo default
+  '-640261974': -6702512,    // Tool (Utrom Rod)
+  '-839979647': 1734215393,   // Tool (Ride the Wave)
+  '498986860':  -1580443902,  // Alopex - Tool (Kunai)
+  '-1400536958': 189122600,    // Tool (Smoke Bomb)
+  '785524961':  -1970154591,  // Tool (Fireball)
+  '-682882212':  842366194,   // Tool (Meteor Storm)
 };
 // Known enhancement_symbols for kit items
 const KIT_ENH_SYMS = {
-  '1844912779':  1032868229,   // Casey Insp 1
-  '1861690398':  -611779718,   // Casey Insp 2
 };
 
 const UNMAPPED_POWERS = [
-  {sym:-523953124,hint:'Lv1 — in run but not visible in-game powers screen, category unknown'},
-  {sym:1938928338,hint:'Lv3 — in run but not visible in-game powers screen, category unknown'},
-  {sym:1922146599,hint:'Lv2 — in run but not visible in-game powers screen, category unknown'},
-  {sym:-1911145177,hint:'seen in Metalhead + Casey runs Lv1 — category unknown, not displaying correctly'},
-  {sym:1212610709,hint:'seen in Casey run Lv2 — not an inspiration, unknown power'},
-  {sym:-2097731964,hint:'seen in Casey run — set to Lv2, unknown power'},
-  {sym:-1984093787,hint:'seen in Casey run — Lv3, unknown power'},
-  {sym:-2105683899,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-2097731964,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-2023653963,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1984093787,hint:'seen in Casey run'},
-  {sym:-1837571790,hint:'seen in Casey run'},
-  {sym:-1752657340,hint:'seen in Casey run'},
-  {sym:-1732795265,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1731294535,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1724689305,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1463821367,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1415779635,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1391222310,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1375537276,hint:'seen in Casey run'},
-  {sym:-1303223760,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1299775965,hint:'seen in Casey run'},
-  {sym:-1186504473,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-1109671216,hint:'seen in Casey run'},
-  {sym:-1068283913,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-997119924,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-955543693,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-948395547,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-722931231,hint:'seen in Casey run'},
-  {sym:-708443022,hint:'seen in Casey run'},
-  {sym:-662594691,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-619310296,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-519095219,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-388807946,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-311294544,hint:'Legendary or Mastery'},
-  {sym:-235787709,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-196974294,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-150579913,hint:'seen in Casey run'},
-  {sym:-147856574,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:-14461045,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:133185293,hint:'seen in Casey run'},
-  {sym:138635578,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:228613591,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:347186936,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:415064718,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:590707888,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:788412624,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:834996524,hint:'seen in Casey run'},
-  {sym:874267031,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
-  {sym:1166508037,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:1212610709,hint:'seen in Casey run'},
-  {sym:1583289433,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
-  {sym:1646991356,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:1789795819,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:1821891108,hint:'seen in Casey run'},
-  {sym:1847681499,hint:'Legendary (Tempered Shuriken/Frostfire/Bright Spring)'},
-  {sym:1922146599,hint:'seen in Casey run'},
-  {sym:1938928338,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'},
-  {sym:1953603970,hint:'seen in Raph run Lv3 — Ninja/Astral/Water/Flame tree'}
 ];
 
 // Sync coop[3].run to match state.run (they must be identical mirrors)
 function syncCoop(){
   if(!save||!save.state.coop)return;
-  // Find coop slot that mirrors run (same enhancement set)
-  const runSymSet=new Set(save.state.run.enhancements.map(e=>e.buff_symbol));
-  for(let i=0;i<save.state.coop.length;i++){
-    const c=save.state.coop[i];
-    if(!c||!c.run||!c.run.enhancements||c.run.enhancements.length===0)continue;
-    const cSymSet=new Set(c.run.enhancements.map(e=>e.buff_symbol));
-    // If significant overlap (>50% match), this is the mirror slot
-    const overlap=[...runSymSet].filter(s=>cSymSet.has(s)).length;
-    if(overlap>runSymSet.size*0.5){
-      // Deep copy run.enhancements to this coop slot
-      c.run.enhancements=save.state.run.enhancements.map(e=>({...e}));
-      return;
+  const hero=save.state.run.hero;
+  const runEnhs=save.state.run.enhancements;
+  // Find the coop slot that belongs to this player (matching hero ID and non-empty)
+  // Try coop[3] first (solo default), then search by hero match
+  for(let pass=0;pass<2;pass++){
+    for(let i=save.state.coop.length-1;i>=0;i--){
+      const c=save.state.coop[i];
+      if(!c||!c.run)continue;
+      const cHero=c.run.hero;
+      const cEnhs=c.run.enhancements||[];
+      // Pass 0: match by hero AND non-empty; Pass 1: match by hero only
+      if(cHero===hero&&(pass===1||cEnhs.length>0)){
+        c.run.enhancements=runEnhs.map(e=>({...e}));
+        return;
+      }
     }
   }
+}
+
+// Known boosts — name, description. roomDuration is per-instance in the save.
+const BOOSTS = {
+  '-1340414882': ['Heal',              'Heal at the start of each room.',          4],
+  '617543826':   ['Damage',            '+? bonus damage.',                         4],
+  '1009834748':  ['Critical Chance',   '+? Critical Hit chance.',                  4],
+  '143260484':   ['Critical Damage',   '+100% Critical Hit damage.',               9],
+  '-2122367194': ['Elemental Damage',  '+? Elemental damage.',                     4],
+  '-274920327':  ['Movement Speed',    '+? Movement Speed.',                       4],
+  '1557023907':  ['Barrier Damage',    '+? damage against Barriers.',              4],
+  '92011809':    ['Special Damage',    '+100% Special Damage.',                    4],
+  '-1854552503': ['Tool Damage',       '+? Tool Damage.',                          4],
+  '1141745441':  ['Attack Damage',     '+50% Attack Damage.',                      4],
+  '-717407322':  ['Dash Attack Damage','+? Dash Attack Damage.',                   4],
+  '-1274020767': ['Special Charge',    '+? Special Charge rate.',                  4],
+  '1016348431':  ['Tool Charge',       '+? Tool Charge rate.',                     4],
+};
+
+function renderBoosts(){
+  if(!runActive())return;
+  const container=document.getElementById('boost-grid');
+  if(!container)return;
+  container.innerHTML='';
+
+  // Collect all enhancements with roomDuration > 0 (boosts)
+  const boostEnhs=save.state.run.enhancements.filter(e=>e.roomDuration>0&&enhCat(e.buff_symbol)!=='internal');
+
+  if(!boostEnhs.length){
+    container.innerHTML='<div style="font-family:var(--fm);font-size:12px;color:var(--mu);margin-bottom:12px;">No active boosts.</div>';
+    // Still show add button
+  }
+
+  const grid=document.createElement('div');
+  grid.className='enh-grid';
+  container.appendChild(grid);
+
+  boostEnhs.forEach((e,i)=>{
+    const sym=String(e.buff_symbol);
+    const known=BOOSTS[sym];
+    const name=known?known[0]:`Unknown boost (${e.buff_symbol})`;
+    const desc=known?known[1]:'';
+    const row=document.createElement('div');row.className='enh-row';
+    row.innerHTML=`
+      <div class="enh-info">
+        <div class="enh-name" style="${known?'':'color:var(--mu)'}">${name}</div>
+        ${desc?`<div class="art-desc" style="margin-top:3px;">${desc}</div>`:''}
+        <div class="enh-sym" style="margin-top:3px;"><span style="color:#38bdf8;font-size:10px;text-transform:uppercase;letter-spacing:.5px;">BOOST</span> &middot; buff: ${e.buff_symbol}</div>
+      </div>
+      <div class="enh-ctrl" style="flex-direction:column;align-items:flex-end;gap:4px;">
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:var(--fm);font-size:11px;color:var(--mu);">rooms left</span>
+          <button class="c-btn" data-boost="${i}" data-d="-1"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+          <span class="enh-lv" id="boost-dur-${i}" style="color:#38bdf8;">${e.roomDuration}</span>
+          <button class="c-btn" data-boost="${i}" data-d="1"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+        </div>
+        <button class="c-btn" data-boost-remove="${i}" style="font-family:var(--fm);font-size:10px;color:var(--r);width:auto;padding:0 6px;">remove</button>
+      </div>`;
+    grid.appendChild(row);
+  });
+
+  // Add boost button
+  const addWrap=document.createElement('div');
+  addWrap.style.cssText='margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
+  addWrap.innerHTML=`
+    <select id="boost-add-sym" class="run-select" style="flex:1;min-width:200px;">
+      ${Object.entries(BOOSTS).map(([s,v])=>`<option value="${s}"${!hasEnhSym(s)?' disabled':''}>${v[0]}${!hasEnhSym(s)?' (no enh_sym)':''}</option>`).join('')}
+      <option value="custom">Custom (enter buff_symbol)</option>
+    </select>
+    <input id="boost-custom-sym" type="number" placeholder="buff_symbol" class="stat-val" style="width:130px;display:none;">
+    <input id="boost-dur-input" type="number" value="9" min="1" max="99" class="stat-val" style="width:60px;" title="Room duration">
+    <button class="add-btn" id="boost-add-btn">+ add boost</button>`;
+  container.appendChild(addWrap);
+
+  document.getElementById('boost-add-sym').addEventListener('change',e=>{
+    const custom=document.getElementById('boost-custom-sym');
+    custom.style.display=e.target.value==='custom'?'block':'none';
+    const known=BOOSTS[e.target.value];
+    if(known&&known[2])document.getElementById('boost-dur-input').value=known[2];
+  });
+
+  document.getElementById('boost-add-btn').addEventListener('click',()=>{
+    const sel=document.getElementById('boost-add-sym').value;
+    const sym=sel==='custom'?parseInt(document.getElementById('boost-custom-sym').value):parseInt(sel);
+    const dur=parseInt(document.getElementById('boost-dur-input').value)||9;
+    if(isNaN(sym))return;
+    // Check if boost already exists — overwrite roomDuration if so
+    const existing=save.state.run.enhancements.find(e=>e.buff_symbol===sym&&e.roomDuration>0);
+    if(existing){
+      existing.roomDuration+=dur;  // stack duration
+    } else {
+      const enhSym=POWER_ENH_SYMS[String(sym)]||0;
+      save.state.run.enhancements.push({version:1,buff_symbol:sym,enhancement_symbol:enhSym,level:1,aux:0,roomDuration:dur});
+    }
+    markDirty();renderBoosts();
+  });
+
+  // Duration +/- and remove handlers
+  container.addEventListener('click',e=>{
+    const durBtn=e.target.closest('[data-boost]');
+    if(durBtn){
+      const i=parseInt(durBtn.dataset.boost);
+      const d=parseInt(durBtn.dataset.d);
+      const boostEnhs=save.state.run.enhancements.filter(e=>e.roomDuration>0&&enhCat(e.buff_symbol)!=='internal');
+      const enh=boostEnhs[i];
+      enh.roomDuration=Math.max(1,enh.roomDuration+d);
+      document.getElementById('boost-dur-'+i).textContent=enh.roomDuration;
+      markDirty();return;
+    }
+    const remBtn=e.target.closest('[data-boost-remove]');
+    if(remBtn){
+      const i=parseInt(remBtn.dataset.boostRemove);
+      const boostEnhs=save.state.run.enhancements.filter(e=>e.roomDuration>0&&enhCat(e.buff_symbol)!=='internal');
+      const enh=boostEnhs[i];
+      const idx=save.state.run.enhancements.indexOf(enh);
+      if(idx>=0)save.state.run.enhancements.splice(idx,1);
+      markDirty();renderBoosts();
+    }
+  });
 }
 
 function renderRun(){
@@ -1342,8 +1878,9 @@ function renderRun(){
   // Tools are stored in run.enhancements (active + collected tools)
   const coopEnhs=save.state.coop&&save.state.coop[0]?save.state.coop[0].run.enhancements:[];
   // Active tool = last tool in run.enhancements (most recently equipped)
-  const toolEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='tool');
-  const toolEnh=toolEnhs[0]||null;  // first tool = active tool
+  const toolEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='tool'&&e.level===1);
+  // Last Lv1 tool = most recently equipped
+  const toolEnh=toolEnhs.length?toolEnhs[toolEnhs.length-1]:null;
   const toolSym=toolEnh?String(toolEnh.buff_symbol):'';
   const toolRawName=toolSym?(ENHANCEMENTS[toolSym]?.[0]||'Unknown ('+toolSym+')'):'None';
   // Strip "Michelangelo - Tool (Taunt)" -> "Taunt" for the tool name portion
@@ -1384,7 +1921,10 @@ function renderRun(){
             <option value="">None</option>
             ${Object.entries(ENHANCEMENTS).filter(([s,v])=>v[1]==='tool').map(([s,v])=>{
               const tname=v[0].match(/Tool \((.+?)\)/)?.[1]||v[0];
-              return `<option value="${s}"${toolSym===s?' selected':''}>${tname}</option>`;
+              const isPlaceholder=parseInt(s)>=1&&parseInt(s)<=6;
+              const noEnhSym=!TOOL_ENH_SYMS[s];
+              const disableTool=isPlaceholder||noEnhSym;
+              return `<option value="${s}"${toolSym===s?' selected':''}${disableTool?' disabled':''}>${tname}${isPlaceholder?' [ID unknown]':noEnhSym?' [enh_sym unknown]':''}</option>`;
             }).join('')}
           </select>
         </div>
@@ -1401,20 +1941,51 @@ function renderRun(){
     <div class="sec-title" style="margin-top:18px;"><i class="ti ti-map" aria-hidden="true"></i>Room sequence</div>
     <div class="room-seq" id="room-seq"></div>
     <div class="sec-title" style="margin-top:4px;"><i class="ti ti-bolt" aria-hidden="true"></i>Powers this run</div>
-
     <div style="display:flex;gap:8px;margin-bottom:12px;">
       <button class="save-btn" id="powers-zero-btn" style="background:var(--r);font-size:14px;padding:8px 18px;">ZERO ALL POWERS</button>
       <button class="save-btn" id="powers-max-btn" style="font-size:14px;padding:8px 18px;">MAX ALL POWERS</button>
+      <button class="save-btn" id="powers-selall-btn" style="background:var(--s2);border:1px solid var(--bd);color:var(--mu);font-size:14px;padding:8px 18px;">SELECT ALL</button>
+      <button class="save-btn" id="powers-desel-btn" style="background:var(--s2);border:1px solid var(--bd);color:var(--mu);font-size:14px;padding:8px 18px;">DESELECT</button>
     </div>
     <div id="enh-grid"></div>
+    <div class="sec-title" style="margin-top:18px;"><i class="ti ti-star" aria-hidden="true"></i>Inspirations</div>
+    <div id="insp-grid"></div>
+    <div class="sec-title" style="margin-top:12px;"><i class="ti ti-sparkles" aria-hidden="true"></i>Masteries</div>
+    <div id="mastery-grid"></div>
+    <div class="sec-title" style="margin-top:18px;"><i class="ti ti-bolt" aria-hidden="true"></i>Boosts</div>
+    <div id="boost-grid"></div>
 `;
 
   // Build enhancements list — grouped by tree
   renderRoomSequence();
+  renderBoosts();
   const treeColor={'Astral (Dark)':'#a78bfa','Astral (Light)':'#e0c97f','Flame':'#f97316','Ninja':'#14b8a6',
                    'Ooze':'#7c3aed','Robotics':'#c0c0c0','Utrom':'#38bdf8','Water':'#3b82f6','Legendary':'#ffd600'};
   const catColor={'inspiration':'#a78bfa','tool':'#fb923c','power':'var(--g)','special':'#38bdf8'};
-  const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Robotics','Utrom','Water','Legendary'];
+  
+// Slot-based mutual exclusions — adding one removes the other from run.enhancements
+// The game allows only one power per slot; picking a new one replaces the old
+const POWER_SLOTS = {
+  strike: [-54411067, -1068283913, -27946384, -1936580441, 85174008, 65597839],
+  // Ooze Strike, Flame Strike, Utrom Strike, Nightfall, Torrential Strike, Charge Attacks
+  charged: [-371414428, 1066694247, -150579913, -1850496697, 1583289433],
+  // Blade Matrix, Laser Strike, Overdrive, Photon Lance, Shocking
+  abilities: [1212610709, -549683561, -1569557381, -1516693114, -312114001, -1400563463],
+  // Ooze Abilities, Flame Abilities, Water Abilities, Utrom Abilities, Shadow Abilities, Power Surge
+  dash: [-1364872862, -1917187826, 1938928338, 1765260001, 1357762756, -519913461],
+  // Ooze Dash, Flame Dash, Water Dash, Utrom Dash, Shifting Shadow, Wireless Charging
+};
+// Build reverse lookup: buff_symbol -> slot name
+const SYM_TO_SLOT = {};
+Object.entries(POWER_SLOTS).forEach(([slot,syms])=>syms.forEach(s=>SYM_TO_SLOT[s]=slot));
+
+// Tag-based mutual exclusions — picking one removes the other
+// Each inner array is a group where only one can be active
+const POWER_EXCLUSIONS = [
+  [-1463821367, 420963323],  // Throwing Arts: Ricochet vs Chakram
+];
+
+const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Robotics','Utrom','Water','Legendary'];
 
   function buildEnhGrid(){
     const container=document.getElementById('enh-grid');
@@ -1427,18 +1998,7 @@ function renderRun(){
       if(name)activeByName[name]=e;
     });
 
-    // Inspirations section (active only)
-    const inspEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='inspiration');
-    if(inspEnhs.length){
-      const kitSec=collapsible('Inspirations & Masteries ('+inspEnhs.length+')','var(--mu)',body=>{
-        const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
-        inspEnhs.forEach(e=>appendEnhRow(g,e));
-      });
-      kitSec.querySelector('.coll-header').click();
-      container.appendChild(kitSec);
-    }
-
-    // Powers — render from POWER_INFO as master list, Lv0 if not in run
+        // Powers — render from POWER_INFO as master list, Lv0 if not in run
     treeOrder.forEach(tree=>{
       const treePowers=Object.entries(POWER_INFO).filter(([n,info])=>info[0]===tree);
       if(!treePowers.length)return;
@@ -1453,22 +2013,52 @@ function renderRun(){
           appendEnhRowFromInfo(g,name,info,eObj,active);
         });
       });
+      // Add "Select Tree" button to header
+      const selBtn=document.createElement('button');
+      selBtn.className='sel-tree-btn';
+      selBtn.textContent='SELECT TREE';
+      selBtn.dataset.tree=tree;
+      selBtn.addEventListener('click',ev=>{
+        ev.stopPropagation();
+        const cbs=sec.querySelectorAll('.enh-cb');
+        const allChecked=[...cbs].every(c=>c.checked);
+        cbs.forEach(c=>{c.checked=!allChecked;c.closest('.enh-row').classList.toggle('enh-selected',!allChecked);});
+        selBtn.classList.toggle('active',!allChecked);
+        selBtn.textContent=allChecked?'SELECT TREE':'DESELECT TREE';
+      });
+      sec.querySelector('.coll-header').appendChild(selBtn);
       sec.querySelector('.coll-header').click();
       container.appendChild(sec);
     });
 
     // Unknown powers in run (unmapped buff_symbols)
     const unknownPowers=run.enhancements.filter(e=>{
+      if(e.roomDuration>0)return false;  // boosts handled separately
       const cat=enhCat(e.buff_symbol);
-      if(cat==='inspiration'||cat==='tool')return false;
+      if(cat==='inspiration'||cat==='tool'||cat==='internal'||cat==='boost')return false;
       const name=enhName(e.buff_symbol);
-      return !name||!POWER_INFO[name];
+      if(name&&name!==String(e.buff_symbol))return false;  // mapped in ENHANCEMENTS
+      return true;
     });
     if(unknownPowers.length){
       const sec=collapsible('Unknown in run ('+unknownPowers.length+') — buff_symbol not yet mapped','#555',body=>{
         const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
         unknownPowers.forEach(e=>appendEnhRow(g,e));
       });
+      // Add "Select Tree" button to header
+      const selBtn=document.createElement('button');
+      selBtn.className='sel-tree-btn';
+      selBtn.textContent='SELECT TREE';
+      selBtn.dataset.tree=tree;
+      selBtn.addEventListener('click',ev=>{
+        ev.stopPropagation();
+        const cbs=sec.querySelectorAll('.enh-cb');
+        const allChecked=[...cbs].every(c=>c.checked);
+        cbs.forEach(c=>{c.checked=!allChecked;c.closest('.enh-row').classList.toggle('enh-selected',!allChecked);});
+        selBtn.classList.toggle('active',!allChecked);
+        selBtn.textContent=allChecked?'SELECT TREE':'DESELECT TREE';
+      });
+      sec.querySelector('.coll-header').appendChild(selBtn);
       sec.querySelector('.coll-header').click();
       container.appendChild(sec);
     }
@@ -1508,6 +2098,185 @@ function renderRun(){
     }
   }
 
+
+  function getAltarLevel(name){
+    const altarSym=INSP_TO_ALTAR[name];
+    if(!altarSym)return null;
+    const upgrades=save.state.lifetime.upgrades||[];
+    const u=upgrades.find(x=>String(x.buff_symbol)===altarSym);
+    return u?u.level:1;
+  }
+  function getAltarDesc(name,level){
+    const levels=INSP_LEVELS[name];
+    if(!levels)return '';
+    const idx=Math.min(level-1,levels.length-1);
+    return idx>=0?levels[idx]:'';
+  }
+
+  function buildInspGrid(){
+    const container=document.getElementById('insp-grid');
+    if(!container)return;
+    container.className='insp-grid';
+    container.innerHTML='';
+
+    const activeSyms=new Set(run.enhancements.filter(e=>e.roomDuration===0).map(e=>e.buff_symbol));
+    const entries=[];
+    const seen=new Set();
+    for(const [sym,val] of Object.entries(ENHANCEMENTS)){
+      if(val[1]!=='inspiration')continue;
+      if(seen.has(sym))continue;
+      seen.add(sym);
+      entries.push({sym:parseInt(sym),name:val[0]});
+    }
+    entries.sort((a,b)=>a.name.localeCompare(b.name));
+
+    for(const {sym,name} of entries){
+      const isActive=activeSyms.has(sym);
+      const hasEnh=!!(POWER_ENH_SYMS[String(sym)]||0);
+      const altarLv=getAltarLevel(name);
+      const lvStr=altarLv?` <span class="insp-lv">Lv ${altarLv}</span>`:'';
+
+      const row=document.createElement('div');
+      row.className='insp-row'+(isActive?' insp-active':'');
+      if(!hasEnh&&!isActive) row.style.opacity='0.25';
+      else if(!isActive) row.style.opacity='0.6';
+
+      row.innerHTML=`
+        <div class="insp-name" style="${isActive?'color:var(--g)':''}">${name}${lvStr}</div>
+        ${altarLv&&getAltarDesc(name,altarLv)?`<div style="font-size:11px;color:var(--mu);margin-top:1px;">${getAltarDesc(name,altarLv)}</div>`:''}
+        ${isActive
+          ? `<button class="c-btn" data-isym="${sym}" data-iact="remove"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none;font-size:16px;line-height:1;">-</span></button>`
+          : `<button class="c-btn" data-isym="${sym}" data-iact="add"${!hasEnh?' disabled style="opacity:.3;cursor:not-allowed"':''}><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none;font-size:16px;line-height:1;">+</span></button>`
+        }`;
+      container.appendChild(row);
+    }
+  }
+
+  function buildMasteryGrid(){
+    const container=document.getElementById('mastery-grid');
+    if(!container)return;
+    container.innerHTML='';
+
+    const activeSyms=new Set(run.enhancements.filter(e=>e.roomDuration===0).map(e=>e.buff_symbol));
+
+    const MASTERY_GROUPS=[
+  {label:'Shared',color:'#a78bfa',entries:[
+      {sym:'1121725528',name:'+30% Dash Attack damage, +1 Dash on kill', chars:'All'},
+      {sym:'-19678530',name:'+50% damage to Barrier enemies', chars:'All'},
+      {sym:null,name:'+20% damage to Bosses', chars:'All'},
+      {sym:null,name:'+30% dmg to Bosses, Mousers & Super Soldiers', chars:'Don/Casey/Metalhead'},
+      {sym:null,name:'-35% Dash Cooldown', chars:'Mikey/Casey/Metalhead'},
+      {sym:'1360933634',name:'+10% Utrom dmg per Utrom power', chars:'Leo/Metalhead'},
+      {sym:null,name:'+5% Shuriken dmg per Ninja power', chars:'Leo/Alopex'},
+      {sym:null,name:'+20% Attack Crit chance', chars:'Raph/Metalhead'},
+      {sym:null,name:'+20% Special Crit chance', chars:'Raph/Casey'},
+      {sym:'1312854464',name:'+50% Crit Hit damage', chars:'Raph/Alopex'},
+      {sym:null,name:'+30% Flame damage', chars:'Raph/Casey'},
+      {sym:null,name:'+30% Water damage', chars:'Mikey/Raph'},
+      {sym:null,name:'+5% damage per Astral power', chars:'Mikey/Casey'},
+      {sym:null,name:'+15% Attack area size & damage', chars:'Casey/Alopex'},
+      {sym:'876375387',name:'Special charges 30% faster', chars:'Leo/Casey'},
+      {sym:null,name:'Special deals 30 Utrom damage', chars:'Leo/Casey'},
+      {sym:null,name:'Special gains all Dash & Dash Attack bonuses', chars:'Leo/Don'},
+      {sym:null,name:'Reduces dmg from projectiles & hazards 75%', chars:'Mikey/Casey/Metalhead'}
+    ]},
+  {label:'Michelangelo',color:'#f97316',entries:[
+      {sym:'1445359757',name:'Improve Inspiration (Atk area & dmg)'},
+      {sym:'1395026900',name:'Unknown Mastery 2'},
+      {sym:null,name:'+10% Elemental damage'},
+      {sym:null,name:'+10% Multi-Hit chance'},
+      {sym:null,name:'+15% chance to trigger Elemental Effects'},
+      {sym:null,name:'+20% Damage & Move Speed 3s after kill'},
+      {sym:null,name:'+30% Special area size, Special 20% faster'},
+      {sym:null,name:'+40% Multi-Hit damage'}
+    ]},
+  {label:'Leonardo',color:'#3b82f6',entries:[
+      {sym:null,name:'+100% Master Strike damage'},
+      {sym:'792487292',name:'Activating Special grants Light Shell 2s'},
+      {sym:'859597768',name:'Dash Attack applies Master Strike'},
+      {sym:null,name:'Defeating enemy with Special recharges Tool'},
+      {sym:null,name:'Gain Light Shell 1s on Master Strike'},
+      {sym:null,name:'Master Strike applies Guard Break 3.5s'}
+    ]},
+  {label:'Raphael',color:'#ef4444',entries:[
+      {sym:null,name:'+3% Crit Hit dmg per kill (encounter)'},
+      {sym:null,name:'+30% Special damage'},
+      {sym:null,name:'+100% Special dmg to enemies below 35% HP'},
+      {sym:null,name:'Crits: 20% chance 10 dmg of any element'},
+      {sym:null,name:'Crits: 40% chance Multi-Crit 300% dmg'},
+      {sym:null,name:'Instantly defeat enemies below 10% HP'}
+    ]},
+  {label:'Donatello',color:'#a855f7',entries:[
+      {sym:'1633481062',name:'Tool charges 30% faster'},
+      {sym:'1801257252',name:'Special/Tool: next attack is Final Strike'},
+      {sym:null,name:'+1 Tool charge'},
+      {sym:null,name:'+15% all damage dealt'},
+      {sym:null,name:'+30% Ooze damage'},
+      {sym:null,name:'+30% Utrom damage'},
+      {sym:null,name:'+75% Special damage'},
+      {sym:null,name:'Every other attack deals 10 Utrom damage'},
+      {sym:null,name:'Special and Tool deals 20 Utrom damage'}
+    ]},
+  {label:'Casey Jones',color:'#6b7280',entries:[
+      {sym:null,name:'Dash Attacks: +15 dmg, Guard Break 3s'},
+      {sym:null,name:'Special projectiles bounce 2 more targets'}
+    ]},
+  {label:'Metalhead',color:'#eab308',entries:[
+      {sym:null,name:'+10% Elemental dmg per Robotics power'},
+      {sym:null,name:'Dash Attack has Final Strike tag'},
+      {sym:null,name:'Final Strike projectile: slower, 50% bigger explosion'},
+      {sym:null,name:'Invulnerability 0.5s after activating Special'},
+      {sym:'656276786',name:'+100% Special Missiles damage'},
+      {sym:null,name:'+50% Move Speed during Special'}
+    ]},
+  {label:'Alopex',color:'#14b8a6',entries:[
+      {sym:'441330377',name:'+2 Dashes'},
+      {sym:'458107996',name:'+25% Elemental damage'},
+      {sym:null,name:'+35% Special damage'},
+      {sym:null,name:'Dash Attack & Final Strike: +15 Water damage'},
+      {sym:'491663234',name:'Dashing through enemy: Guard Break 2s'},
+      {sym:null,name:'Special kill: +20% Tool Charge, +1 Adrenaline'},
+      {sym:null,name:'Light Shell & +30% Move Speed 1.5s after Special'},
+      {sym:'-1098962392',name:'Tool deals +25 Flame damage'}
+    ]},
+];
+
+    for(const group of MASTERY_GROUPS){
+      const hdr=document.createElement('div');
+      hdr.style.cssText='grid-column:1/-1;font-family:var(--fd);font-size:13px;letter-spacing:1px;'
+        +'color:'+group.color+';margin-top:8px;margin-bottom:2px;padding-bottom:4px;'
+        +'border-bottom:1px solid rgba(255,255,255,.06);';
+      hdr.textContent=group.label.toUpperCase();
+      container.appendChild(hdr);
+
+      for(const {sym,name,chars} of group.entries){
+        const symInt=sym?parseInt(sym):null;
+        const isActive=symInt!==null&&activeSyms.has(symInt);
+        const hasEnh=sym&&!!(POWER_ENH_SYMS[sym]||0);
+
+        const row=document.createElement('div');
+        row.className='insp-row'+(isActive?' insp-active':'');
+        if(!sym) row.style.opacity='0.35';
+        else if(!isActive) row.style.opacity='0.6';
+
+                const charsTag=chars?`<span style="font-size:10px;color:#555;margin-left:4px;">[${chars}]</span>`:''
+        const btnStr=sym?(isActive
+          ?`<button class="c-btn" data-isym="${symInt}" data-iact="remove"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none;font-size:16px;line-height:1;">-</span></button>`
+          :`<button class="c-btn" data-isym="${symInt}" data-iact="add"${!hasEnh?' disabled style="opacity:.3;cursor:not-allowed"':''}><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none;font-size:16px;line-height:1;">+</span></button>`)
+          :'<span style="font-family:var(--fm);font-size:9px;color:#444;padding:0 4px;">?</span>';
+
+        row.innerHTML=`<div class="insp-name" style="${isActive?'color:var(--g)':''}">${name}${charsTag}</div>${btnStr}`;
+        container.appendChild(row);
+      }
+    }
+  }
+
+  function rebuildInspMastery(){
+    buildInspGrid();
+    buildMasteryGrid();
+  }
+
+
   // Render a power row from POWER_INFO — handles both active (in run) and inactive (Lv0)
   function appendEnhRowFromInfo(grid,name,info,eObj,active){
     const tree=info[0];
@@ -1516,23 +2285,36 @@ function renderRun(){
     const showUnlock=unlock&&unlock!=='Initial'&&unlock!=='Secondary';
     const lv=active?eObj.level:0;
     const desc=lv>0?powerDesc(name,lv):(info[2]?info[2].split('/')[0]:'');
-    const isLocked=tree==='Legendary'||name.startsWith('Mastery');
+    const isLocked=tree==='Legendary'||name.startsWith('Mastery')||name==='Quick Feet'||name==='Gift of the Dragon'||name==='Gift of the Dreamer'||name==='Gift Of the Dreamer';
+    const sym=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name)?.[0]||null;
+    const noEnh=active?false:!hasEnhSym(sym||'');
     const symStr=active?` &middot; buff: ${eObj.buff_symbol}`:'';
+    const slot=sym?SYM_TO_SLOT[parseInt(sym)]:null;
+    const SLOT_COLORS={'strike':'#60a5fa','charged':'#c084fc','abilities':'#34d399','dash':'#facc15'};
+    const slotColor=slot?(SLOT_COLORS[slot]||'#888'):'#888';
+    const slotLabel=slot?`<span style="font-family:var(--fm);font-size:10px;color:${slotColor};font-weight:500;margin-left:6px;opacity:.9;">&ndash; ${slot}</span>`:'';
+    const slotConflict=!active&&slot&&run.enhancements.some(e=>POWER_SLOTS[slot]&&POWER_SLOTS[slot].includes(e.buff_symbol)&&e.buff_symbol!==parseInt(sym)&&e.roomDuration===0);
+    const slotConflictEnh=slotConflict?run.enhancements.find(e=>POWER_SLOTS[slot]&&POWER_SLOTS[slot].includes(e.buff_symbol)&&e.buff_symbol!==parseInt(sym)&&e.roomDuration===0):null;
+    const exclConflictEnh=!slotConflict?POWER_EXCLUSIONS.reduce((found,g)=>found||(g.includes(parseInt(sym))&&run.enhancements.find(e=>g.includes(e.buff_symbol)&&e.buff_symbol!==parseInt(sym)&&e.roomDuration===0))||null,null):null;
+    const anyConflict=slotConflict||!!exclConflictEnh;
+    const conflictName=slotConflictEnh?enhName(slotConflictEnh.buff_symbol):exclConflictEnh?enhName(exclConflictEnh.buff_symbol):'';
     const lvStyle=lv===0?'color:#444':'';
 
     const row=document.createElement('div');
-    row.className='enh-row'+(lv===0?' enh-inactive':'');
+    row.className='enh-row'+(lv===0?' enh-inactive':'')+(anyConflict?' enh-conflict':'');
     row.dataset.powerName=name;
     row.innerHTML=`
       <div class="enh-info">
-        <div class="enh-name" style="${lv===0?'color:#555':''}">${name}</div>
+        <div class="enh-name" style="${lv===0?'color:#555':''}">${name}${slotLabel}</div>
         <div class="art-desc" id="pdesc-${name.replace(/[^a-z0-9]/gi,'_')}" style="margin-top:3px;${lv===0?'color:#444':''}">${desc}</div>
         <div class="enh-sym" style="margin-top:3px;"><span style="color:${color};font-size:10px;text-transform:uppercase;letter-spacing:.5px;">${tree}</span>${showUnlock?' &middot; '+unlock:''}${symStr}</div>
+        ${anyConflict?`<div style="font-size:10px;color:#f97316;margin-top:2px;">! replaces: ${conflictName}</div>`:''}
+        <input type="checkbox" class="enh-cb" data-pname="${name}" title="Select for bulk action">
       </div>
       <div class="enh-ctrl">
         <button class="c-btn" data-pname="${name}" data-d="-1" ${lv===0?'disabled style="opacity:.3"':''}><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
-        <span class="enh-lv" id="plv-${name.replace(/[^a-z0-9]/gi,'_')}" style="${lvStyle}">${lv===0?'—':'Lv '+lv}</span>
-        <button class="c-btn" data-pname="${name}" data-d="1" ${isLocked&&lv>=1?'disabled style="opacity:.3"':''}><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+        <span class="enh-lv" id="plv-${name.replace(/[^a-z0-9]/gi,'_')}" style="${lvStyle}">${lv===0?'-':'Lv '+lv}</span>
+        <button class="c-btn" data-pname="${name}" data-d="1" ${(isLocked&&lv>=1)||noEnh?'disabled style="opacity:.3"':''}><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
       </div>`;
     grid.appendChild(row);
   }
@@ -1558,34 +2340,109 @@ function renderRun(){
       </div>
       <div class="enh-ctrl">
         <button class="c-btn" data-enh="${origIdx}" data-d="-1"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
-        <span class="enh-lv" id="enh-lv-${origIdx}">Lv ${e.level}</span>
+        <span class="enh-lv" id="enh-lv-${origIdx}">Lv ${e._displayLevel||e.level}${e._displayLevel?` <span style="font-size:10px;color:var(--mu)">(altar)</span>`:''}</span>
         <button class="c-btn" data-enh="${origIdx}" data-d="1"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
       </div>`;
     grid.appendChild(row);
   }
 
   buildEnhGrid();
+  rebuildInspMastery();
 
-
-
-  document.getElementById('powers-zero-btn').addEventListener('click',()=>{
-    run.enhancements=run.enhancements.filter(e=>['inspiration','tool'].includes(enhCat(e.buff_symbol)));
-    markDirty();buildEnhGrid();
+  // Inspiration/mastery click delegation
+  ['insp-grid','mastery-grid'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.addEventListener('click',e=>{
+      const btn=e.target.closest('[data-isym]');
+      if(!btn||btn.disabled)return;
+      const sym=parseInt(btn.dataset.isym);
+      const act=btn.dataset.iact;
+      if(act==='add'){
+        const enhSym=POWER_ENH_SYMS[String(sym)]||0;
+        if(!enhSym)return;
+        if(!run.enhancements.find(x=>x.buff_symbol===sym&&x.roomDuration===0)){
+          run.enhancements.push({version:1,buff_symbol:sym,enhancement_symbol:enhSym,level:1,aux:0,roomDuration:0});
+          markDirty();
+        }
+      } else {
+        run.enhancements=run.enhancements.filter(x=>!(x.buff_symbol===sym&&x.roomDuration===0));
+        markDirty();
+      }
+      rebuildInspMastery();
+    });
   });
 
-  document.getElementById('powers-max-btn').addEventListener('click',()=>{
+
+
+  if(document.getElementById('powers-zero-btn'))document.getElementById('powers-zero-btn').addEventListener('click',()=>{
+    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.pname));
+    const useSelection=selected.size>0;
+    run.enhancements=run.enhancements.filter(e=>{
+      if(enhCat(e.buff_symbol)!=='power')return true;
+      const name=enhName(e.buff_symbol);
+      if(!name)return true;
+      if(useSelection&&!selected.has(name))return true;
+      return false;
+    });
+    markDirty();rebuildInspMastery();renderBoosts();buildEnhGrid();
+  });
+
+  if(document.getElementById('powers-max-btn'))document.getElementById('powers-max-btn').addEventListener('click',()=>{
+    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.pname));
+    const useSelection=selected.size>0;
+
+    // Helper: check if injecting sym would cause a slot or exclusion conflict
+    function wouldConflict(symInt){
+      const slot=Object.keys(POWER_SLOTS).find(s=>POWER_SLOTS[s].includes(symInt));
+      if(slot&&run.enhancements.some(e=>POWER_SLOTS[slot].includes(e.buff_symbol)&&e.buff_symbol!==symInt&&e.roomDuration===0))return true;
+      if(POWER_EXCLUSIONS.some(g=>g.includes(symInt)&&run.enhancements.some(e=>g.includes(e.buff_symbol)&&e.buff_symbol!==symInt&&e.roomDuration===0)))return true;
+      return false;
+    }
+
+    // Inject missing powers first
+    Object.entries(POWER_INFO).forEach(([name,info])=>{
+      if(useSelection&&!selected.has(name))return;
+      const tree=info[0];
+      if(tree==='Legendary')return;
+      // Find sym for this name
+      const symEntry=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name&&v[1]==='power');
+      if(!symEntry)return;
+      const symInt=parseInt(symEntry[0]);
+      if(NO_ENH_SYM.has(symInt))return;
+      // Skip if already in run
+      if(run.enhancements.some(e=>e.buff_symbol===symInt&&e.roomDuration===0))return;
+      // Skip if would cause conflict
+      if(wouldConflict(symInt))return;
+      const enhSym=POWER_ENH_SYMS[symEntry[0]]||0;
+      run.enhancements.push({version:1,buff_symbol:symInt,enhancement_symbol:enhSym,level:3,aux:0,roomDuration:0});
+    });
+
+    // Max all active powers
     run.enhancements.forEach(e=>{
       if(enhCat(e.buff_symbol)!=='power')return;
       const name=enhName(e.buff_symbol);
       if(!name)return;
+      if(useSelection&&!selected.has(name))return;
       const tree=POWER_INFO[name]?POWER_INFO[name][0]:null;
-      if(tree==='Legendary')return; // legendaries locked at Lv1
-      if(name.startsWith('Mastery'))return; // masteries locked at Lv1
+      if(tree==='Legendary')return;
       e.level=3;
     });
     markDirty();buildEnhGrid();
   });
 
+  document.getElementById('powers-selall-btn').addEventListener('click',()=>{
+    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=true;c.closest('.enh-row').classList.add('enh-selected');});
+    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='DESELECT TREE';b.classList.add('active');});
+  });
+  document.getElementById('powers-desel-btn').addEventListener('click',()=>{
+    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=false;c.closest('.enh-row').classList.remove('enh-selected');});
+    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='SELECT TREE';b.classList.remove('active');});
+  });
+  document.getElementById('enh-grid').addEventListener('change',e=>{
+    const cb=e.target.closest('.enh-cb');
+    if(cb) cb.closest('.enh-row').classList.toggle('enh-selected',cb.checked);
+  });
   document.getElementById('enh-grid').addEventListener('click',e=>{
     const btn=e.target.closest('[data-pname]');
     if(btn){
@@ -1602,6 +2459,19 @@ function renderRun(){
           if(!isLocked)run.enhancements[idx].level=Math.min(3,run.enhancements[idx].level+1);
         } else if(symInt!==null){
           const pEnhSym=POWER_ENH_SYMS[String(symInt)]||0;
+          if(!pEnhSym)return;  // no enh_sym — injection won't work
+          // Slot enforcement: remove any existing power in the same slot
+          const slot=SYM_TO_SLOT[symInt];
+          if(slot){
+            const slotSyms=POWER_SLOTS[slot];
+            run.enhancements=run.enhancements.filter(e=>!slotSyms.includes(e.buff_symbol));
+          }
+          // Tag exclusion: remove mutually exclusive powers
+          for(const group of POWER_EXCLUSIONS){
+            if(group.includes(symInt)){
+              run.enhancements=run.enhancements.filter(e=>!group.includes(e.buff_symbol)||e.buff_symbol===symInt);
+            }
+          }
           run.enhancements.push({version:1,buff_symbol:symInt,enhancement_symbol:pEnhSym,level:1,aux:0,roomDuration:0});
         }
       } else {
@@ -1654,12 +2524,21 @@ function renderRun(){
     eqArt.artifact_symbol=parseInt(e.target.value);markDirty();});
   document.getElementById('run-tool-sym').addEventListener('change',e=>{
     const sym=parseInt(e.target.value);
-    // Remove ALL existing tools from run first, then add selected one
-    run.enhancements=run.enhancements.filter(e=>enhCat(e.buff_symbol)!=='tool');
+    // Replicate game behavior: unshift new tool, set kit_sym in equipped
+    run.enhancements=run.enhancements.filter(e=>e.buff_symbol!==sym);
+    if(!run.stats.equipped) run.stats.equipped={value:0,values:[]};
     if(e.target.value!==''){
       const realEnhSym=POWER_ENH_SYMS[String(sym)]||TOOL_ENH_SYMS[String(sym)]||0;
       const newEnh={version:1,buff_symbol:sym,enhancement_symbol:realEnhSym,level:1,aux:0,roomDuration:0};
       run.enhancements.unshift(newEnh);
+      // Set kit_sym entry for this tool so game recognises it as active
+      const kitSym=TOOL_KIT_SYM[String(sym)];
+      if(kitSym){
+        const existing=run.stats.equipped.values.find(v=>v.key===kitSym);
+        const nextVal=(existing?existing.value:0)+1;
+        run.stats.equipped.values=run.stats.equipped.values.filter(v=>v.key!==kitSym);
+        run.stats.equipped.values.push({key:kitSym,value:nextVal});
+      }
     }
     // Update description
     const rawName=ENHANCEMENTS[String(sym)]?.[0]||'';
@@ -1712,7 +2591,7 @@ function renderRoomSequence(){
       `<option value="${v}"${room.portal==v?' selected':''}>${n}</option>`).join('');
 
     card.innerHTML=`
-      <div class="room-num">Room ${i+1} — ${typeName}${isCurrent?'<span class="current-tag">● CURRENT</span>':''}</div>
+      <div class="room-num">Room ${i+1} &ndash; ${typeName}${isCurrent?'<span class="current-tag">● CURRENT</span>':''}</div>
       <div class="room-field"><label>Reward</label>
         <select class="room-select" data-room="${i}" data-field="reward"${isPast?' disabled':''}>${rewardOpts}</select>
       </div>
