@@ -4,7 +4,7 @@ A save editor for TMNT: Splintered Fate (Steam / Epic). Made with the help of Cl
 
 ---
 
-## Web editor (no install)
+## Web editor (no download)
 
 **https://shabbypenguin.github.io/TMNT-SF-Saveeditor/**
 
@@ -20,7 +20,7 @@ On Windows they live in `%appdata%\TMNTSF`. Make a backup before editing. When y
 
 ---
 
-## Desktop app (exe)
+## Desktop app (exe, no install)
 
 A standalone Windows app that finds your save folder automatically, lets you pick a slot, saves directly back to the right place, and keeps automatic backups of every change.
 
