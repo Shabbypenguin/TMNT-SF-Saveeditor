@@ -91,7 +91,7 @@ The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-conta
 - SELECT ALL, DESELECT, MAX ALL, ZERO ALL bulk controls
 - Per-tree SELECT TREE toggle
 
-**Tools**
+**Tools** CURRENTLY BROKEN, THE WAY THE GAME HANDLES IT ISNT AS CLEAN OR AS EASY AS I THOUGHT
 - One active tool per run. Selecting a tool swaps it in; the editor mirrors the game exactly — your hero's default kit tool is preserved and the swapped tool is set as active. Picking a different tool replaces the previous swap.
 - Default kit tools (one per hero): Leo Shuriken, Michelangelo Taunt, Raphael Turtle Line, Donatello Hardened Shell, Casey Juice, Alopex Kunai, Metalhead Landmines
 - Pool / store tools selectable as swaps: Shuriken Storm, Ooze Shuriken, Fireball, Meteor Storm, Smoke Bomb, Ride the Wave, Water Sweep, Utrom Drone, Utrom Rod, Utrom Shuriken, Attack Drone, Unstable Canister
