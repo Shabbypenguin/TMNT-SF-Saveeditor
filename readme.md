@@ -139,7 +139,7 @@ The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-conta
 
 ## Changelog
 
-### 2026-05-31 — Tool mechanism, dedup, update check
+### 2026-05-31 — Better save slot information, various fixes, and a backend change to updater.
 
 - **Save slots better display information.** Save slots now match characters in current run. May expand this to include some other staple stats.
 - **Tool inject has been disabled for now.** Wasn't working so I made sure to stop it before it breaks stuff.
