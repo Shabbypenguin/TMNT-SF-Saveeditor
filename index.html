@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%277%27%20fill%3D%27%230d0d0d%27%2F%3E%3Cpath%20d%3D%27M16%205l8%203v6c0%205-3.4%209.3-8%2011-4.6-1.7-8-6-8-11V8z%27%20fill%3D%27%234caf50%27%2F%3E%3Cpath%20d%3D%27M16%205l8%203v6c0%205-3.4%209.3-8%2011z%27%20fill%3D%27%2343a047%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2713%27%20r%3D%272.4%27%20fill%3D%27%23ffd600%27%2F%3E%3Crect%20x%3D%2714.7%27%20y%3D%2714.6%27%20width%3D%272.6%27%20height%3D%276%27%20rx%3D%271.3%27%20fill%3D%27%23ffd600%27%2F%3E%3C%2Fsvg%3E">
 <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
 <style>
@@ -208,6 +208,10 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .slot-name{font-weight:500;font-size:15px;color:var(--tx);}
 .slot-id{font-family:var(--fm);font-size:11px;color:#555;margin-top:2px;}
 .slot-empty{color:#555;font-style:italic;font-size:14px;}
+.slot-icon{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:20px;color:#0d0d0d;font-weight:bold;}
+.slot-build{font-family:var(--fm);font-size:11px;color:var(--g);margin-top:3px;line-height:1.45;}
+.slot-build .sb-slot{color:var(--mu);}
+.slot-handle{font-family:var(--fm);font-size:10px;color:#555;margin-top:3px;}
 .slot-or{text-align:center;color:var(--mu);font-size:13px;margin:4px 0 12px;}
 .slot-file-btn{width:100%;background:rgba(255,214,0,.06);border:1px dashed rgba(255,214,0,.25);color:var(--y);padding:12px;border-radius:6px;cursor:pointer;font-family:var(--fm);font-size:13px;transition:background .15s,border-color .15s;display:block;text-align:center;}
 .slot-file-btn:hover{background:rgba(255,214,0,.12);border-color:rgba(255,214,0,.5);}
@@ -2533,16 +2537,10 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
   if(toolEnh){
     document.getElementById('run-tool-dec').addEventListener('click',()=>{
       return; // tool editing disabled
-
-      toolEnh.level=Math.max(1,toolEnh.level-1);
-      document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
-      markDirty();});
+    });
     document.getElementById('run-tool-inc').addEventListener('click',()=>{
       return; // tool editing disabled
-
-      toolEnh.level=Math.min(3,toolEnh.level+1);
-      document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
-      markDirty();});
+    });
   }
 
 
@@ -2962,7 +2960,34 @@ if (isFlaskMode) {
       btn.className = 'slot-btn';
       btn.disabled = !slot.exists;
       if (slot.exists && !slot.error) {
-        btn.innerHTML = '<div class="slot-num">' + slot.slot + '</div><div class="slot-info"><div class="slot-name">' + (slot.handle || 'Unknown') + '</div><div class="slot-id">' + (slot.player_id || '') + ' — ' + slot.filename + '</div></div>';
+        // Resolve hero, chapter, and slot powers (names live here, app.py sends raw IDs)
+        const cmap = {}; CHARS.forEach(c => cmap[c.id] = c);
+        const hc = (slot.hero !== null && slot.hero !== undefined) ? cmap[slot.hero] : null;
+        const CHAP = ['Lair', 'Sewers', 'Docks', 'Streets', 'Rooftops'];
+        const slotName = hc ? hc.name : (slot.hero != null ? 'Unknown' : 'No run in progress');
+        const slotColor = hc ? hc.color : 'var(--mu)';
+        const initial = hc ? hc.name.charAt(0) : '–';
+        // Icon: colored badge with the character initial (placeholder until custom art exists)
+        const iconHtml = '<div class="slot-icon" style="background:' + (hc ? hc.color : '#2a2a2a') + ';color:' + (hc ? '#0d0d0d' : '#555') + ';">' + initial + '</div>';
+        // Build line: Chapter · Strike / Abilities / Dash (tool omitted until detection is fixed)
+        let buildLine = '';
+        if (slot.hero != null) {
+          const chap = (typeof slot.chapter === 'number' && CHAP[slot.chapter] !== undefined) ? CHAP[slot.chapter] : null;
+          const sp = slot.slot_powers || {};
+          const pname = bs => { const e = ENHANCEMENTS[String(bs)]; return e ? e[0] : null; };
+          const order = ['strike', 'abilities', 'dash'];
+          const parts = order.filter(k => sp[k] != null).map(k => pname(sp[k])).filter(Boolean);
+          const bits = [];
+          if (chap) bits.push(chap);
+          if (parts.length) bits.push(parts.join(' / '));
+          buildLine = bits.length ? '<div class="slot-build">' + bits.join(' <span class="sb-slot">·</span> ') + '</div>' : '';
+        } else {
+          buildLine = '<div class="slot-build"><span class="sb-slot">No active run</span></div>';
+        }
+        const handleLine = '<div class="slot-handle">' + (slot.handle || '') + (slot.player_id ? ' · ' + slot.player_id : '') + '</div>';
+        btn.innerHTML = '<div class="slot-num">' + slot.slot + '</div>' + iconHtml +
+          '<div class="slot-info"><div class="slot-name" style="color:' + slotColor + ';">' + slotName + '</div>' +
+          buildLine + handleLine + '</div>';
         btn.addEventListener('click', () => selectSlot(slot.slot, slot.handle));
       } else {
         btn.innerHTML = '<div class="slot-num">' + slot.slot + '</div><div class="slot-info"><div class="slot-empty">' + (slot.error ? 'Error: ' + slot.error : 'Empty slot') + '</div></div>';
@@ -3081,8 +3106,8 @@ document.getElementById('char-grid').addEventListener('click',e=>{
 
 
 // ---- Version / update check (hidden build number; not shown to users) ----
-// BUILD format: game version digits + 2-digit editor build. 114001 = game 1.14.0, editor build 01.
-const BUILD = 114003;
+// SHABBYBUILD format: game version digits + 2-digit editor build. 114001 = game 1.14.0, editor build 01.
+const SHABBYBUILD = 114004;
 const VERSION_URL = 'https://raw.githubusercontent.com/Shabbypenguin/TMNT-SF-Saveeditor/main/version.json';
 (function checkForUpdate(){
   try{
@@ -3092,7 +3117,7 @@ const VERSION_URL = 'https://raw.githubusercontent.com/Shabbypenguin/TMNT-SF-Sav
         if(!data)return;
         const remote=parseInt(data.build,10);
         if(!Number.isFinite(remote))return;       // malformed -> silent
-        if(remote<=BUILD)return;                    // up to date or local newer -> silent
+        if(remote<=SHABBYBUILD)return;                    // up to date or local newer -> silent
         const banner=document.getElementById('upd-banner');
         if(!banner)return;
         const link=document.getElementById('upd-banner-link');

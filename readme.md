@@ -141,6 +141,13 @@ The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-conta
 
 ### 2026-05-31 — Tool mechanism, dedup, update check
 
+- **Save slots better display information.** Save slots now match characters in current run. May expand this to include some other staple stats.
+- **Tool inject has been disabled for now.** Wasn't working so I made sure to stop it before it breaks stuff.
+- **Tweaked updater code.**
+- **Fixed CSS to fix the Flask display.**
+
+### 2026-05-31 — Tool mechanism, dedup, update check
+
 - **Tool handling rewritten to match the game.** Confirmed across many live saves that the active tool is the non-default (swapped) tool, with the hero's default kit tool always preserved; swapping replaces the prior swap rather than stacking. Injection now enforces this exactly, in all cases including unknown heroes and saves missing a default entry.
 - **Water Sweep** confirmed and added as a proper tool.
 - **Metalhead fixes:** corrected an inverted mapping — Landmines is Metalhead's default tool, and Inspiration 1 is now mapped correctly.
