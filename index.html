@@ -1939,7 +1939,7 @@ function renderRun(){
             }).join('')}
           </select>
         </div>
-        <div class="art-desc" id="run-tool-desc" style="margin:2px 0 6px;font-size:11px;color:var(--mu);padding:0 4px;">${toolDesc}</div><div style="font-family:var(--fm);font-size:11px;color:var(--y);margin-top:4px;">⚠ Tool editing is temporarily disabled while the tool mechanism is being verified.
+        <div class="art-desc" id="run-tool-desc" style="margin:2px 0 6px;font-size:11px;color:var(--mu);padding:0 4px;">${toolDesc}</div><div style="font-family:var(--fm);font-size:11px;color:var(--y);margin:0 0 6px;padding:0 4px;">⚠ Tool editing temporarily disabled.</div>
         ${toolEnh?`<div class="run-row"><span class="run-lbl">Tool Lv</span>
           <div style="display:flex;align-items:center;gap:5px;">
             <button class="c-btn" id="run-tool-dec" disabled style="opacity:.4;cursor:not-allowed;"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
@@ -3082,7 +3082,7 @@ document.getElementById('char-grid').addEventListener('click',e=>{
 
 // ---- Version / update check (hidden build number; not shown to users) ----
 // BUILD format: game version digits + 2-digit editor build. 114001 = game 1.14.0, editor build 01.
-const BUILD = 114002;
+const BUILD = 114003;
 const VERSION_URL = 'https://raw.githubusercontent.com/Shabbypenguin/TMNT-SF-Saveeditor/main/version.json';
 (function checkForUpdate(){
   try{
