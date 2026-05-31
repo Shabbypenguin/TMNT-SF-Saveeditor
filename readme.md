@@ -1,102 +1,174 @@
 # TMNT: Splintered Fate — Save Editor
 
-A browser-based save editor for TMNT: Splintered Fate Steam or Epic. This was made with the help of claude, the game softlocked me out of a few artifacts and there was no way to try and get them without restarting progress. I saw no one else had made one so I wanted to make one.
+A save editor for TMNT: Splintered Fate (Steam / Epic). Made with the help of Claude after the game softlocked me out of a few artifacts with no way to recover them without restarting. No one else had made one, so here we are.
 
-## Usage
+---
 
-https://shabbypenguin.github.io/TMNT-SF-Saveeditor/
+## Web editor (no install)
 
-https://tmntsf.shabbygames.club/ - Beta newer changes get pushed here first.
+**https://shabbypenguin.github.io/TMNT-SF-Saveeditor/**
 
-### Loading a save
-Drag and drop a save file onto the drop zone, or click to browse. Save files are named:
+**https://tmntsf.shabbygames.club/** — beta, newer changes land here first
+
+Load a save file by dragging it onto the drop zone or clicking to browse. Save files are named:
 ```
-saveSlot_GameState0_cloud.json
-saveSlot_GameState1_cloud.json
+saveSlot.GameState0.cloud.json
+saveSlot.GameState1.cloud.json
+saveSlot.GameState2.cloud.json
 ```
-Located in the game's local data folder. On Windows that is `%appdata%\TMNTSF`. Make copies of your saves before editing.
+On Windows they live in `%appdata%\TMNTSF`. Make a backup before editing. When you're done, click **EXPORT SAVE** and drop the file back into your TMNTSF folder.
 
-### Exporting
-Click **EXPORT SAVE** and drop the downloaded file back into your TMNTSF save folder, replacing the original.
+---
+
+## Desktop app (exe)
+
+A standalone Windows app that finds your save folder automatically, lets you pick a slot, saves directly back to the right place, and keeps automatic backups of every change.
+
+### Download
+
+Grab the latest `TMNTSF_SaveEditor.exe` from the [Releases](../../releases) page. No installation needed — just double-click it.
+
+> **Requirement:** Windows 10 or 11 with [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) installed. This is pre-installed on most up-to-date Windows systems. If the app does not open, install the WebView2 runtime from that link.
+
+### Features
+
+- **Auto-detects your save folder** — opens straight to a slot picker showing all three save slots with their character names
+- **Saves directly back** — no downloading and copying files manually
+- **Automatic backups** — every time you save, a timestamped backup is written to a `TMNTSF_backups` folder next to the exe before anything is overwritten
+- **Backup restore** — view all backups for a slot and restore any of them with one click
+- **Switch slot** — jump between save slots without restarting
+- Closing the window fully exits the app — no background processes left running
+
+---
+
+## Update notifications
+
+Both the web and desktop editors check for a newer build on launch and show a banner at the top of the window if one is available, linking straight to the Releases page. The check is silent if you're offline or already up to date, and never blocks the editor from loading.
+
+---
+
+## Building the exe yourself
+
+Requirements: Python 3.10+ on Windows.
+
+**1. Install dependencies**
+```
+pip install flask pywebview pyinstaller
+```
+
+**2. Clone the repo**
+```
+git clone https://github.com/Shabbypenguin/TMNT-SF-Saveeditor.git
+cd TMNT-SF-Saveeditor
+```
+
+**3. Build**
+```
+pyinstaller tool-src/TMNTSF_SaveEditor.spec
+```
+
+The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-contained — the editor, all images, and the Python runtime are bundled inside. Copy it anywhere and run it.
+
+> **Note:** The spec file expects `index.html` and `media/` to be in the repo root (one level above `tool-src/`). Do not move things around.
 
 ---
 
 ## What you can edit
 
 ### Artifacts tab
-- **Add** any artifact to your inventory (starts at Lv 1)
-- **Remove** an artifact by decreasing its level below 1
-- **Adjust level** between 1 and the artifact's max level using +/−
+- Add any artifact to your inventory (starts at Lv 1)
+- Remove an artifact by decreasing its level below 1
+- Adjust level between 1 and the artifact's max using +/−
+
+### Current Run tab
+
+**Powers**
+- Full power grid across all trees: Flame, Water, Ooze, Ninja, Utrom, Robotics, Astral Light, Astral Dark, Legendary, and Dash
+- 132 powers mapped with correct enhancement symbols — upgrades apply properly in-game
+- Slot enforcement: picking a Strike/Abilities/Dash/Charged power automatically removes the conflicting one
+- Level powers from Lv 1 to Lv 3
+- Conflict indicator shows which power will be replaced before you commit
+- SELECT ALL, DESELECT, MAX ALL, ZERO ALL bulk controls
+- Per-tree SELECT TREE toggle
+
+**Tools**
+- One active tool per run. Selecting a tool swaps it in; the editor mirrors the game exactly — your hero's default kit tool is preserved and the swapped tool is set as active. Picking a different tool replaces the previous swap.
+- Default kit tools (one per hero): Leo Shuriken, Michelangelo Taunt, Raphael Turtle Line, Donatello Hardened Shell, Casey Juice, Alopex Kunai, Metalhead Landmines
+- Pool / store tools selectable as swaps: Shuriken Storm, Ooze Shuriken, Fireball, Meteor Storm, Smoke Bomb, Ride the Wave, Water Sweep, Utrom Drone, Utrom Rod, Utrom Shuriken, Attack Drone, Unstable Canister
+
+**Inspirations & Masteries**
+- All 14 character inspirations (2 per hero) injectable with correct altar sync
+- Inspiration levels are read by the game from your Dragon Coin altar upgrades, not the run entry — the editor edits the altar level that actually applies
+- Confirmed masteries for multiple heroes plus shared masteries (Dash Attack, Special charges 30% faster, Crit Damage, Barrier Damage, and more)
+
+**Other**
+- Adjust scrap, dice, revives, and HP for the current run
+- Set active artifact
 
 ### Stats tab
 
 **Currency**
-- Set available Dreamer Coins (light) and Dragon Coins (dark) directly
+- Set available Dreamer Coins and Dragon Coins directly
 
 **Per character**
 - Shredder victories, deaths, victories, talismans, and wraps per character
 
+**Boss records**
+- Leatherhead, Karai, Bebop & Rocksteady, Shredder (by character and by build), Punk Frog Mech — victories, variants, hard clears
+
 **Global stats**
-- Runs, kills, room clears, portal entries, enemy kills broken down by type, miniboss and boss records, arena victories, and more
-- Search bar filters across all stat sections
-- Advanced / hidden stats toggle for internal fields
+- Runs, kills, room clears, portal entries, enemy kills broken down by type, miniboss records, arena victories, and more
+- Search bar filters all sections
+- Advanced / hidden stats toggle
 
-### Current Run tab
-- View and inject any power from the full power grid (all trees, all tiers)
-- Set power levels (Lv 1–3)
-- Select active tool from all confirmed tools
-- Set current artifact
-- Adjust scrap, dice, revives, and health for this run
-- Add and adjust inspirations and masteries
-- SELECT ALL / DESELECT, MAX ALL, ZERO ALL bulk controls
-- Per-tree SELECT TREE toggle
-- Conflict detection — shows which powers will be replaced in a given slot
-
-### Upgrades Tab
+### Upgrades tab
 - View Dragon and Dreamer altar upgrades and set levels
 - Zero out all upgrades
-- Max level all upgrades
-- Toggle overleveling (some upgrades can go as high as level 99)
+- Max all upgrades
+- Toggle overleveling — uncapped upgrades go as high as level 99, while locked upgrades (inspirations and similar) stay capped at their real in-game max
 
 ---
 
 ## Notes
 
 - The editor preserves the original save's binary format exactly — header, MD5 checksum, size fields, and zlib compression are all recalculated correctly on export
-- Power injection writes the correct `enhancement_symbol` for each power so upgrades apply properly in-game
-- Tool injection sets the correct per-tool `kit_sym` in `run.stats.equipped` so the game recognises the active tool
+- Power injection writes the correct `enhancement_symbol` for each power so in-game upgrade rooms display and apply properly
+- All buff_syms and enh_syms were sourced from live save files, not decompiles — several decompile IDs were wrong and have been corrected
 
 ---
 
 ## Changelog
 
+### 2026-05-31 — Tool mechanism, dedup, update check
+
+- **Tool handling rewritten to match the game.** Confirmed across many live saves that the active tool is the non-default (swapped) tool, with the hero's default kit tool always preserved; swapping replaces the prior swap rather than stacking. Injection now enforces this exactly, in all cases including unknown heroes and saves missing a default entry.
+- **Water Sweep** confirmed and added as a proper tool.
+- **Metalhead fixes:** corrected an inverted mapping — Landmines is Metalhead's default tool, and Inspiration 1 is now mapped correctly.
+- **Mikey and Raph inspirations** now lock at their real altar max even with overleveling enabled, matching the other heroes.
+- **Data cleanup:** removed a large batch of duplicate internal entries (deduped to 207 unique), so every entry resolves to the correct definition.
+- **Update check:** the editor now notifies you on launch when a newer build is available, with a dismissible banner linking to Releases.
+- **Polish:** added a favicon and a version badge, and removed unused dead code.
+
+### 2026-05-30 — Desktop app
+
+- Standalone Windows exe via PyInstaller + pywebview
+- Opens as a native app window (no browser tab needed)
+- Auto-detects `%appdata%\TMNTSF` save folder
+- Slot picker on launch with character names
+- Direct save-back to game folder
+- Automatic timestamped backups before every write
+- Backup viewer and one-click restore
+- Closing the window fully exits — no background processes
+
 ### 2026-05-29 — Major run editor overhaul
 
-**Power system**
-- All **132 powers** fully mapped with confirmed buff_syms and enh_syms, sourced from live saves
-- All 7 power trees (Flame, Water, Ooze, Ninja, Utrom, Robotics, Astral Light/Dark) plus Legendary, Dash, and cross-tree powers
-- Slot enforcement: selecting a Strike/Abilities/Dash/Charged power removes the conflicting one
-- Throwing Arts Ricochet ↔ Chakram mutual exclusion
-- Powers without a confirmed enh_sym are blocked from injection (prevents broken upgrades)
-- Conflict indicator shows which power will be replaced before you commit
-
-**Tools**
-- All pool tools now injectable with correct enh_sym and per-tool kit_sym:
-  - Shuriken Storm, Ooze Shuriken, Smoke Bomb, Fireball, Meteor Storm, Ride the Wave all confirmed
-  - Default tools (Leo Shuriken, Utrom Drone, Raphael Turtle Line, Michelangelo Taunt, Casey Juice, Donatello Hardened Shell, Alopex Kunai, Utrom Rod) all confirmed
-  - Water Sweep ID unconfirmed — hidden from list until resolved
-- Each pool tool uses its own `kit_sym` key (Ride the Wave = `1002778670`; all others share `-751219635`)
-
-**Inspirations & Masteries**
-- All 14 character inspirations confirmed with altar syms and enh_syms (Mikey, Leo, Raph, Don, Casey, Metalhead, Alopex — both slots each)
-- 19 masteries confirmed with enh_syms including shared masteries (Dash Attack, Special charges 30% faster, Barrier Damage, Crit Damage) and character-specific ones for Leo, Alopex, and others
-- Altar level display synced from run kit_sym to lifetime altar stat
-
-**Bug fixes**
-- Removed stale/wrong decompile IDs that were blocking correct powers (Unknown Ninja C, Unknown Astral Dark B, Unknown Utrom B, wrong Shuriken Breaker/Laser Strike IDs)
-- Fixed Frostfire and Bright Spring display (duplicate ENHANCEMENTS entries caused wrong name lookup)
-- Slippery correctly identified (was mislabeled as Spontaneous Combustion)
-- JS syntax corruption from simultaneous insertion at same position — added post-edit syntax verification
+- 132 powers fully mapped with confirmed buff_syms and enh_syms from live saves
+- Complete tool coverage confirmed from live saves
+- All 14 character inspirations confirmed with altar syms
+- Masteries confirmed including hero-specific and shared masteries
+- Slot enforcement and conflict detection for all power trees
+- Removed stale/wrong decompile IDs (Unknown Ninja C, Unknown Astral Dark B, Unknown Utrom B, wrong Shuriken Breaker/Laser Strike IDs)
+- Fixed Frostfire, Bright Spring, and Slippery display (mislabeled or duplicate entries)
 
 ---
 

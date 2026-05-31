@@ -1,4 +1,6 @@
 
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%277%27%20fill%3D%27%230d0d0d%27%2F%3E%3Cpath%20d%3D%27M16%205l8%203v6c0%205-3.4%209.3-8%2011-4.6-1.7-8-6-8-11V8z%27%20fill%3D%27%234caf50%27%2F%3E%3Cpath%20d%3D%27M16%205l8%203v6c0%205-3.4%209.3-8%2011z%27%20fill%3D%27%2343a047%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2713%27%20r%3D%272.4%27%20fill%3D%27%23ffd600%27%2F%3E%3Crect%20x%3D%2714.7%27%20y%3D%2714.6%27%20width%3D%272.6%27%20height%3D%276%27%20rx%3D%271.3%27%20fill%3D%27%23ffd600%27%2F%3E%3C%2Fsvg%3E">
+<link rel="alternate icon" type="image/x-icon" href="favicon.ico">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap');
 :root{--g:#4caf50;--gdim:rgba(76,175,80,0.12);--y:#ffd600;--r:#e53935;--bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--bd:rgba(76,175,80,0.25);--tx:#e8e8e8;--mu:#777;--fd:'Bebas Neue',sans-serif;--fb:'IBM Plex Sans',sans-serif;--fm:'IBM Plex Mono',monospace;}
@@ -7,6 +9,12 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;gap:12px;}
 .hdr-logo{font-family:var(--fd);font-size:28px;color:var(--g);letter-spacing:2px;line-height:1;}
 .hdr-logo span{color:var(--y);}
+.hdr-ver{font-size:13px;color:var(--mu);margin-left:8px;letter-spacing:1px;font-family:var(--fm);vertical-align:middle;}
+.upd-banner{display:none;align-items:center;gap:12px;background:var(--r);color:#fff;padding:9px 16px;font-family:var(--fb);font-size:14px;font-weight:500;}
+.upd-banner.show{display:flex;}
+.upd-banner a{color:#fff;text-decoration:underline;font-weight:600;}
+.upd-banner .upd-close{margin-left:auto;background:rgba(0,0,0,.18);border:none;color:#fff;width:24px;height:24px;border-radius:4px;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0;}
+.upd-banner .upd-close:hover{background:rgba(0,0,0,.32);}
 .hdr-meta{margin-left:auto;font-family:var(--fm);font-size:12px;color:var(--mu);text-align:right;line-height:1.6;}
 .hdr-meta .handle{color:var(--g);font-size:14px;}
 .drop-zone{margin:28px 20px;border:1.5px dashed var(--bd);border-radius:8px;padding:44px 20px;text-align:center;cursor:pointer;background:var(--s1);transition:border-color .2s,background .2s;}
@@ -157,12 +165,6 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .enh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px;}
 .enh-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
 .enh-row.enh-conflict{border:2px solid #ef4444;}
-.enh-cb{position:absolute;top:5px;right:5px;width:14px;height:14px;accent-color:var(--g);cursor:pointer;}
-.enh-row{position:relative;}
-.sel-tree-btn{font-family:var(--fm);font-size:10px;color:var(--mu);background:var(--s1);border:1px solid var(--bd);border-radius:3px;padding:2px 7px;cursor:pointer;margin-left:8px;transition:color .1s,border-color .1s;}
-.sel-tree-btn:hover{color:var(--g);border-color:var(--g);}
-.sel-tree-btn.active{color:var(--g);border-color:var(--g);}
-.enh-row.enh-selected{outline:1px solid var(--g);}
 .insp-row{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:8px 12px;display:flex;align-items:center;gap:10px;}
 .insp-row.insp-active{border-color:rgba(76,175,80,.4);}
 .insp-row.insp-noenh{opacity:.3;}
@@ -187,18 +189,91 @@ body,.root{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:
 .status{font-family:var(--fm);font-size:13px;color:var(--mu);}
 .status.ok{color:var(--g);}
 .status.err{color:var(--r);}
+
+/* ---- Flask/desktop mode: slot picker ---- */
+.slot-picker{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);}
+.slot-picker.hidden{display:none;}
+.slot-box{background:#161616;border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:32px 36px;min-width:480px;max-width:600px;}
+.slot-box-title{font-family:var(--fd);font-size:26px;color:var(--g);letter-spacing:2px;margin-bottom:4px;}
+.slot-box-title span{color:var(--y);}
+.slot-box-sub{font-size:13px;color:var(--mu);margin-bottom:20px;font-family:var(--fm);}
+.save-path{font-family:var(--fm);font-size:11px;color:#555;margin-bottom:20px;padding:8px 12px;background:#0d0d0d;border-radius:4px;border:1px solid #222;word-break:break-all;}
+.save-path.not-found{color:var(--r);}
+.slot-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.slot-btn{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .15s,background .15s;text-align:left;width:100%;}
+.slot-btn:hover:not(:disabled){border-color:var(--g);background:var(--gdim);}
+.slot-btn:disabled{opacity:.4;cursor:not-allowed;}
+.slot-num{font-family:var(--fd);font-size:24px;color:var(--g);width:36px;text-align:center;flex-shrink:0;}
+.slot-info{flex:1;}
+.slot-name{font-weight:500;font-size:15px;color:var(--tx);}
+.slot-id{font-family:var(--fm);font-size:11px;color:#555;margin-top:2px;}
+.slot-empty{color:#555;font-style:italic;font-size:14px;}
+.slot-or{text-align:center;color:var(--mu);font-size:13px;margin:4px 0 12px;}
+.slot-file-btn{width:100%;background:rgba(255,214,0,.06);border:1px dashed rgba(255,214,0,.25);color:var(--y);padding:12px;border-radius:6px;cursor:pointer;font-family:var(--fm);font-size:13px;transition:background .15s,border-color .15s;display:block;text-align:center;}
+.slot-file-btn:hover{background:rgba(255,214,0,.12);border-color:rgba(255,214,0,.5);}
+.slot-file-input{display:none;}
+.backup-bar{background:var(--s1);border-bottom:1px solid rgba(76,175,80,.15);padding:8px 20px;display:flex;align-items:center;gap:10px;font-size:13px;font-family:var(--fm);}
+.backup-bar.hidden{display:none;}
+.backup-label{color:var(--mu);}
+.backup-slot-badge{background:var(--gdim);border:1px solid var(--bd);color:var(--g);padding:2px 10px;border-radius:3px;font-size:12px;}
+.backup-link{color:var(--mu);cursor:pointer;text-decoration:underline;margin-left:auto;}
+.backup-link:hover{color:var(--tx);}
+.backup-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9998;}
+.backup-modal.hidden{display:none;}
+.backup-modal-box{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:24px 28px;min-width:400px;max-width:560px;}
+.backup-modal-title{font-family:var(--fd);font-size:20px;color:var(--g);margin-bottom:16px;letter-spacing:1px;}
+.backup-list{max-height:280px;overflow-y:auto;}
+.backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-family:var(--fm);font-size:12px;color:var(--tx);}
+.backup-item:last-child{border-bottom:none;}
+.backup-restore-btn{background:var(--gdim);border:1px solid var(--bd);color:var(--g);padding:3px 10px;border-radius:3px;cursor:pointer;font-size:11px;font-family:var(--fm);}
+.backup-restore-btn:hover{background:rgba(76,175,80,.2);}
+.backup-close-btn{margin-top:16px;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:8px 20px;border-radius:4px;cursor:pointer;font-family:var(--fm);font-size:13px;}
+.backup-empty{color:var(--mu);font-style:italic;font-size:13px;padding:12px 0;}
+
+.enh-cb{width:15px;height:15px;accent-color:var(--g);cursor:pointer;flex-shrink:0;}
+.enh-row.enh-selected{outline:1px solid var(--g);}
+.sel-tree-btn{font-family:var(--fm);font-size:10px;color:var(--mu);background:var(--s1);border:1px solid var(--bd);border-radius:3px;padding:2px 7px;cursor:pointer;margin-left:8px;transition:color .1s,border-color .1s;}
+.sel-tree-btn:hover{color:var(--g);border-color:var(--g);}
+.sel-tree-btn.active{color:var(--g);border-color:var(--g);}
 </style>
 
+
+<div class="slot-picker hidden" id="slot-picker">
+  <div class="slot-box">
+    <div class="slot-box-title">TMNT <span>SF</span> SAVE EDITOR</div>
+    <div class="slot-box-sub">Select a save slot to edit, or load a file manually.</div>
+    <div class="save-path" id="save-path-display">Detecting save folder...</div>
+    <div class="slot-list" id="slot-list"><div style="color:#777;font-size:13px;font-family:var(--fm);">Loading...</div></div>
+    <div class="slot-or">— or —</div>
+    <label><input type="file" class="slot-file-input" id="fi-slot" accept=".json"><div class="slot-file-btn">📂 &nbsp;Browse for save file manually</div></label>
+  </div>
+</div>
+<div class="backup-bar hidden" id="backup-bar">
+  <span class="backup-label">Active slot:</span>
+  <span class="backup-slot-badge" id="backup-slot-badge">—</span>
+  <span class="backup-label" style="margin-left:8px;">Auto-backup on every save.</span>
+  <span class="backup-link" id="backup-link">View backups</span>
+  <span class="backup-link" id="switch-slot-link" style="margin-left:12px;">Switch slot</span>
+</div>
+<div class="backup-modal hidden" id="backup-modal">
+  <div class="backup-modal-box">
+    <div class="backup-modal-title">BACKUPS</div>
+    <div class="backup-list" id="backup-list"></div>
+    <button class="backup-close-btn" id="backup-close-btn">Close</button>
+  </div>
+</div>
+
 <div class="root" id="root">
+<div class="upd-banner" id="upd-banner"><span id="upd-banner-text">A new version of the TMNT SF Save Editor is available.</span><a id="upd-banner-link" href="https://github.com/Shabbypenguin/TMNT-SF-Saveeditor/releases" target="_blank" rel="noopener">Download the latest version</a><button class="upd-close" id="upd-close" title="dismiss" aria-label="dismiss">&times;</button></div>
 <div class="hdr">
-  <div class="hdr-logo">TMNT <span>SF</span> SAVE EDITOR</div>
+  <div class="hdr-logo">TMNT <span>SF</span> SAVE EDITOR<span class="hdr-ver">V1.14.0</span></div>
   <div class="hdr-meta" id="hdr-meta">drop a save file to begin</div>
 </div>
 <div class="drop-zone" id="dz">
   <label for="fi" style="cursor:pointer;display:block;">
     <i class="ti ti-file-upload" aria-hidden="true"></i>
     <div class="dz-title">DROP SAVE FILE</div>
-    <div class="dz-sub">saveSlot_GameState*_cloud.json -- drag and drop or click to browse</div>
+    <div class="dz-sub">saveSlot.GameState*.cloud.json -- drag and drop or click to browse</div>
     <input type="file" id="fi" accept=".json" style="display:none">
   </label>
 </div>
@@ -326,7 +401,6 @@ const POWER_INFO = {
   'Revved Up':["Astral (Light)","After Daybreak","+20/25/30% chance of dodging enemy attacks when they are affected by Blinding Light."],
   'Ancestral Tech':["Astral (Light)","Secondary","While Light Shell is active, fill your Tool over time."],
   'Astral Presence':["Astral (Light)","Secondary","While Light Shell is active, gain bonus damage and Multi-hit."],
-  'Unknown Astral Light B':["Astral (Light)","Secondary","+Max Health. Gain additional Max Health when selecting Dreamer Coins."],
   // Flame
   'Flame Abilities':["Flame","Initial","Special and Tool deals 15/25/40 Flame damage."],
   'Flame Dash':["Flame","Initial","Deal 30/50/70 Flame damage to nearby enemies at the start of a Dash."],
@@ -344,7 +418,6 @@ const POWER_INFO = {
   // Ninja
   'Adrenaline':["Ninja","Initial","Gain a stack of Adrenaline upon defeating an enemy. Adrenaline increases Physical damage by 5/10/15%. 5 stacks max."],
   'First Strike':["Ninja","Initial","+30/45/60% damage dealt for 1s after a Dash."],
-  'Unknown Ninja C':["Ninja","Initial","Unknown — buff_sym -1415415163"],
   'Quick Feet':["Ninja","Initial","+1 Dash charge."],
   'Shinobi Supremacy':["Ninja","Initial","+10/15/20% Dodge chance."],
   'Shuriken Attacks':["Ninja","Initial","Attacks have a 30/60/100% chance to throw a Shuriken forward."],
@@ -508,19 +581,6 @@ const ENHANCEMENTS = {
   '1066694247':  ['Laser Strike',                      'power'],
 
   // Internal affinity buffs — not player-facing, filter from display
-  '-1048629535': ['Internal: Alopex Affinity 1',   'internal'],
-  '-1098962392': ['Alopex: Tool deals +25 Flame damage', 'mastery'],
-  '1105143980':  ['Internal: Casey Affinity 1',    'internal'],
-  '1155476837':  ['Internal: Casey Affinity 2',    'internal'],
-  '-1512743178': ['Internal: Donatello Affinity 1','internal'],
-  '-1529520797': ['Internal: Donatello Affinity 2','internal'],
-  '1344156015':  ['Internal: Leonardo Affinity 2', 'internal'],
-  '2113377231':  ['Internal: Metalhead Affinity 1','internal'],
-  '2130154850':  ['Internal: Metalhead Affinity 2','internal'],
-  '772501084':   ['Internal: Mikey Affinity 1',    'internal'],
-  '822833941':   ['Internal: Mikey Affinity 2',    'internal'],
-  '-1442636985': ['Internal: Raphael Affinity 1',  'internal'],
-  '-1425859366': ['Internal: Raphael Affinity 2',  'internal'],
   // Alopex kit
   // Michelangelo kit
   // Donatello kit (IDs confirmed, which is Insp1 vs Insp2 unknown)
@@ -549,26 +609,15 @@ const ENHANCEMENTS = {
   '-1034736680': ['Donatello - Inspiration 1',    'inspiration'],  // Lv1:1 / Lv2:2 / Lv3:3 HP on encounter start
       '-984403823':  ['Donatello - Inspiration 2',          'inspiration'],  // Lv1:20% / Lv2:40% Tool charge speed
   // Internal affinity buffs — not player-facing, filter from display
-  '-1048629535': ['Internal: Alopex Affinity 1',   'internal'],
-  '-1098962392': ['Alopex: Tool deals +25 Flame damage', 'mastery'],
-  '1105143980':  ['Internal: Casey Affinity 1',    'internal'],
-  '1155476837':  ['Internal: Casey Affinity 2',    'internal'],
-  '-1512743178': ['Internal: Donatello Affinity 1','internal'],
-  '-1529520797': ['Internal: Donatello Affinity 2','internal'],
-  '1344156015':  ['Internal: Leonardo Affinity 2', 'internal'],
-  '2113377231':  ['Internal: Metalhead Affinity 1','internal'],
-  '2130154850':  ['Internal: Metalhead Affinity 2','internal'],
-  '772501084':   ['Internal: Mikey Affinity 1',    'internal'],
-  '822833941':   ['Internal: Mikey Affinity 2',    'internal'],
-  '-1442636985': ['Internal: Raphael Affinity 1',  'internal'],
-  '-1425859366': ['Internal: Raphael Affinity 2',  'internal'],
   // Alopex kit
   '498986860':   ['Alopex - Tool (Kunai)',          'tool'],
   '831103151':   ['Alopex - Inspiration 1',         'inspiration'],  // Lv1:+8% / Lv2:+10% / Lv3:+12% Dodge (x2 vs projectiles)
   '847880770':   ['Alopex - Inspiration 2',         'inspiration'],  // Lv1:+8% / Lv2:+10% / Lv3:+12% Crit & Move Speed
   // Metalhead kit (IDs confirmed, slot order unknown)
   '-580224395':  ['Metalhead - Inspiration 2',               'inspiration'],
+  '1389435912': ['Metalhead - Inspiration 1', 'inspiration'],  // confirmed fresh Metalhead save
   '1212610709':  ['Ooze Abilities',       'power'],
+
   // Raphael kit (tool confirmed, inspirations are 2 of the remaining 4 unknowns)
   '-619638694':  ['Raphael - Tool (Turtle Line)',       'tool'],
     '-1820198603': ['Tool (Ooze Shuriken)',            'tool'],
@@ -593,9 +642,11 @@ const ENHANCEMENTS = {
   '347186936':   ['Astral Insight',        'power'],
   '530038070':   ['Astral Presence',       'power'],
   '-1616197290': ['Call of the Void',           'power'],
+  '-2087857272':  ['Raphael - Inspiration 2', 'inspiration'],  // Lv1:+3% / Lv2:+6% / Lv3:+9% Atk Crit & Crit Dmg
   '-1746636050': ['Eclipse',               'power'],
   '-1189980455': ['Eternal Darkness',       'power'],
   '1747718790':  ['Gift of the Dragon',     'power'],
+  '1845016249':  ["Dragon's Claw",          'power'],
   '-1752657340': ['Eternal Light',         'power'],
   '-14461045':   ['Light Embrace',         'power'],
   '-1475312023': ['Light Hammer',          'power'],
@@ -639,10 +690,7 @@ const ENHANCEMENTS = {
   '-27946384':   ['Utrom Strike',           'power'],
   '-249594085':  ['Techno-Organic Interface','power'],
   '-1663813465': ['Stormy Weather',         'power'],
-  '-630557252':  ['Metalhead - Inspiration 1',    'inspiration'],
-  '-2087857272':  ['Raphael - Inspiration 2', 'inspiration'],
-  '1361471662':  ['Unknown Mikey Mastery A', 'mastery'],
-  '-2122367194': ['Unknown (boost room duration effect — roomDuration:5 at Lv2)', 'power'],
+  '-630557252':  ['Tool (Landmines)',      'tool'],
   '-194026468':  ['Art of Darkness',      'power'],
   '-519095219':  ['Extended Assault',      'power'],
   '1953603970':  ['Heightened Senses',      'power'],
@@ -658,7 +706,6 @@ const ENHANCEMENTS = {
   '-1364872862': ['Ooze Dash',            'power'],
   '590707888':   ['Ooze Attack',          'power'],
   '-54411067':   ['Ooze Strike',          'power'],
-  '325923318':   ['Tool (Utrom Drone)',      'tool'],
   // Ooze powers (confirmed via acquisition order)
   '-1526079192': ["Goo'dbye",           'power'],
   '1867113587':  ['Focus Fire',          'power'],
@@ -677,7 +724,6 @@ const ENHANCEMENTS = {
   '138635578':   ['Trailblazer',           'power'],
   '-196974294':  ['Precision',             'power'],
   '-2061803411': ['Preheated',             'power'],
-  '1789795819':  ['Pressure Nozzle',       'power'],
   '1746825681':  ['Blazing Inferno',    'power'],
   // Legendaries (confirmed via acquisition order)
   '1935875699':  ['Slippery',               'power'],
@@ -719,13 +765,19 @@ const ENHANCEMENTS = {
   '-2095601647':  ['First Strike',    'power'],
   // ── Masteries (confirmed buff_syms only) ──
   // ── Tools (no buff_sym confirmed — placeholder syms) ──
-  '456127606':  ['Tool (Attack Drone)',  'tool'],
-  '6':  ['Tool (Water Sweep)', 'tool'],  // 80/100/120 Water dmg nearby, knockback. Charge: ~12%/atk
-  '-839979647': ['Tool (Ride the Wave)',  'tool'],
-  '-1400536958': ['Tool (Smoke Bomb)',  'tool'],
-  '785524961':  ['Tool (Fireball)',   'tool'],
-  '-682882212':  ['Tool (Meteor Storm)', 'tool'],
+  '456127606':  ['Tool (Attack Drone)', 'tool'],  // Final Strike: missile 15/20/25 dmg. Active: 10/12/15 missiles over 2s. Charge: ~??%
+  '785524961':  ['Tool (Fireball)', 'tool'],  // 4 seeking fireballs, 30/50/100 Flame dmg each. Charge: 10%/atk
+  '-682882212':  ['Tool (Meteor Storm)', 'tool'],  // Meteor storm 6.5/8.5/10.5s, 20/40/60 Flame dmg/impact. Charge: 4.2%/atk
+  '-839979647':  ['Tool (Ride the Wave)', 'tool'],  // +30/40/50% Move Speed 5s, 40/50/60 Water dmg/s nearby. Charge: ~4%/atk
+  '-1400536958': ['Tool (Smoke Bomb)', 'tool'],  // Teleport fwd, 50/60/70 dmg nearby. +15/25/35% Dodge. Charge: ??
+  '-2003791131': ['Tool (Water Sweep)', 'tool'],  // 80/100/120 Water dmg nearby, knockback
 
+  '458107996':  ['Alopex: +25% Elemental damage', 'mastery'],
+  '491663234':  ['Alopex: Dashing through enemy Guard Break 2s', 'mastery'],
+  '859597768':  ['Leo: Dash Attack applies Master Strike', 'mastery'],
+  '792487292':  ['Leo: Special grants Light Shell for 2s', 'mastery'],
+  '876375387':  ['Special charges 30% faster', 'mastery'],
+  '1361471662':  ['Unknown Mikey Mastery A', 'mastery'],
   // ── Masteries (confirmed buff_syms) ──
   '1121725528':  ['+30% Dash Attack damage, +1 Dash on kill',   'mastery'],
   '-19678530':   ['+50% damage to Barrier enemies',              'mastery'],
@@ -737,11 +789,6 @@ const ENHANCEMENTS = {
   '1395026900':  ['Mikey: Unknown Mastery 2',                   'mastery'],
   '441330377':   ['Alopex: +2 Dashes',                          'mastery'],
   '656276786':  ['+100% Special Missiles damage',               'mastery'],
-  '792487292':  ['Leo: Special grants Light Shell for 2s', 'mastery'],
-  '876375387':  ['Special charges 30% faster', 'mastery'],
-  '458107996':  ['Alopex: +25% Elemental damage', 'mastery'],
-  '491663234':  ['Alopex: Dashing through enemy Guard Break 2s', 'mastery'],
-  '859597768':  ['Leo: Dash Attack applies Master Strike', 'mastery'],
 };
 
 function enhName(buff_sym){
@@ -749,7 +796,7 @@ function enhName(buff_sym){
   return e?e[0]:null;
 }
 // Symbols we don't have enh_sym for — injection won't work
-const NO_ENH_SYM = new Set([6]);
+const NO_ENH_SYM = new Set([]);
 function hasEnhSym(sym){return !NO_ENH_SYM.has(Number(sym))&&!NO_ENH_SYM.has(String(sym));}
 function enhCat(buff_sym){
   const e=ENHANCEMENTS[String(buff_sym)];
@@ -935,44 +982,6 @@ let save=null,rawBuf=null,zlibOff=0,origName='save.json',dirty=false,origFloatPa
 
 function findZlib(b){for(let i=0;i<b.length-1;i++)if(b[i]===0x78&&(b[i+1]===0x9c||b[i+1]===0xda||b[i+1]===0x01))return i;return -1;}
 
-function md5(str){
-  function sa(x,y){const l=(x&0xFFFF)+(y&0xFFFF);return(((x>>16)+(y>>16)+(l>>16))<<16)|(l&0xFFFF);}
-  function brl(n,c){return(n<<c)|(n>>>(32-c));}
-  function cmn(q,a,b,x,s,t){return sa(brl(sa(sa(a,q),sa(x,t)),s),b);}
-  function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t);}
-  function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t);}
-  function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t);}
-  function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t);}
-  const utf8=unescape(encodeURIComponent(str));
-  const by=new Uint8Array(utf8.length);for(let i=0;i<utf8.length;i++)by[i]=utf8.charCodeAt(i);
-  const L=by.length,ex=((L+8)>>>6<<4)+14-L/4|0;const M=new Int32Array(L/4+ex+2);
-  for(let i=0;i<L;i++)M[i>>2]|=by[i]<<((i%4)*8);M[L>>2]|=0x80<<((L%4)*8);M[M.length-2]=L*8;
-  let a=1732584193,b=-271733879,c=-1732584194,d=271733878;
-  for(let i=0;i<M.length;i+=16){
-    const A=a,B=b,C=c,D=d;
-    a=ff(a,b,c,d,M[i],7,-680876936);d=ff(d,a,b,c,M[i+1],12,-389564586);c=ff(c,d,a,b,M[i+2],17,606105819);b=ff(b,c,d,a,M[i+3],22,-1044525330);
-    a=ff(a,b,c,d,M[i+4],7,-176418897);d=ff(d,a,b,c,M[i+5],12,1200080426);c=ff(c,d,a,b,M[i+6],17,-1473231341);b=ff(b,c,d,a,M[i+7],22,-45705983);
-    a=ff(a,b,c,d,M[i+8],7,1770035416);d=ff(d,a,b,c,M[i+9],12,-1958414417);c=ff(c,d,a,b,M[i+10],17,-42063);b=ff(b,c,d,a,M[i+11],22,-1990404162);
-    a=ff(a,b,c,d,M[i+12],7,1804603682);d=ff(d,a,b,c,M[i+13],12,-40341101);c=ff(c,d,a,b,M[i+14],17,-1502002290);b=ff(b,c,d,a,M[i+15],22,1236535329);
-    a=gg(a,b,c,d,M[i+1],5,-165796510);d=gg(d,a,b,c,M[i+6],9,-1069501632);c=gg(c,d,a,b,M[i+11],14,643717713);b=gg(b,c,d,a,M[i],20,-373897302);
-    a=gg(a,b,c,d,M[i+5],5,-701558691);d=gg(d,a,b,c,M[i+10],9,38016083);c=gg(c,d,a,b,M[i+15],14,-660478335);b=gg(b,c,d,a,M[i+4],20,-405537848);
-    a=gg(a,b,c,d,M[i+9],5,568446438);d=gg(d,a,b,c,M[i+14],9,-1019803690);c=gg(c,d,a,b,M[i+3],14,-187363961);b=gg(b,c,d,a,M[i+8],20,1163531501);
-    a=gg(a,b,c,d,M[i+13],5,-1444681467);d=gg(d,a,b,c,M[i+2],9,-51403784);c=gg(c,d,a,b,M[i+7],14,1735328473);b=gg(b,c,d,a,M[i+12],20,-1926607734);
-    a=hh(a,b,c,d,M[i+5],4,-378558);d=hh(d,a,b,c,M[i+8],11,-2022574463);c=hh(c,d,a,b,M[i+11],16,1839030562);b=hh(b,c,d,a,M[i+14],23,-35309556);
-    a=hh(a,b,c,d,M[i+1],4,-1530992060);d=hh(d,a,b,c,M[i+4],11,1272893353);c=hh(c,d,a,b,M[i+7],16,-155497632);b=hh(b,c,d,a,M[i+10],23,-1094730640);
-    a=hh(a,b,c,d,M[i+13],4,681279174);d=hh(d,a,b,c,M[i],11,-358537222);c=hh(c,d,a,b,M[i+3],16,-722521979);b=hh(b,c,d,a,M[i+6],23,76029189);
-    a=hh(a,b,c,d,M[i+9],4,-640364487);d=hh(d,a,b,c,M[i+12],11,-421815835);c=hh(c,d,a,b,M[i+15],16,530742520);b=hh(b,c,d,a,M[i+2],23,-995338651);
-    a=ii(a,b,c,d,M[i],6,-198630844);d=ii(d,a,b,c,M[i+7],10,1126891415);c=ii(c,d,a,b,M[i+14],15,-1416354905);b=ii(b,c,d,a,M[i+5],21,-57434055);
-    a=ii(a,b,c,d,M[i+12],6,1700485571);d=ii(d,a,b,c,M[i+3],10,-1894986606);c=ii(c,d,a,b,M[i+10],15,-1051523);b=ii(b,c,d,a,M[i+1],21,-2054922799);
-    a=ii(a,b,c,d,M[i+8],6,1873313359);d=ii(d,a,b,c,M[i+15],10,-30611744);c=ii(c,d,a,b,M[i+6],15,-1560198380);b=ii(b,c,d,a,M[i+13],21,1309151649);
-    a=ii(a,b,c,d,M[i+4],6,-145523070);d=ii(d,a,b,c,M[i+11],10,-1120210379);c=ii(c,d,a,b,M[i+2],15,718787259);b=ii(b,c,d,a,M[i+9],21,-343485551);
-    a=sa(a,A);b=sa(b,B);c=sa(c,C);d=sa(d,D);
-  }
-  function h(n){let s='',v;for(let i=0;i<4;i++){v=(n>>>(i*8))&0xFF;s+=('0'+v.toString(16)).slice(-2);}return s;}
-  return(h(a)+h(b)+h(c)+h(d)).toUpperCase();
-}
-
-// MD5 over a Uint8Array directly — avoids string encoding issues
 function md5bytes(by){
   function sa(x,y){const l=(x&0xFFFF)+(y&0xFFFF);return(((x>>16)+(y>>16)+(l>>16))<<16)|(l&0xFFFF);}
   function brl(n,c){return(n<<c)|(n>>>(32-c));}
@@ -1027,23 +1036,13 @@ const KIT_TO_ALTAR = {
   '1813693740':  '-2131612450',  // Leo Insp 1
   '1864026597':  '2146577227',   // Leo Insp 2
   // Metalhead
-  '-630557252':  '-1125299434',  // Metalhead Insp 1
+  '1389435912':  '-1125299434',  // Metalhead Insp 1
   '-580224395':  '-1142077053',  // Metalhead Insp 2
   // Donatello (run syms not confirmed from fresh save yet)
   '-1034736680': '-1212524326',  // Don Insp 1 (unconfirmed)
   '-984403823':  '-1229301945',  // Don Insp 2 (unconfirmed)
   // Raphael (run syms unclear — multiple unknowns)
   // Michelangelo (run syms unclear — 201029333 / -1053443010)
-};
-// Maps tool buff_sym -> kit_sym used in run.stats.equipped
-// Each pool tool has its own kit_sym entry; value = acquisition order counter
-const TOOL_KIT_SYM = {
-  '319898966':   -751219635,   // Tool (Shuriken Storm) — confirmed
-  '-1820198603': -751219635,   // Tool (Ooze Shuriken) — assumed same key
-  '-1400536958': -751219635,   // Tool (Smoke Bomb) — confirmed
-  '785524961':   -751219635,   // Tool (Fireball) — confirmed
-  '-682882212':   -751219635,   // Tool (Meteor Storm) — confirmed
-  '-839979647':  1002778670,   // Tool (Ride the Wave) — confirmed
 };
 
 
@@ -1079,6 +1078,7 @@ const INSP_LEVELS = {
   'Donatello - Inspiration 2':    ['Tool charges 20% faster', 'Tool charges 40% faster'],
   'Casey Jones - Inspiration 1':  ['Special Guard Break +1s', 'Special Guard Break +2s', 'Special Guard Break +3s'],
   'Casey Jones - Inspiration 2':  ['Special: Final Strike +33% Crit', 'Special: Final Strike +66% Crit', 'Special: Final Strike +100% Crit'],
+  'Metalhead - Inspiration 1':    ['Boss kill: upgrade enh, +25 Scrap', 'Boss kill: upgrade enh, +50 Scrap', 'Boss kill: upgrade enh, +75 Scrap'],
   'Metalhead - Inspiration 1':    ['Boss kill: upgrade enh, +25 Scrap', 'Boss kill: upgrade enh, +50 Scrap', 'Boss kill: upgrade enh, +75 Scrap'],
   'Metalhead - Inspiration 2':    ['Tool Guard Break 3s', 'Tool Guard Break 6s', 'Tool Guard Break 9s'],
   'Alopex - Inspiration 1':       ['+8% Dodge (x2 vs projectiles)', '+10% Dodge (x2 vs projectiles)', '+12% Dodge (x2 vs projectiles)'],
@@ -1338,14 +1338,14 @@ const UPGRADE_LOOKUP = {
   // Scrap & Currency section
     '-516092780': ['Running Start', 'dreamer', 10, lv=>`+${lv*25} Scrap upon starting a run.`, false, 106],
     '2055001189': ['Scrappy Bosses', 'dreamer', 5, lv=>`+${lv*20}% Scrap granted by Bosses.`, false, 107],
-    '-405782207': ['Scavenger', 'dreamer', 3, lv=>`+${lv*100}% Scrap from destroying crates.`, true,  108],
-    '-611797745': ["Pantheon's Blessing", 'dreamer', 5, lv=>`+${lv*10}% Dragon and Dreamer Coins from Room Rewards.`, true,  109],
-    '-386336970': ['Scrap King', 'dreamer', 5, lv=>`+${lv*10}% Scrap from Room Rewards.`, true,  110],
+    '-405782207': ['Scavenger', 'dreamer', 3, lv=>`+${lv*100}% Scrap from destroying crates.`, false, 108],
+    '-611797745': ["Pantheon's Blessing", 'dreamer', 5, lv=>`+${lv*10}% Dragon and Dreamer Coins from Room Rewards.`, false, 109],
+    '-386336970': ['Scrap King', 'dreamer', 5, lv=>`+${lv*10}% Scrap from Room Rewards.`, false, 110],
     '-154024465': ['Recycling', 'dreamer', 5, lv=>`+${lv*5}% chance for Bonus Currency Room Rewards.`, false, 111],
   // Bonus section
     '-792546313': ['Mouse Scrap', 'dreamer', 3, lv=>`+${lv*15}% chance for MOUSER to drop triple Scrap on defeat.`, false, 112],
     '-1734720141': ['Fortune Favors the Bold', 'dreamer', 3, lv=>`+${lv} Dragon and Dreamer Coins from Veteran/Champion enemies.`, false, 113],
-    '-1227395869': ['Arcade Fixer', 'dreamer', 2, lv=>`+${lv*25}% chance Bonus Currency applies to all Room Reward options.`, true,  114],
+    '-1227395869': ['Arcade Fixer', 'dreamer', 2, lv=>`+${lv*25}% chance Bonus Currency applies to all Room Reward options.`, false, 114],
     '-1853417476': ['Busted Coin Slot', 'dreamer', 1, lv=>`Dragon Coins always granted as Bonus Currency for Masteries and Inspirations.`, true, 115],
     '641018994': ['Dojo', 'dreamer', 4, lv=>`${lv*25}% chance to upgrade Turtle Power to a Mastery in Rooftops entry room.`, true, 116],
 };
@@ -1502,6 +1502,7 @@ function runActive(){
 // Format: buff_symbol_str -> {level -> enh_sym}
 // enh_sym is fixed per power regardless of level — confirmed across multiple runs
 const POWER_ENH_SYMS = {
+  '1389435912': 978577814,  // Metalhead - Inspiration 1
   '-1247950504': -190135704,  // Adrenaline
   '-708443022': -2146352798,  // Aggressive Savings
   '1929011532': -1218941732,  // Alternating Current
@@ -1615,6 +1616,7 @@ const POWER_ENH_SYMS = {
   '138635578': -339028266,  // Trailblazer
   '-1375537276': 515841388,  // Unfortunate Odor
   '1747718790': 1346909886,  // Gift of the Dragon
+  '1845016249': 1247824899,  // Dragon's Claw
   '420963323': 776498099,  // Throwing Arts: Chakram
   '-1984093787': 200384183,  // Unknown (Lv2, mixed run)
   '-1616197290': -1629967754,  // Unknown Astral Dark power
@@ -1678,6 +1680,8 @@ const POWER_ENH_SYMS = {
 
 
 const TOOL_ENH_SYMS = {
+  '-2003791131': -2019579539,  // Tool (Water Sweep)
+  '-630557252':  547447264,   // Tool (Landmines) — confirmed
   '-180578088':  -1763016193,  // Tool: Utrom Shuriken
   '319898966':  -1656781500,  // Tool: Shuriken Storm
   '325923318': 2143337380,  // Tool: Utrom Drone
@@ -1696,9 +1700,17 @@ const TOOL_ENH_SYMS = {
   '785524961':  -1970154591,  // Tool (Fireball)
   '-682882212':  842366194,   // Tool (Meteor Storm)
 };
-// Known enhancement_symbols for kit items
-const KIT_ENH_SYMS = {
+
+const HERO_DEFAULT_TOOL = {
+  '-1842996619': -1615068019,  // Leonardo -> Shuriken
+  '1773431475':  -1070220629,  // Michelangelo -> Taunt
+  '195141004':   -619638694,   // Raphael -> Turtle Line
+  '-1076859241': 1642479731,   // Donatello -> Hardened Shell
+  '-917669266':  -876652360,   // Casey Jones -> The Juice
+  '1252917672':  498986860,    // Alopex -> Kunai
+  '1751315127':  -630557252,   // Metalhead -> Landmines (confirmed fresh save)
 };
+// Known enhancement_symbols for kit items
 
 const UNMAPPED_POWERS = [
 ];
@@ -1878,9 +1890,12 @@ function renderRun(){
   // Tools are stored in run.enhancements (active + collected tools)
   const coopEnhs=save.state.coop&&save.state.coop[0]?save.state.coop[0].run.enhancements:[];
   // Active tool = last tool in run.enhancements (most recently equipped)
-  const toolEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='tool'&&e.level===1);
-  // Last Lv1 tool = most recently equipped
-  const toolEnh=toolEnhs.length?toolEnhs[toolEnhs.length-1]:null;
+  const toolEnhs=run.enhancements.filter(e=>enhCat(e.buff_symbol)==='tool');
+  // Active tool = the non-default (swapped) tool if present, else the hero's default kit tool.
+  // Confirmed via fresh saves: swapping replaces the prior swapped tool; default kit tool persists.
+  const defaultToolSym=HERO_DEFAULT_TOOL[String(run.hero)];
+  const swapped=toolEnhs.find(e=>e.buff_symbol!==defaultToolSym);
+  const toolEnh=swapped||(toolEnhs.length?toolEnhs[0]:null);
   const toolSym=toolEnh?String(toolEnh.buff_symbol):'';
   const toolRawName=toolSym?(ENHANCEMENTS[toolSym]?.[0]||'Unknown ('+toolSym+')'):'None';
   // Strip "Michelangelo - Tool (Taunt)" -> "Taunt" for the tool name portion
@@ -1918,13 +1933,9 @@ function renderRun(){
         <div class="run-row"><span class="run-lbl">Artifact Lv</span><span style="font-family:var(--fm);font-size:13px;color:var(--g)">Lv ${eqArt.level}</span></div>
         <div class="run-row"><span class="run-lbl">Tool</span>
           <select class="run-select" id="run-tool-sym" style="color:#fb923c;">
-            <option value="">None</option>
             ${Object.entries(ENHANCEMENTS).filter(([s,v])=>v[1]==='tool').map(([s,v])=>{
               const tname=v[0].match(/Tool \((.+?)\)/)?.[1]||v[0];
-              const isPlaceholder=parseInt(s)>=1&&parseInt(s)<=6;
-              const noEnhSym=!TOOL_ENH_SYMS[s];
-              const disableTool=isPlaceholder||noEnhSym;
-              return `<option value="${s}"${toolSym===s?' selected':''}${disableTool?' disabled':''}>${tname}${isPlaceholder?' [ID unknown]':noEnhSym?' [enh_sym unknown]':''}</option>`;
+              return `<option value="${s}"${toolSym===s?' selected':''}>${tname}</option>`;
             }).join('')}
           </select>
         </div>
@@ -2013,11 +2024,9 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
           appendEnhRowFromInfo(g,name,info,eObj,active);
         });
       });
-      // Add "Select Tree" button to header
       const selBtn=document.createElement('button');
       selBtn.className='sel-tree-btn';
       selBtn.textContent='SELECT TREE';
-      selBtn.dataset.tree=tree;
       selBtn.addEventListener('click',ev=>{
         ev.stopPropagation();
         const cbs=sec.querySelectorAll('.enh-cb');
@@ -2045,11 +2054,9 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
         const g=document.createElement('div');g.className='enh-grid';body.appendChild(g);
         unknownPowers.forEach(e=>appendEnhRow(g,e));
       });
-      // Add "Select Tree" button to header
       const selBtn=document.createElement('button');
       selBtn.className='sel-tree-btn';
       selBtn.textContent='SELECT TREE';
-      selBtn.dataset.tree=tree;
       selBtn.addEventListener('click',ev=>{
         ev.stopPropagation();
         const cbs=sec.querySelectorAll('.enh-cb');
@@ -2285,7 +2292,7 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
     const showUnlock=unlock&&unlock!=='Initial'&&unlock!=='Secondary';
     const lv=active?eObj.level:0;
     const desc=lv>0?powerDesc(name,lv):(info[2]?info[2].split('/')[0]:'');
-    const isLocked=tree==='Legendary'||name.startsWith('Mastery')||name==='Quick Feet'||name==='Gift of the Dragon'||name==='Gift of the Dreamer'||name==='Gift Of the Dreamer';
+    const isLocked=tree==='Legendary'||name.startsWith('Mastery')||name==='Gift of the Dragon'||name==='Gift of the Dreamer'||name==='Gift Of the Dreamer';
     const sym=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name)?.[0]||null;
     const noEnh=active?false:!hasEnhSym(sym||'');
     const symStr=active?` &middot; buff: ${eObj.buff_symbol}`:'';
@@ -2304,12 +2311,12 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
     row.className='enh-row'+(lv===0?' enh-inactive':'')+(anyConflict?' enh-conflict':'');
     row.dataset.powerName=name;
     row.innerHTML=`
+      <input type="checkbox" class="enh-cb" data-cbname="${name}" title="Select for bulk action">
       <div class="enh-info">
         <div class="enh-name" style="${lv===0?'color:#555':''}">${name}${slotLabel}</div>
         <div class="art-desc" id="pdesc-${name.replace(/[^a-z0-9]/gi,'_')}" style="margin-top:3px;${lv===0?'color:#444':''}">${desc}</div>
         <div class="enh-sym" style="margin-top:3px;"><span style="color:${color};font-size:10px;text-transform:uppercase;letter-spacing:.5px;">${tree}</span>${showUnlock?' &middot; '+unlock:''}${symStr}</div>
         ${anyConflict?`<div style="font-size:10px;color:#f97316;margin-top:2px;">! replaces: ${conflictName}</div>`:''}
-        <input type="checkbox" class="enh-cb" data-pname="${name}" title="Select for bulk action">
       </div>
       <div class="enh-ctrl">
         <button class="c-btn" data-pname="${name}" data-d="-1" ${lv===0?'disabled style="opacity:.3"':''}><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;"><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
@@ -2346,6 +2353,18 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
     grid.appendChild(row);
   }
 
+  document.getElementById('powers-selall-btn').addEventListener('click',()=>{
+    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=true;c.closest('.enh-row').classList.add('enh-selected');});
+    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='DESELECT TREE';b.classList.add('active');});
+  });
+  document.getElementById('powers-desel-btn').addEventListener('click',()=>{
+    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=false;c.closest('.enh-row').classList.remove('enh-selected');});
+    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='SELECT TREE';b.classList.remove('active');});
+  });
+  document.getElementById('enh-grid').addEventListener('change',e=>{
+    const cb=e.target.closest('.enh-cb');
+    if(cb)cb.closest('.enh-row').classList.toggle('enh-selected',cb.checked);
+  });
   buildEnhGrid();
   rebuildInspMastery();
 
@@ -2376,7 +2395,7 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
 
 
   if(document.getElementById('powers-zero-btn'))document.getElementById('powers-zero-btn').addEventListener('click',()=>{
-    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.pname));
+    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.cbname));
     const useSelection=selected.size>0;
     run.enhancements=run.enhancements.filter(e=>{
       if(enhCat(e.buff_symbol)!=='power')return true;
@@ -2385,14 +2404,13 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
       if(useSelection&&!selected.has(name))return true;
       return false;
     });
-    markDirty();rebuildInspMastery();renderBoosts();buildEnhGrid();
+    markDirty();buildEnhGrid();rebuildInspMastery();
   });
 
   if(document.getElementById('powers-max-btn'))document.getElementById('powers-max-btn').addEventListener('click',()=>{
-    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.pname));
+    const selected=new Set([...document.querySelectorAll('.enh-cb:checked')].map(c=>c.dataset.cbname));
     const useSelection=selected.size>0;
 
-    // Helper: check if injecting sym would cause a slot or exclusion conflict
     function wouldConflict(symInt){
       const slot=Object.keys(POWER_SLOTS).find(s=>POWER_SLOTS[s].includes(symInt));
       if(slot&&run.enhancements.some(e=>POWER_SLOTS[slot].includes(e.buff_symbol)&&e.buff_symbol!==symInt&&e.roomDuration===0))return true;
@@ -2400,56 +2418,39 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
       return false;
     }
 
-    // Inject missing powers first
+    // Inject missing powers
     Object.entries(POWER_INFO).forEach(([name,info])=>{
       if(useSelection&&!selected.has(name))return;
-      const tree=info[0];
-      if(tree==='Legendary')return;
-      // Find sym for this name
+      if(info[0]==='Legendary')return;
       const symEntry=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name&&v[1]==='power');
       if(!symEntry)return;
       const symInt=parseInt(symEntry[0]);
       if(NO_ENH_SYM.has(symInt))return;
-      // Skip if already in run
       if(run.enhancements.some(e=>e.buff_symbol===symInt&&e.roomDuration===0))return;
-      // Skip if would cause conflict
       if(wouldConflict(symInt))return;
       const enhSym=POWER_ENH_SYMS[symEntry[0]]||0;
       run.enhancements.push({version:1,buff_symbol:symInt,enhancement_symbol:enhSym,level:3,aux:0,roomDuration:0});
     });
 
-    // Max all active powers
+    // Max existing
     run.enhancements.forEach(e=>{
       if(enhCat(e.buff_symbol)!=='power')return;
       const name=enhName(e.buff_symbol);
       if(!name)return;
       if(useSelection&&!selected.has(name))return;
-      const tree=POWER_INFO[name]?POWER_INFO[name][0]:null;
-      if(tree==='Legendary')return;
+      if(POWER_INFO[name]?.[0]==='Legendary')return;
       e.level=3;
     });
     markDirty();buildEnhGrid();
   });
 
-  document.getElementById('powers-selall-btn').addEventListener('click',()=>{
-    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=true;c.closest('.enh-row').classList.add('enh-selected');});
-    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='DESELECT TREE';b.classList.add('active');});
-  });
-  document.getElementById('powers-desel-btn').addEventListener('click',()=>{
-    document.querySelectorAll('.enh-cb').forEach(c=>{c.checked=false;c.closest('.enh-row').classList.remove('enh-selected');});
-    document.querySelectorAll('.sel-tree-btn').forEach(b=>{b.textContent='SELECT TREE';b.classList.remove('active');});
-  });
-  document.getElementById('enh-grid').addEventListener('change',e=>{
-    const cb=e.target.closest('.enh-cb');
-    if(cb) cb.closest('.enh-row').classList.toggle('enh-selected',cb.checked);
-  });
   document.getElementById('enh-grid').addEventListener('click',e=>{
     const btn=e.target.closest('[data-pname]');
     if(btn){
       const name=btn.dataset.pname;
       const d=parseInt(btn.dataset.d);
       const info=POWER_INFO[name];if(!info)return;
-      const isLocked=info[0]==='Legendary'||name.startsWith('Mastery');
+      const isLocked=info[0]==='Legendary'||name.startsWith('Mastery')||name==='Quick Feet'||name==='Gift of the Dragon'||name==='Gift of the Dreamer';
       // Find buff_symbol for this power from ENHANCEMENTS reverse lookup
       const sym=Object.entries(ENHANCEMENTS).find(([s,v])=>v[0]===name)?.[0];
       const symInt=sym?parseInt(sym):null;
@@ -2524,23 +2525,20 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
     eqArt.artifact_symbol=parseInt(e.target.value);markDirty();});
   document.getElementById('run-tool-sym').addEventListener('change',e=>{
     const sym=parseInt(e.target.value);
-    // Replicate game behavior: unshift new tool, set kit_sym in equipped
-    run.enhancements=run.enhancements.filter(e=>e.buff_symbol!==sym);
-    if(!run.stats.equipped) run.stats.equipped={value:0,values:[]};
-    if(e.target.value!==''){
-      const realEnhSym=POWER_ENH_SYMS[String(sym)]||TOOL_ENH_SYMS[String(sym)]||0;
-      const newEnh={version:1,buff_symbol:sym,enhancement_symbol:realEnhSym,level:1,aux:0,roomDuration:0};
-      run.enhancements.unshift(newEnh);
-      // Set kit_sym entry for this tool so game recognises it as active
-      const kitSym=TOOL_KIT_SYM[String(sym)];
-      if(kitSym){
-        const existing=run.stats.equipped.values.find(v=>v.key===kitSym);
-        const nextVal=(existing?existing.value:0)+1;
-        run.stats.equipped.values=run.stats.equipped.values.filter(v=>v.key!==kitSym);
-        run.stats.equipped.values.push({key:kitSym,value:nextVal});
-      }
+    const hasSel=e.target.value!=='';
+    const defaultToolSym=HERO_DEFAULT_TOOL[String(run.hero)];  // may be undefined (unknown hero)
+    const enhFor=s=>POWER_ENH_SYMS[String(s)]||TOOL_ENH_SYMS[String(s)]||0;
+    // Enforce the game's tool invariant: at most the hero's default (Lv1) + at most one swapped tool (Lv3).
+    // Strip ALL tool-category entries, then rebuild to the exact end-state.
+    run.enhancements=run.enhancements.filter(en=>enhCat(en.buff_symbol)!=='tool');
+    // Re-add the hero's default kit tool at Lv1 (only if we know it). Never fabricate an unknown default.
+    if(defaultToolSym!==undefined){
+      run.enhancements.push({version:1,buff_symbol:defaultToolSym,enhancement_symbol:enhFor(defaultToolSym),level:1,aux:0,roomDuration:0});
     }
-    // Update description
+    // Add the chosen swap at Lv3 (unless it's empty or is the hero's own default).
+    if(hasSel&&sym!==defaultToolSym){
+      run.enhancements.unshift({version:1,buff_symbol:sym,enhancement_symbol:enhFor(sym),level:3,aux:0,roomDuration:0});
+    }
     const rawName=ENHANCEMENTS[String(sym)]?.[0]||'';
     const tname=rawName.match(/Tool \((.+?)\)/)?.[1]||rawName;
     const desc=TOOLS[tname]||'';
@@ -2918,7 +2916,108 @@ const dz=document.getElementById('dz');
 dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
 dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
 dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
-document.getElementById('save-btn').addEventListener('click',exportSave);
+document.getElementById('save-btn').addEventListener('click',()=>{
+  if(isFlaskMode && currentSlot !== null) saveToSlot();
+  else exportSave();
+});
+
+// ---- Desktop mode: ?mode=desktop ----
+let currentSlot = null;
+const isFlaskMode = new URLSearchParams(window.location.search).get('mode') === 'desktop';
+
+async function loadSlot(slot) {
+  try {
+    setStatus('loading slot ' + slot + '...', '');
+    const res = await fetch('/api/load/' + slot);
+    const data = await res.json();
+    if (data.error) { setStatus('error: ' + data.error, 'err'); return; }
+    save = data.save;
+    rawBuf = null; zlibOff = 0; origFloatPaths = new Set();
+    currentSlot = slot;
+    dirty = false;
+    syncInspirationLevels();
+    render();
+    setStatus('loaded slot ' + slot + ' (' + save.handle + ')', 'ok');
+  } catch (err) { setStatus('error: ' + err.message, 'err'); }
+}
+
+async function saveToSlot() {
+  try {
+    setStatus('saving...', '');
+    const res = await fetch('/api/save/' + currentSlot, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ save })
+    });
+    const data = await res.json();
+    if (data.error) { setStatus('error: ' + data.error, 'err'); return; }
+    dirty = false;
+    document.getElementById('save-btn').disabled = true;
+    setStatus('saved — backup: ' + data.backup, 'ok');
+  } catch (err) { setStatus('error: ' + err.message, 'err'); }
+}
+
+if (isFlaskMode) {
+  (async function initDesktop() {
+    const picker = document.getElementById('slot-picker');
+    picker.classList.remove('hidden');
+    const res = await fetch('/api/savedir').then(r => r.json()).catch(() => ({ found: false }));
+    const pathEl = document.getElementById('save-path-display');
+    if (res.found) { pathEl.textContent = res.path; }
+    else { pathEl.textContent = 'Save folder not found — use manual file browse below.'; pathEl.classList.add('not-found'); }
+    const slotsRes = await fetch('/api/slots').then(r => r.json()).catch(() => ({ slots: [] }));
+    const listEl = document.getElementById('slot-list');
+    listEl.innerHTML = '';
+    slotsRes.slots.forEach(slot => {
+      const btn = document.createElement('button');
+      btn.className = 'slot-btn';
+      btn.disabled = !slot.exists;
+      if (slot.exists && !slot.error) {
+        btn.innerHTML = '<div class="slot-num">' + slot.slot + '</div><div class="slot-info"><div class="slot-name">' + (slot.handle || 'Unknown') + '</div><div class="slot-id">' + (slot.player_id || '') + ' — ' + slot.filename + '</div></div>';
+        btn.addEventListener('click', () => selectSlot(slot.slot, slot.handle));
+      } else {
+        btn.innerHTML = '<div class="slot-num">' + slot.slot + '</div><div class="slot-info"><div class="slot-empty">' + (slot.error ? 'Error: ' + slot.error : 'Empty slot') + '</div></div>';
+      }
+      listEl.appendChild(btn);
+    });
+    document.getElementById('fi-slot').addEventListener('change', e => {
+      if (e.target.files[0]) { picker.classList.add('hidden'); loadFile(e.target.files[0]); }
+    });
+  })();
+}
+
+async function selectSlot(slot, handle) {
+  document.getElementById('slot-picker').classList.add('hidden');
+  await loadSlot(slot);
+  document.getElementById('backup-bar').classList.remove('hidden');
+  document.getElementById('backup-slot-badge').textContent = 'Slot ' + slot + ' — ' + handle;
+}
+
+document.getElementById('backup-link').addEventListener('click', async () => {
+  if (currentSlot === null) return;
+  const res = await fetch('/api/backups/' + currentSlot).then(r => r.json()).catch(() => ({ backups: [] }));
+  const listEl = document.getElementById('backup-list');
+  listEl.innerHTML = '';
+  if (!res.backups.length) { listEl.innerHTML = '<div class="backup-empty">No backups yet.</div>'; }
+  else {
+    res.backups.forEach(name => {
+      const ts = name.replace(/.*_(\d{8}_\d{6})\.json/, '$1').replace(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/, '$1-$2-$3 $4:$5:$6');
+      const row = document.createElement('div'); row.className = 'backup-item';
+      row.innerHTML = '<span>' + ts + '</span>';
+      const btn = document.createElement('button'); btn.className = 'backup-restore-btn'; btn.textContent = 'Restore';
+      btn.addEventListener('click', async () => {
+        if (!confirm('Restore backup from ' + ts + '?')) return;
+        const r = await fetch('/api/restore/' + currentSlot + '/' + name, { method: 'POST' }).then(r => r.json());
+        if (r.success) { document.getElementById('backup-modal').classList.add('hidden'); await loadSlot(currentSlot); setStatus('restored from backup: ' + ts, 'ok'); }
+        else { alert('Restore failed: ' + (r.error || 'unknown error')); }
+      });
+      row.appendChild(btn); listEl.appendChild(row);
+    });
+  }
+  document.getElementById('backup-modal').classList.remove('hidden');
+});
+document.getElementById('backup-close-btn').addEventListener('click', () => document.getElementById('backup-modal').classList.add('hidden'));
+document.getElementById('switch-slot-link').addEventListener('click', () => document.getElementById('slot-picker').classList.remove('hidden'));
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));
@@ -2990,6 +3089,35 @@ document.getElementById('char-grid').addEventListener('click',e=>{
   }
   markDirty();
 });
+
+
+// ---- Version / update check (hidden build number; not shown to users) ----
+// BUILD format: game version digits + 2-digit editor build. 114001 = game 1.14.0, editor build 01.
+const BUILD = 114001;
+const VERSION_URL = 'https://raw.githubusercontent.com/Shabbypenguin/TMNT-SF-Saveeditor/main/version.json';
+(function checkForUpdate(){
+  try{
+    fetch(VERSION_URL, {cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{
+        if(!data)return;
+        const remote=parseInt(data.build,10);
+        if(!Number.isFinite(remote))return;       // malformed -> silent
+        if(remote<=BUILD)return;                    // up to date or local newer -> silent
+        const banner=document.getElementById('upd-banner');
+        if(!banner)return;
+        const link=document.getElementById('upd-banner-link');
+        if(link&&typeof data.url==='string'&&data.url)link.href=data.url;
+        banner.classList.add('show');
+      })
+      .catch(()=>{});  // offline / blocked -> silent
+  }catch(e){/* silent */}
+})();
+const _updClose=document.getElementById('upd-close');
+if(_updClose)_updClose.addEventListener('click',()=>{
+  const b=document.getElementById('upd-banner');if(b)b.classList.remove('show');
+});
+
 
 })();
 </script>
