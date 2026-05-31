@@ -8,7 +8,7 @@ A save editor for TMNT: Splintered Fate (Steam / Epic). Made with the help of Cl
 
 **https://shabbypenguin.github.io/TMNT-SF-Saveeditor/**
 
-**https://tmntsf.shabbygames.club/** — beta, newer changes land here first
+**https://tmntsf.shabbygames.club/**
 
 Load a save file by dragging it onto the drop zone or clicking to browse. Save files are named:
 ```
@@ -64,7 +64,7 @@ cd TMNT-SF-Saveeditor
 
 **3. Build**
 ```
-pyinstaller tool-src/TMNTSF_SaveEditor.spec
+pyinstaller flask/TMNTSF_SaveEditor.spec
 ```
 
 The finished exe will be at `dist/TMNTSF_SaveEditor.exe`. It is fully self-contained — the editor, all images, and the Python runtime are bundled inside. Copy it anywhere and run it.
