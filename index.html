@@ -1932,19 +1932,19 @@ function renderRun(){
         </div>
         <div class="run-row"><span class="run-lbl">Artifact Lv</span><span style="font-family:var(--fm);font-size:13px;color:var(--g)">Lv ${eqArt.level}</span></div>
         <div class="run-row"><span class="run-lbl">Tool</span>
-          <select class="run-select" id="run-tool-sym" style="color:#fb923c;">
+          <select class="run-select" id="run-tool-sym" style="color:#fb923c;opacity:.5;cursor:not-allowed;" disabled title="Tool editing is temporarily disabled while the tool mechanism is being verified.">
             ${Object.entries(ENHANCEMENTS).filter(([s,v])=>v[1]==='tool').map(([s,v])=>{
               const tname=v[0].match(/Tool \((.+?)\)/)?.[1]||v[0];
               return `<option value="${s}"${toolSym===s?' selected':''}>${tname}</option>`;
             }).join('')}
           </select>
         </div>
-        <div class="art-desc" id="run-tool-desc" style="margin:2px 0 6px;font-size:11px;color:var(--mu);padding:0 4px;">${toolDesc}</div>
+        <div class="art-desc" id="run-tool-desc" style="margin:2px 0 6px;font-size:11px;color:var(--mu);padding:0 4px;">${toolDesc}</div><div style="font-family:var(--fm);font-size:11px;color:var(--y);margin-top:4px;">⚠ Tool editing is temporarily disabled while the tool mechanism is being verified.
         ${toolEnh?`<div class="run-row"><span class="run-lbl">Tool Lv</span>
           <div style="display:flex;align-items:center;gap:5px;">
-            <button class="c-btn" id="run-tool-dec"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
+            <button class="c-btn" id="run-tool-dec" disabled style="opacity:.4;cursor:not-allowed;"><img src="media/images/minus.png" alt="-" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">−</span></button>
             <span style="font-family:var(--fm);font-size:13px;color:#fb923c;min-width:34px;text-align:center;" id="run-tool-lv">Lv ${toolLevel}</span>
-            <button class="c-btn" id="run-tool-inc"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
+            <button class="c-btn" id="run-tool-inc" disabled style="opacity:.4;cursor:not-allowed;"><img src="media/images/plus.png" alt="+" class="btn-icon" onerror="this.style.display=&apos;none&apos;;this.nextSibling.style.display=&apos;inline&apos;" ><span style="display:none;font-size:16px;line-height:1;pointer-events:none;">+</span></button>
           </div>
         </div>`:''}
       </div>
@@ -2524,33 +2524,22 @@ const treeOrder=['Astral (Dark)','Astral (Light)','Flame','Ninja','Ooze','Roboti
   document.getElementById('run-art-sym').addEventListener('change',e=>{
     eqArt.artifact_symbol=parseInt(e.target.value);markDirty();});
   document.getElementById('run-tool-sym').addEventListener('change',e=>{
-    const sym=parseInt(e.target.value);
-    const hasSel=e.target.value!=='';
-    const defaultToolSym=HERO_DEFAULT_TOOL[String(run.hero)];  // may be undefined (unknown hero)
-    const enhFor=s=>POWER_ENH_SYMS[String(s)]||TOOL_ENH_SYMS[String(s)]||0;
-    // Enforce the game's tool invariant: at most the hero's default (Lv1) + at most one swapped tool (Lv3).
-    // Strip ALL tool-category entries, then rebuild to the exact end-state.
-    run.enhancements=run.enhancements.filter(en=>enhCat(en.buff_symbol)!=='tool');
-    // Re-add the hero's default kit tool at Lv1 (only if we know it). Never fabricate an unknown default.
-    if(defaultToolSym!==undefined){
-      run.enhancements.push({version:1,buff_symbol:defaultToolSym,enhancement_symbol:enhFor(defaultToolSym),level:1,aux:0,roomDuration:0});
-    }
-    // Add the chosen swap at Lv3 (unless it's empty or is the hero's own default).
-    if(hasSel&&sym!==defaultToolSym){
-      run.enhancements.unshift({version:1,buff_symbol:sym,enhancement_symbol:enhFor(sym),level:3,aux:0,roomDuration:0});
-    }
-    const rawName=ENHANCEMENTS[String(sym)]?.[0]||'';
-    const tname=rawName.match(/Tool \((.+?)\)/)?.[1]||rawName;
-    const desc=TOOLS[tname]||'';
-    const descEl=document.getElementById('run-tool-desc');
-    if(descEl)descEl.textContent=desc;
-    markDirty();buildEnhGrid();});
+    // TOOL INJECTION DISABLED: the tool mechanism (equipped pool counter vs accumulating
+    // tool entries) is not yet fully understood. Editing tools here produced saves the game
+    // overrode (wrong tool in-game), so injection is turned off until the mechanism is verified.
+    // This handler intentionally does nothing to run.enhancements.
+    return;
+  });
   if(toolEnh){
     document.getElementById('run-tool-dec').addEventListener('click',()=>{
+      return; // tool editing disabled
+
       toolEnh.level=Math.max(1,toolEnh.level-1);
       document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
       markDirty();});
     document.getElementById('run-tool-inc').addEventListener('click',()=>{
+      return; // tool editing disabled
+
       toolEnh.level=Math.min(3,toolEnh.level+1);
       document.getElementById('run-tool-lv').textContent='Lv '+toolEnh.level;
       markDirty();});
@@ -3093,7 +3082,7 @@ document.getElementById('char-grid').addEventListener('click',e=>{
 
 // ---- Version / update check (hidden build number; not shown to users) ----
 // BUILD format: game version digits + 2-digit editor build. 114001 = game 1.14.0, editor build 01.
-const BUILD = 114001;
+const BUILD = 114002;
 const VERSION_URL = 'https://raw.githubusercontent.com/Shabbypenguin/TMNT-SF-Saveeditor/main/version.json';
 (function checkForUpdate(){
   try{
