@@ -1470,7 +1470,7 @@ function buildUpgradeGrid(gridId, upgrades, color){
     const row=document.createElement('div');row.className='enh-row';
     row.innerHTML=`
       <div class="enh-info">
-        <div class="enh-name" style="${known?'':'color:var(--mu)'}">${label}${locked?' <span style="font-family:var(--fm);font-size:10px;color:var(--r);letter-spacing:.5px;">LOCKED</span>':''}</div>
+        <div class="enh-name" style="${known?'':'color:var(--mu)'}">${label}${locked?' <span style="font-family:var(--fm);font-size:10px;color:var(--r);letter-spacing:.5px;">Game prevents over-level</span>':''}</div>
         ${desc?`<div class="art-desc" id="upg-desc-${globalIdx}" style="margin-top:3px;">${desc}</div>`:''}
         <div class="enh-sym" style="margin-top:2px;">buff: ${u.buff_symbol}</div>
       </div>
